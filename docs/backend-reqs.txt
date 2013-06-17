@@ -1,1 +1,4 @@
 Backend Requirements
+
+Support CRUD as defined in the comm-def.txt document
+

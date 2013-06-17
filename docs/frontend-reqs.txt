@@ -1,1 +1,12 @@
 Frontend Requirements
+
+Frontend of Annotatit has the following parts:
+
+Landing Page
+
+
+Navigation:
+ Media
+ configuration
+ Account
+ Payments
