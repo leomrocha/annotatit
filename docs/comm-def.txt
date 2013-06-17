@@ -1,0 +1,48 @@
+Communications Standard
+
+The communication standard has 3 major Milestones:
+
+1st Milestone: Annotatit application 
+    Communication will be held only between user UI and Annotatit Backend
+    The goal of the definitions is to:
+        State the communication between user UI and Annotatit in a way that 
+            is possible to extend it later
+            
+2nd Milestone: 3rd Party integration
+    Communications will be held between
+        
+        * 3rd party Backend and Annotatit backend 
+            + for CRUD a user
+            + for token request for a user session
+        * user UI and 3rd party Backend:
+            + request token
+        * user UI and Annotatit Backend (CORS):
+            + CRUD for annotations
+            
+3nd Milestone: Secure communications
+    All communications will be secured 
+    Payments will be added
+
+All communicaciones will be held in JSON
+
+
+################################################################################
+# 1st Milestone
+################################################################################
+For AJAX communications between  user UI and Backend (any backend) 
+The pattern is CRUD and the mapping between request is:
+
+Create - POST
+Read - GET
+Update - PUT
+Delete - DELETE
+
+################################################################################
+# 2nd Milestone
+################################################################################
+
+################################################################################
+# 3rd Milestone
+################################################################################
+
+

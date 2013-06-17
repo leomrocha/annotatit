@@ -1,6 +1,15 @@
 This document stablishes the basic standards of work:
 
 #########################################################
+#Code
+#########################################################
+ - according to the programming language, follow the most common directives in style
+ - Comments:
+   * all code (functions and classes) must have a brief description of what it does (goal)
+   * If some difficult or esoteric way of solving a problem is used, should 
+     also have a reference to the pattern or algorithm in which is based
+ 
+#########################################################
 #Documentation structure:
 #########################################################
 frontend-reqs.txt
