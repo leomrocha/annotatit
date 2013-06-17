@@ -37,6 +37,59 @@ Read - GET
 Update - PUT
 Delete - DELETE
 
+
+The protocol for the communication is a JSON string containing
+
+{
+    token: TOKEN, //unused for the moment, just to extend it
+    request: ["create", "read", "update", "delete"], //is it actually needed??
+    data: {
+            ALL CONTENT
+          }
+}
+
+if the request is a bulk request data field must be:
+data: {
+    array: {
+        DATA1,
+        DATA2,
+        DATA3
+        .
+        .
+        .
+    }
+}
+
+the response from the server will be:
+
+{
+    response: ["accepted", "rejected", "success", "error"],
+    response-detail: "", //details of the response, eg: "user not autorhized", "token expired"
+    data: {
+            ALL CONTENT  
+          }
+}
+if the response is  more than one item dta field will be:
+data: {
+    array: {
+        DATA1,
+        DATA2,
+        DATA3
+        .
+        .
+        .
+    }
+}
+
+
+Path for the service will be:
+
+www.annotatit.com/ajax/create
+www.annotatit.com/ajax/read
+www.annotatit.com/ajax/update
+www.annotatit.com/ajax/delete
+
+
 ################################################################################
 # 2nd Milestone
 ################################################################################
