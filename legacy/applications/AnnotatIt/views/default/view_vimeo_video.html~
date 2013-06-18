@@ -1,0 +1,84 @@
+{{extend 'view_layout.html'}}
+
+{{block viewer_head}}
+    <script src="http://a.vimeocdn.com/js/froogaloop2.min.js"></script>
+{{end}}
+
+{{block media_frame}}    
+    <iframe id="vmPlayer" src="http://player.vimeo.com/video/{{=video.video_id}}?api=1&player_id=vmPlayer" width="520" height="480" frameborder="0" ></iframe>
+{{end}}
+
+{{block video_init_scripts}}
+
+    <script type="text/javascript">
+    var vmplayer = null;
+
+
+    function pause_video(){
+        if(vmplayer){
+            vmplayer.api('pause');
+        }
+    }
+
+    function on_tag_click_specific(canvas, obj, tag_json){
+        //console.log("tag click");
+        setVideoTime(tag_json.video_time);
+        //play;
+        if(!vmplayer){
+            vmplayer = document.getElementById("vmPlayer");
+            }
+        vmplayer.api('play');
+    }
+
+    function on_comment_click_specific(canvas, obj, comment_json){
+        //console.log("comment click");
+        setVideoTime(comment_json.video_time);
+        //play;
+        if(!vmplayer){
+            vmplayer = document.getElementById("vmPlayer");
+            }
+        vmplayer.api('play');
+    }
+
+    ///VIMEO specifics
+    function onPlayProgress(data, id) {
+        //updateValue('video_time',Number(data.seconds));
+        updateTime('video_time',Number(data.seconds));
+        current_time = Number(data.seconds);
+    }
+
+
+    function init_vimeo_player(){
+        //check this
+        var vmplayer_frame = $('#vmPlayer')[0];
+        vmplayer = $f(vmplayer_frame);
+        var obj = vmplayer.api('getDuration', function (value, player_id) {
+                $("#video_duration").text(value);
+                $("#video_duration").val(value);
+                video_duration = value;
+                });
+        //console.log("dta from obj = "+Object.keys(obj));
+        vmplayer.addEvent('playProgress', onPlayProgress);
+        init_interactive_canvas();
+
+    }
+    /////////////////////////////////////////////////
+    //loading after window loaded
+    window.onload=function() {
+        //document.addEventListener("customApiEvent", custom_event_handler, false);
+        //setup player and player handler
+        //console.log("setup handler");
+        var vmplayer_frame = $('#vmPlayer')[0];
+        vmplayer = $f(vmplayer_frame);
+        //console.log("handler = "+ vmplayer);
+        
+        vmplayer.addEvent('ready', init_vimeo_player);
+
+        vmplayer.api('play');
+        //init_canvas();
+        //console.log("setup canvas");
+        //init_interactive_canvas();
+    }  
+    </script>
+{{end}}
+

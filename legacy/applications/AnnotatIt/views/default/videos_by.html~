@@ -1,0 +1,16 @@
+{{left_sidebar_enabled= False}}
+{{right_sidebar_enabled=False}}
+
+{{extend 'layout.html'}}
+
+{{block center}}
+    {{try:}}
+        <ul>
+            {{for v in videos:}}
+                {{#=v}}
+                <li> {{=T('On ')}} {{=v.datetime}} {{=A(v.title, _href=URL('view_video',args=v.youtube_video_id))}}</li>
+            {{pass}}
+        </ul>
+    {{except:}}
+    {{pass}}
+{{end}}

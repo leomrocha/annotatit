@@ -1,0 +1,870 @@
+(dp1
+S'output'
+p2
+S"<type 'exceptions.NameError'> name 'post_args' is not defined"
+p3
+sS'layer'
+p4
+S'/home/leo/projects/heroku_projects/annotatit/applications/AnnotatIt/views/default/view_video.html'
+p5
+sS'code'
+p6
+S'left_sidebar_enabled= False\nresponse.write(\'\\n\', escape=False)\nright_sidebar_enabled=True\nresponse.write(\'\\n\\n\', escape=False)\nresponse.write(\'<!--[if HTML5]><![endif]-->\\n<!DOCTYPE html>\\n<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->\\n<!--[if lt IE 7]><html class="ie ie6 ie-lte9 ie-lte8 ie-lte7 no-js" lang="\', escape=False)\nresponse.write(T.accepted_language or \'en\')\nresponse.write(\'"> <![endif]-->\\n<!--[if IE 7]><html class="ie ie7 ie-lte9 ie-lte8 ie-lte7 no-js" lang="\', escape=False)\nresponse.write(T.accepted_language or \'en\')\nresponse.write(\'"> <![endif]-->\\n<!--[if IE 8]><html class="ie ie8 ie-lte9 ie-lte8 no-js" lang="\', escape=False)\nresponse.write(T.accepted_language or \'en\')\nresponse.write(\'"> <![endif]-->\\n<!--[if IE 9]><html class="ie9 ie-lte9 no-js" lang="\', escape=False)\nresponse.write(T.accepted_language or \'en\')\nresponse.write(\'"> <![endif]-->\\n<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js" lang="\', escape=False)\nresponse.write(T.accepted_language or \'en\')\nresponse.write(\'"> <!--<![endif]-->\\n<head>\\n<title>\', escape=False)\nresponse.write(response.title or request.application)\nresponse.write(\'</title>\\n  <!--[if !HTML5]>\\n      <meta http-equiv="X-UA-Compatible" content="IE=edge\', escape=False)\nresponse.write(not request.is_local and \',chrome=1\' or \'\')\nresponse.write(\'">\\n  <![endif]-->\\n  <!-- www.phpied.com/conditional-comments-block-downloads/ -->\\n  <!-- Always force latest IE rendering engine\\n       (even in intranet) & Chrome Frame\\n       Remove this if you use the .htaccess -->\\n\\t   \\n  <meta charset="utf-8" />\\n\\n  <!-- http://dev.w3.org/html5/markup/meta.name.html -->\\n  <meta name="application-name" content="\', escape=False)\nresponse.write(request.application)\nresponse.write(\'" />\\n\\n  <!-- Speaking of Google, don\\\'t forget to set your site up:\\n       http://google.com/webmasters -->\\n  <meta name="google-site-verification" content="" />\\n\\n  <!--  Mobile Viewport Fix\\n        j.mp/mobileviewport & davidbcalhoun.com/2010/viewport-metatag\\n        device-width: Occupy full width of the screen in its current orientation\\n        initial-scale = 1.0 retains dimensions instead of zooming out if page height > device height\\n        user-scalable = yes allows the user to zoom in -->\\n  <meta name="viewport" content="width=device-width, initial-scale=1.0" />\\n\\n  <link rel="shortcut icon" href="\', escape=False)\nresponse.write(URL(\'static\',\'images/favicon.ico\'))\nresponse.write(\'" type="image/x-icon">\\n  <link rel="apple-touch-icon" href="\', escape=False)\nresponse.write(URL(\'static\',\'images/favicon.png\'))\nresponse.write(\'">\\n\\n  <!-- All JavaScript at the bottom, except for Modernizr which enables\\n       HTML5 elements & feature detects -->\\n  <script src="\', escape=False)\nresponse.write(URL(\'static\',\'js/modernizr.custom.js\'))\nresponse.write(\'"></script>\\n\\n  <!-- include stylesheets -->\\n  \', escape=False)\nresponse.files.append(URL(\'static\',\'css/web2py.css\'))\nresponse.files.append(URL(\'static\',\'css/bootstrap.min.css\'))\nresponse.files.append(URL(\'static\',\'css/bootstrap-responsive.min.css\'))\nresponse.files.append(URL(\'static\',\'css/web2py_bootstrap.css\'))\nresponse.write(\'\\n\\n  \', escape=False)\nresponse.write(\'<script type="text/javascript"><!--\\n    // These variables are used by the web2py_ajax_init function in web2py_ajax.js (which is loaded below).\\n    var w2p_ajax_confirm_message = "\', escape=False)\nresponse.write(T(\'Are you sure you want to delete this object?\'))\nresponse.write(\'";\\n    var w2p_ajax_date_format = "\', escape=False)\nresponse.write(T(\'%Y-%m-%d\'))\nresponse.write(\'";\\n    var w2p_ajax_datetime_format = "\', escape=False)\nresponse.write(T(\'%Y-%m-%d %H:%M:%S\'))\nresponse.write(\'";\\n    var ajax_error_500 = \\\'\', escape=False)\nresponse.write(XML(T(\'An error occured, please %s the page\') % A(T(\'reload\'), _href=URL(args=request.args, vars=request.vars))))\nresponse.write("\'\\n    //--></script>\\n", escape=False)\nresponse.files.insert(0,URL(\'static\',\'js/jquery.js\'))\nresponse.files.insert(1,URL(\'static\',\'css/calendar.css\'))\nresponse.files.insert(2,URL(\'static\',\'js/calendar.js\'))\nresponse.files.insert(3,URL(\'static\',\'js/web2py.js\'))\nresponse.include_meta()\nresponse.include_files()\nresponse.write(\'\\n\', escape=False)\nresponse.write(\'\\n\\n  \', escape=False)\n# using sidebars need to know what sidebar you want to use\nleft_sidebar_enabled = globals().get(\'left_sidebar_enabled\',False)\nright_sidebar_enabled = globals().get(\'right_sidebar_enabled\',False)\nmiddle_columns = {0:\'span12\',1:\'span9\',2:\'span6\'}[\n(left_sidebar_enabled and 1 or 0)+(right_sidebar_enabled and 1 or 0)]\nresponse.write(\'\\n\\n  <!-- uncomment here to load jquery-ui\\n       <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/base/jquery-ui.css" type="text/css" media="all" />\\n       <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" type="text/javascript"></script>\\n       uncomment to load jquery-ui //-->\\n  <noscript><link href="\', escape=False)\nresponse.write(URL(\'static\', \'css/web2py_bootstrap_nojs.css\'))\nresponse.write(\'" rel="stylesheet" type="text/css" /></noscript>\\n  \', escape=False)\nresponse.write(\'\\n<!-- <script type="text/javascript" src="https://www.google.com/jsapi"></script> -->\\n<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>\\n<script type="text/javascript">\\n  //google.load("search", "1");\\n  //google.load("jquery", "1.4.2");\\n  //google.load("jqueryui", "1.7.2");\\n</script>\\n\\n<script type="text/javascript">\\n/*\\n * Polling the player for information\\n */\\n\\n// Update a particular HTML element with a new value\\nfunction updateHTML(elmId, value) {\\n  document.getElementById(elmId).innerHTML = value;\\n}\\n\\nfunction updateValue(elmId, val) {\\n  document.getElementById(elmId).value = val;\\n}\\n\\nfunction updateTime(elmId, val) {\\n    val = Number(val);\\n    hh = Math.floor(val/3600);\\n    mm = Math.floor(val/60);\\n    ss = val%60; \\n    //ss = Math.round( (val%60)*10) / 10.0 ; \\n    tval = hh.toString()+\\\':\\\'+mm.toString()+\\\':\\\'+ss.toString()\\n    document.getElementById(elmId).value = tval;\\n}\\n// This function is called when an error is thrown by the player\\nfunction onPlayerError(errorCode) {\\n  alert("An error occured of type:" + errorCode);\\n  console.log("An error occured of type:" + errorCode);\\n}\\n\\n// This function is called when the player changes state\\nfunction onPlayerStateChange(newState) {\\n  updateHTML("playerState", newState);\\n}\\n\\n// Display information about the current state of the player\\nfunction updatePlayerInfo() {\\n  // Also check that at least one function exists since when IE unloads the\\n  // page, it will destroy the SWF before clearing the interval.\\n  if(ytplayer && ytplayer.getDuration) {\\n    updateTime("video_time", ytplayer.getCurrentTime());\\n  }\\n}\\n\\n// This function is automatically called by the player once it loads\\nfunction onYouTubePlayerReady(playerId) {\\n  console.log("Player loaded and ready, setting callbacks");\\n  ytplayer = document.getElementById("ytPlayer");\\n  // This causes the updatePlayerInfo function to be called every 50ms to\\n  // get fresh data from the player\\n  setInterval(updatePlayerInfo, 50);\\n  updatePlayerInfo();\\n  //ytplayer.addEventListener("onStateChange", "onPlayerStateChange");\\n  ytplayer.addEventListener("onError", "onPlayerError");\\n}\\n\\nfunction loadPlayer(){\\n  console.log("Loading Player");\\n  // The video to load\\n  var videoID = "\', escape=False)\nresponse.write(video.youtube_video_id)\nresponse.write(\'"; \\n  // Lets Flash from another domain call JavaScript\\n  var params = { allowScriptAccess: "always" };\\n  // The element id of the Flash embed\\n  var atts = { id: "ytPlayer" };\\n  // All of the magic handled by SWFObject (http://code.google.com/p/swfobject/)\\n  swfobject.embedSWF("http://www.youtube.com/v/" + videoID + \\n                     "?version=3&enablejsapi=1&playerapiid=player1", \\n                     "videoDiv", "720", "480", "9", null, null, params, atts);\\n}\\n\\nwindow.onload=function() {loadPlayer();}  \\n\\nfunction setVideoTime(time){\\n    console.log("setting time");    \\n    console.log(time);\\n    //this parses the string hh:mm:ss into values and \\n    var t=time.split(":");\\n    ntime=Number(t[0])*3600+Number(t[1])*60+Number(t[2]);\\n    ytplayer.seekTo(ntime, true);\\n}\\n\\nfunction annotation_submit(){\\n    console.log("summiting form");\\n    ajax("\', escape=False)\nresponse.write(URL(\'post_annotation\',args=request.args(0)))\nresponse.write(\'",\\n           ["video_id","video_time","comment"], \\\'annotation_response\\\');\\n    return false;\\n}\\n\\nfunction pause_video(){\\n    if(ytplayer){\\n        ytplayer.pauseVideo();\\n    }\\n}\\n\\n//function set_comment_time(){\\n//}\\n\\nfunction on_comment(){\\n    pause_video();\\n    //set_comment_time();\\n    return false;\\n}\\n\\nfunction on_fast_annotation(type, subtype, evaluation){\\n    time = document.getElementById("video_time");\\n    post_args = []\\n    ajax("\', escape=False)\nresponse.write(URL(\'post_annotation\',args=post_args))\nresponse.write(\'",\\n           ["video_id","video_time","comment"], \\\'fast_annotation_response\\\');\\n    return false;\\n}\\n\\njQuery(\\\'#annotation_form\\\').submit(function() {\\n\\n});\\n\\n\\n</script>\\n\\n\', escape=False)\nresponse.write(\'\\n</head>\\n\\n<body>\\n  <!-- Navbar ================================================== -->\\n  <div class="navbar navbar-inverse navbar-fixed-top">\\n    <div class="flash">\', escape=False)\nresponse.write(response.flash or \'\')\nresponse.write(\'</div>\\n    <div class="navbar-inner">\\n      <div class="container">\\n        <!-- the next tag is necessary for bootstrap menus, do not remove -->\\n        <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">\\n          <span class="icon-bar"></span>\\n          <span class="icon-bar"></span>\\n          <span class="icon-bar"></span>\\n        </button>\\n\\t\', escape=False)\nresponse.write(response.logo or \'\')\nresponse.write(\'\\n        <ul id="navbar" class="nav pull-right">\', escape=False)\nresponse.write(\'auth\' in globals() and auth.navbar(mode="dropdown") or \'\')\nresponse.write(\'</ul>\\n        <div class="nav-collapse">\\n          \', escape=False)\nis_mobile=request.user_agent().is_mobile\nresponse.write(\'\\n          \', escape=False)\nif response.menu:\n    response.write(\'\\n          \', escape=False)\n    response.write(MENU(response.menu, _class=\'mobile-menu nav\' if is_mobile else \'nav\',mobile=is_mobile,li_class=\'dropdown\',ul_class=\'dropdown-menu\'))\n    response.write(\'\\n          \', escape=False)\n    pass\nresponse.write(\'\\n        </div><!--/.nav-collapse -->\\n      </div>\\n    </div>\\n  </div><!--/top navbar -->\\n\\n  <div class="container">\\n    <!-- Masthead ================================================== -->\\n    \', escape=False)\nif response.title:\n    response.write(\'\\n    <header class="mastheader row" id="header">\\n        <div class="span12">\\n            <div class="page-header">\\n                <h1>\\n                    \', escape=False)\n    response.write(response.title)\n    response.write(\'\\n                    <small>\', escape=False)\n    response.write(response.subtitle or \'\')\n    response.write(\'</small>\\n                </h1>\\n            </div>\\n        </div>\\n    </header>\\n    \', escape=False)\n    pass\nresponse.write(\'\\n\\n    <section id="main" class="main row">\\n        \', escape=False)\nif left_sidebar_enabled:\n    response.write(\'\\n        <div class="span3 left-sidebar">\\n            \', escape=False)\n    response.write(\'\\n            <h3>Left Sidebar</h3>\\n            <p></p>\\n            \', escape=False)\n    response.write(\'\\n        </div>\\n        \', escape=False)\n    pass\nresponse.write(\'\\n\\n        <div class="\', escape=False)\nresponse.write(middle_columns)\nresponse.write(\'">\\n            \', escape=False)\nresponse.write(\'\\n<div class="videoDiv" id="videoDiv" >\\n\\n<object class="ytPlayer" id="ytPlayer" >\\n\\n\\n</object>\\n</div>\\n\\n\', escape=False)\nif auth.user:\n    response.write(\'\\n<hr/>\\n<div id="annotation_div">\\n    \\n    <form id="annotation_form" onsubmit= "return annotation_submit()" enctype="multipart/form-data" >\\n        <input id="video_id" name="video_id" readonly="readonly" value="\', escape=False)\n    response.write(video.id)\n    response.write(\'" type="hidden"/> \\n        <input id="video_time" name="video_time"     value="0" type="hidden" /> \\n        <!--Comment: -->\\n        <input id="comment" name="comment"  placeholder="Click here to comment" \\n            onclick="on_comment(); return false;" />\\n        <input type="submit" id="comment_button" name="Comment" value="Post"/>\\n    </form>\\n    <div id="annotation_response"></div>\\n</div>\\n\', escape=False)\n    pass\nresponse.write(\'\\n<hr/>\\n<div id="annotations">\\n\', escape=False)\ntry:\n    response.write(\'\\n    <ul>\\n    \', escape=False)\n    for a in annotations:\n        response.write(\'\\n        <li>\\n\\n        <span style="cursor: pointer; color:red" onclick="setVideoTime(\\\'\', escape=False)\n        response.write(a.video_time)\n        response.write(\'\\\'); return false;" > \', escape=False)\n        response.write(a.video_time)\n        response.write(\' </span> by <a href="\', escape=False)\n        response.write(URL(\'videos_by\', args=a.annotator_id))\n        response.write(\'" > \', escape=False)\n        response.write(a.annotator_id)\n        response.write(\' </a>\\n        <p> \', escape=False)\n        response.write(a.comment)\n        response.write(\'</p>\\n        </li>\\n    \', escape=False)\n        pass\n    response.write(\'\\n    </ul>\\n\', escape=False)\nexcept:\n    response.write(\'\\n\\n\', escape=False)\n    pass\nresponse.write(\'\\n</div>\\n\', escape=False)\nresponse.write(\'\\n        </div>\\n\\n        \', escape=False)\nif right_sidebar_enabled:\n    response.write(\'\\n        <div class="span3">\\n            \', escape=False)\n    response.write(\'\\n\\n    \', escape=False)\n    response.write(\'\\n    <table>\\n        <tbody>\\n            <tr>\\n                <td>\\n                  Good Voice\\n                </td>\\n                <td>\\n                   Good Gestual\\n                </td>\\n            </tr>            \\n            <tr>\\n                <td>\\n                  Error in Voice\\n                </td>\\n                <td>\\n                   Error in Gestual\\n                </td>\\n            </tr>\\n        </tbody>\\n    </table>\\n    <div id="fast_annotation_response"></div>\\n    \', escape=False)\n    response.write(\'\\n\\n\', escape=False)\n    response.write(\'\\n        </div>\\n        \', escape=False)\n    pass\nresponse.write(\'\\n    </section><!--/main-->\\n\\n    <!-- Footer ================================================== -->\\n    <div class="row">\\n        <footer class="footer span12" id="footer">\\n            <div class="footer-content">\\n                \', escape=False)\nresponse.write(\' <!-- this is default footer -->\\n                <div class="copyright pull-left">\', escape=False)\nresponse.write(T(\'Copyright\'))\nresponse.write(\' &#169; \', escape=False)\nresponse.write(request.now.year)\nresponse.write(\'</div>\\n                <div id="poweredBy" class="pull-right">\\n                    \', escape=False)\nresponse.write(T(\'Powered by\'))\nresponse.write(\'\\n                    <a href="http://www.web2py.com/">web2py</a>\\n                </div>\\n                \', escape=False)\nresponse.write(\'\\n            </div>\\n        </footer>\\n    </div>\\n\\n  </div> <!-- /container -->\\n\\n  <!-- The javascript =============================================\\n       (Placed at the end of the document so the pages load faster) -->\\n  <script src="\', escape=False)\nresponse.write(URL(\'static\',\'js/bootstrap.min.js\'))\nresponse.write(\'"></script>\\n  <script src="\', escape=False)\nresponse.write(URL(\'static\',\'js/web2py_bootstrap.js\'))\nresponse.write(\'"></script>\\n  <!--[if lt IE 7 ]>\\n      <script src="\', escape=False)\nresponse.write(URL(\'static\',\'js/dd_belatedpng.js\'))\nresponse.write(\'"></script>\\n      <script> DD_belatedPNG.fix(\\\'img, .png_bg\\\'); //fix any <img> or .png_bg background-images </script>\\n      <![endif]-->\\n  \\n  \', escape=False)\nif response.google_analytics_id:\n    response.write(\'\\n  <script src="\', escape=False)\n    response.write(URL(\'static\',\'js/analytics.min.js\'))\n    response.write(\'"></script>\\n  <script type="text/javascript">\\n  analytics.initialize({\\n    \\\'Google Analytics\\\':{trackingId:\\\'\', escape=False)\n    response.write(response.google_analytics_id)\n    response.write("\'} \\n  });</script>\\n  ", escape=False)\n    pass\nresponse.write(\'\\n  <script src="\', escape=False)\nresponse.write(URL(\'static\',\'js/share.js\',vars=dict(static=URL(\'static\',\'images\'))))\nresponse.write(\'"></script>\\n</body>\\n</html>\\n\\n\', escape=False)'
+p7
+sS'snapshot'
+p8
+(dp9
+S'exception'
+p10
+(dp11
+S'__hash__'
+p12
+S"<method-wrapper '__hash__' of exceptions.NameError object>"
+p13
+sS'__setattr__'
+p14
+S"<method-wrapper '__setattr__' of exceptions.NameError object>"
+p15
+sS'__reduce_ex__'
+p16
+S'<built-in method __reduce_ex__ of exceptions.NameError object>'
+p17
+sS'__getslice__'
+p18
+S"<method-wrapper '__getslice__' of exceptions.NameError object>"
+p19
+sS'__getitem__'
+p20
+S"<method-wrapper '__getitem__' of exceptions.NameError object>"
+p21
+sS'__setstate__'
+p22
+S'<built-in method __setstate__ of exceptions.NameError object>'
+p23
+sS'args'
+p24
+S'("name \'post_args\' is not defined",)'
+p25
+sS'__reduce__'
+p26
+S'<built-in method __reduce__ of exceptions.NameError object>'
+p27
+sS'__str__'
+p28
+S"<method-wrapper '__str__' of exceptions.NameError object>"
+p29
+sS'__format__'
+p30
+S'<built-in method __format__ of exceptions.NameError object>'
+p31
+sS'__getattribute__'
+p32
+S"<method-wrapper '__getattribute__' of exceptions.NameError object>"
+p33
+sS'__class__'
+p34
+S"<type 'exceptions.NameError'>"
+p35
+sS'__unicode__'
+p36
+S'<built-in method __unicode__ of exceptions.NameError object>'
+p37
+sS'__delattr__'
+p38
+S"<method-wrapper '__delattr__' of exceptions.NameError object>"
+p39
+sS'__subclasshook__'
+p40
+S'<built-in method __subclasshook__ of type object>'
+p41
+sS'__repr__'
+p42
+S"<method-wrapper '__repr__' of exceptions.NameError object>"
+p43
+sS'__dict__'
+p44
+S'{}'
+p45
+sS'__sizeof__'
+p46
+S'<built-in method __sizeof__ of exceptions.NameError object>'
+p47
+sS'__doc__'
+p48
+S"'Name not found globally.'"
+p49
+sS'__init__'
+p50
+S"<method-wrapper '__init__' of exceptions.NameError object>"
+p51
+sS'__new__'
+p52
+S'<built-in method __new__ of type object>'
+p53
+ssS'evalue'
+p54
+S"name 'post_args' is not defined"
+p55
+sS'request'
+p56
+cgluon.html
+XML_unpickle
+p57
+(S's\xacB\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top">ajax</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">application</td><td valign="top">:</td><td><div>AnnotatIt</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">args</td><td valign="top">:</td><td><div><table><tr><td><div>6YcJljPGz4M</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">body</td><td valign="top">:</td><td><div>&lt;cStringIO.StringO object at 0x31cc0a0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">cid</td><td valign="top">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">client</td><td valign="top">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">controller</td><td valign="top">:</td><td><div>default</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">cookies</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">session_id_annotatit</td><td valign="top">:</td><td><div>127.0.0.1-00febca3-ffce-48f4-9527-ff9e5b1c68f1<table><tr><td style="font-weight:bold;vertical-align:top">comment</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">domain</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">expires</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">httponly</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">max-age</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">secure</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">version</td><td valign="top">:</td><td><div></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">env</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">app_folders</td><td valign="top">:</td><td><div>set([&#x27;/home/leo/projects/heroku_projects/annotatit/applications/AnnotatIt/&#x27;])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">applications_parent</td><td valign="top">:</td><td><div>/home/leo/projects/heroku_projects/annotatit</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">db_sessions</td><td valign="top">:</td><td><div>set([])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">debugging</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">gluon_parent</td><td valign="top">:</td><td><div>/home/leo/projects/heroku_projects/annotatit</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">gunicorn_socket</td><td valign="top">:</td><td><div>&lt;socket._socketobject object at 0x2e41590&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_accept</td><td valign="top">:</td><td><div>text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_accept_charset</td><td valign="top">:</td><td><div>ISO-8859-1,utf-8;q=0.7,*;q=0.3</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_accept_encoding</td><td valign="top">:</td><td><div>gzip,deflate,sdch</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_accept_language</td><td valign="top">:</td><td><div>en-US,en;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_connection</td><td valign="top">:</td><td><div>keep-alive</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_cookie</td><td valign="top">:</td><td><div>session_id_annotatit=127.0.0.1-00febca3-ffce-48f4-9527-ff9e5b1c68f1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_dnt</td><td valign="top">:</td><td><div>1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_host</td><td valign="top">:</td><td><div>127.0.0.1:5000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_referer</td><td valign="top">:</td><td><div>http://127.0.0.1:5000/my_videos</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_user_agent</td><td valign="top">:</td><td><div>Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.22 (KHTML, like Gecko) Ubuntu Chromium/25.0.1364.160 Chrome/25.0.1364.160 Safari/537.22</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_jython</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_pypy</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">local_hosts</td><td valign="top">:</td><td><div><table><tr><td><div>cotita</div></td></tr><tr><td><div>::1</div></td></tr><tr><td><div>127.0.1.1</div></td></tr><tr><td><div>::ffff:127.0.0.1</div></td></tr><tr><td><div>127.0.0.1</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path_info</td><td valign="top">:</td><td><div>/view_video/6YcJljPGz4M</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">query_string</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">raw_uri</td><td valign="top">:</td><td><div>/view_video/6YcJljPGz4M</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">remote_addr</td><td valign="top">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">remote_port</td><td valign="top">:</td><td><div>52001</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">request_method</td><td valign="top">:</td><td><div>GET</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">request_uri</td><td valign="top">:</td><td><div>/AnnotatIt/default/view_video/6YcJljPGz4M</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">script_name</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">server_name</td><td valign="top">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">server_port</td><td valign="top">:</td><td><div>5000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">server_protocol</td><td valign="top">:</td><td><div>HTTP/1.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">server_software</td><td valign="top">:</td><td><div>gunicorn/0.17.2</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_crontype</td><td valign="top">:</td><td><div>soft</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_original_uri</td><td valign="top">:</td><td><div>/view_video/6YcJljPGz4M</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_path</td><td valign="top">:</td><td><div>/home/leo/projects/heroku_projects/annotatit</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_version</td><td valign="top">:</td><td><div>2.4.6-stable+timestamp.2013.04.06.17.37.38</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_errors</td><td valign="top">:</td><td><div>&lt;open file &#x27;&lt;stderr&gt;&#x27;, mode &#x27;w&#x27; at 0x7ff58c091270&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_file_wrapper</td><td valign="top">:</td><td><div>&lt;class gunicorn.http.wsgi.FileWrapper at 0x2d13bb0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_input</td><td valign="top">:</td><td><div>&lt;gunicorn.http.body.Body object at 0x31a3c90&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_multiprocess</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_multithread</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_run_once</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_url_scheme</td><td valign="top">:</td><td><div>http</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_version</td><td valign="top">:</td><td><div><table><tr><td><div>1</div></td></tr><tr><td><div>0</div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">extension</td><td valign="top">:</td><td><div>html</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">folder</td><td valign="top">:</td><td><div>/home/leo/projects/heroku_projects/annotatit/applications/AnnotatIt/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">function</td><td valign="top">:</td><td><div>view_video</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">get_vars</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">global_settings</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">app_folders</td><td valign="top">:</td><td><div>set([&#x27;/home/leo/projects/heroku_projects/annotatit/applications/AnnotatIt/&#x27;])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">applications_parent</td><td valign="top">:</td><td><div>/home/leo/projects/heroku_projects/annotatit</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">db_sessions</td><td valign="top">:</td><td><div>set([])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">debugging</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">gluon_parent</td><td valign="top">:</td><td><div>/home/leo/projects/heroku_projects/annotatit</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_jython</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_pypy</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">local_hosts</td><td valign="top">:</td><td><div><table><tr><td><div>cotita</div></td></tr><tr><td><div>::1</div></td></tr><tr><td><div>127.0.1.1</div></td></tr><tr><td><div>::ffff:127.0.0.1</div></td></tr><tr><td><div>127.0.0.1</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_crontype</td><td valign="top">:</td><td><div>soft</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_version</td><td valign="top">:</td><td><div>2.4.6-stable+timestamp.2013.04.06.17.37.38</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_https</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_local</td><td valign="top">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_restful</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">now</td><td valign="top">:</td><td><div>datetime.datetime(2013, 5, 9, 17, 15, 45, 605864)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">post_vars</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">url</td><td valign="top">:</td><td><div>/view_video/6YcJljPGz4M</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">utcnow</td><td valign="top">:</td><td><div>datetime.datetime(2013, 5, 9, 15, 15, 45, 605879)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">uuid</td><td valign="top">:</td><td><div>AnnotatIt/127.0.0.1.2013-05-09.17-15-45.fcb597bd-2a88-440c-8215-1ffd7194935a</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">vars</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">environ</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">HTTP_ACCEPT</td><td valign="top">:</td><td><div>text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_ACCEPT_CHARSET</td><td valign="top">:</td><td><div>ISO-8859-1,utf-8;q=0.7,*;q=0.3</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_ACCEPT_ENCODING</td><td valign="top">:</td><td><div>gzip,deflate,sdch</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_ACCEPT_LANGUAGE</td><td valign="top">:</td><td><div>en-US,en;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_CONNECTION</td><td valign="top">:</td><td><div>keep-alive</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_COOKIE</td><td valign="top">:</td><td><div>session_id_annotatit=127.0.0.1-00febca3-ffce-48f4-9527-ff9e5b1c68f1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_DNT</td><td valign="top">:</td><td><div>1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_HOST</td><td valign="top">:</td><td><div>127.0.0.1:5000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_REFERER</td><td valign="top">:</td><td><div>http://127.0.0.1:5000/my_videos</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_USER_AGENT</td><td valign="top">:</td><td><div>Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.22 (KHTML, like Gecko) Ubuntu Chromium/25.0.1364.160 Chrome/25.0.1364.160 Safari/537.22</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">PATH_INFO</td><td valign="top">:</td><td><div>/view_video/6YcJljPGz4M</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">QUERY_STRING</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">RAW_URI</td><td valign="top">:</td><td><div>/view_video/6YcJljPGz4M</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">REMOTE_ADDR</td><td valign="top">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">REMOTE_PORT</td><td valign="top">:</td><td><div>52001</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">REQUEST_METHOD</td><td valign="top">:</td><td><div>GET</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">REQUEST_URI</td><td valign="top">:</td><td><div>/AnnotatIt/default/view_video/6YcJljPGz4M</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SCRIPT_NAME</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SERVER_NAME</td><td valign="top">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SERVER_PORT</td><td valign="top">:</td><td><div>5000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SERVER_PROTOCOL</td><td valign="top">:</td><td><div>HTTP/1.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SERVER_SOFTWARE</td><td valign="top">:</td><td><div>gunicorn/0.17.2</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">WEB2PY_ORIGINAL_URI</td><td valign="top">:</td><td><div>/view_video/6YcJljPGz4M</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">gunicorn.socket</td><td valign="top">:</td><td><div>&lt;socket._socketobject object at 0x2e41590&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.errors</td><td valign="top">:</td><td><div>&lt;open file &#x27;&lt;stderr&gt;&#x27;, mode &#x27;w&#x27; at 0x7ff58c091270&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.file_wrapper</td><td valign="top">:</td><td><div>&lt;class gunicorn.http.wsgi.FileWrapper at 0x2d13bb0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.input</td><td valign="top">:</td><td><div>&lt;cStringIO.StringO object at 0x31cc0a0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.multiprocess</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.multithread</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.run_once</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.url_scheme</td><td valign="top">:</td><td><div>http</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.version</td><td valign="top">:</td><td><div>1</div></td></tr></table></div></td></tr></table></div></td></tr></table></div>'
+tRp58
+sS'frames'
+p59
+(lp60
+(dp61
+S'file'
+p62
+S'/home/leo/projects/heroku_projects/annotatit/gluon/restricted.py'
+p63
+sS'dump'
+p64
+(dp65
+S'environment'
+p66
+S"{'A': <class 'gluon.html.A'>, 'ANY_OF': <class 'gluon.validators.ANY_OF'>, 'APP_DOMAIN_NAME': 'AnnotatIt.com', 'APP_NAME': 'AnnotatIt', 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, 'BUTTON': <class 'gluon.html.BUTTON'>, ...}"
+p67
+sS'ccode'
+p68
+S'<code object <module> at 0x30e0330, file "/home/...AnnotatIt/views/default/view_video.html", line 1>'
+p69
+ssS'lnum'
+p70
+I212
+sS'lines'
+p71
+(dp72
+I207
+S'    try:'
+p73
+sI208
+S'        if isinstance(code, types.CodeType):'
+p74
+sI209
+S'            ccode = code'
+p75
+sI210
+S'        else:'
+p76
+sI211
+S'            ccode = compile2(code, layer)'
+p77
+sI212
+S'        exec ccode in environment'
+p78
+sI213
+S'    except HTTP:'
+p79
+sI214
+S'        raise'
+p80
+sI215
+S'    except RestrictedError:'
+p81
+sI216
+S'        # do not encapsulate (obfuscate) the original RestrictedError'
+p82
+ssS'call'
+p83
+S'(code=\'left_sidebar_enabled= False\\nresponse.write(\\\'\\\\n\\\',..."></script>\\\\n</body>\\\\n</html>\\\\n\\\\n\\\', escape=False)\', environment={\'A\': <class \'gluon.html.A\'>, \'ANY_OF\': <class \'gluon.validators.ANY_OF\'>, \'APP_DOMAIN_NAME\': \'AnnotatIt.com\', \'APP_NAME\': \'AnnotatIt\', \'Auth\': <class \'gluon.tools.Auth\'>, \'B\': <class \'gluon.html.B\'>, \'BEAUTIFY\': <class \'gluon.html.BEAUTIFY\'>, \'BODY\': <class \'gluon.html.BODY\'>, \'BR\': <class \'gluon.html.BR\'>, \'BUTTON\': <class \'gluon.html.BUTTON\'>, ...}, layer=\'/home/leo/projects/heroku_projects/annotatit/applications/AnnotatIt/views/default/view_video.html\')'
+p84
+sS'func'
+p85
+S'restricted'
+p86
+sa(dp87
+g62
+S'/home/leo/projects/heroku_projects/annotatit/applications/AnnotatIt/views/default/view_video.html'
+p88
+sg64
+(dp89
+S'player'
+p90
+S'undefined'
+p91
+sS'fresh'
+p92
+g91
+sS'the'
+p93
+g91
+sS'data'
+p94
+g91
+sS'get'
+p95
+g91
+ssg70
+I63
+sg71
+(dp96
+I64
+S'response.write(\'",\\n           ["video_id","video_time","comment"], \\\'fast_annotation_response\\\');\\n    return false;\\n}\\n\\njQuery(\\\'#annotation_form\\\').submit(function() {\\n\\n});\\n\\n\\n</script>\\n\\n\', escape=False)'
+p97
+sI65
+S'response.write(\'\\n</head>\\n\\n<body>\\n  <!-- Navbar ================================================== -->\\n  <div class="navbar navbar-inverse navbar-fixed-top">\\n    <div class="flash">\', escape=False)'
+p98
+sI66
+S"response.write(response.flash or '')"
+p99
+sI67
+S'response.write(\'</div>\\n    <div class="navbar-inner">\\n      <div class="container">\\n        <!-- the next tag is necessary for bootstrap menus, do not remove -->\\n        <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">\\n          <span class="icon-bar"></span>\\n          <span class="icon-bar"></span>\\n          <span class="icon-bar"></span>\\n        </button>\\n\\t\', escape=False)'
+p100
+sI68
+S"response.write(response.logo or '')"
+p101
+sI69
+S'response.write(\'\\n        <ul id="navbar" class="nav pull-right">\', escape=False)'
+p102
+sI70
+S'response.write(\'auth\' in globals() and auth.navbar(mode="dropdown") or \'\')'
+p103
+sI71
+S'response.write(\'</ul>\\n        <div class="nav-collapse">\\n          \', escape=False)'
+p104
+sI72
+S'is_mobile=request.user_agent().is_mobile'
+p105
+sI73
+S"response.write('\\n          ', escape=False)"
+p106
+sI54
+S'(left_sidebar_enabled and 1 or 0)+(right_sidebar_enabled and 1 or 0)]'
+p107
+sI55
+S'response.write(\'\\n\\n  <!-- uncomment here to load jquery-ui\\n       <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/base/jquery-ui.css" type="text/css" media="all" />\\n       <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" type="text/javascript"></script>\\n       uncomment to load jquery-ui //-->\\n  <noscript><link href="\', escape=False)'
+p108
+sI56
+S"response.write(URL('static', 'css/web2py_bootstrap_nojs.css'))"
+p109
+sI57
+S'response.write(\'" rel="stylesheet" type="text/css" /></noscript>\\n  \', escape=False)'
+p110
+sI58
+S'response.write(\'\\n<!-- <script type="text/javascript" src="https://www.google.com/jsapi"></script> -->\\n<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>\\n<script type="text/javascript">\\n  //google.load("search", "1");\\n  //google.load("jquery", "1.4.2");\\n  //google.load("jqueryui", "1.7.2");\\n</script>\\n\\n<script type="text/javascript">\\n/*\\n * Polling the player for information\\n */\\n\\n// Update a particular HTML element with a new value\\nfunction updateHTML(elmId, value) {\\n  document.getElementById(elmId).innerHTML = value;\\n}\\n\\nfunction updateValue(elmId, val) {\\n  document.getElementById(elmId).value = val;\\n}\\n\\nfunction updateTime(elmId, val) {\\n    val = Number(val);\\n    hh = Math.floor(val/3600);\\n    mm = Math.floor(val/60);\\n    ss = val%60; \\n    //ss = Math.round( (val%60)*10) / 10.0 ; \\n    tval = hh.toString()+\\\':\\\'+mm.toString()+\\\':\\\'+ss.toString()\\n    document.getElementById(elmId).value = tval;\\n}\\n// This function is called when an error is thrown by the player\\nfunction onPlayerError(errorCode) {\\n  alert("An error occured of type:" + errorCode);\\n  console.log("An error occured of type:" + errorCode);\\n}\\n\\n// This function is called when the player changes state\\nfunction onPlayerStateChange(newState) {\\n  updateHTML("playerState", newState);\\n}\\n\\n// Display information about the current state of the player\\nfunction updatePlayerInfo() {\\n  // Also check that at least one function exists since when IE unloads the\\n  // page, it will destroy the SWF before clearing the interval.\\n  if(ytplayer && ytplayer.getDuration) {\\n    updateTime("video_time", ytplayer.getCurrentTime());\\n  }\\n}\\n\\n// This function is automatically called by the player once it loads\\nfunction onYouTubePlayerReady(playerId) {\\n  console.log("Player loaded and ready, setting callbacks");\\n  ytplayer = document.getElementById("ytPlayer");\\n  // This causes the updatePlayerInfo function to be called every 50ms to\\n  // get fresh data from the player\\n  setInterval(updatePlayerInfo, 50);\\n  updatePlayerInfo();\\n  //ytplayer.addEventListener("onStateChange", "onPlayerStateChange");\\n  ytplayer.addEventListener("onError", "onPlayerError");\\n}\\n\\nfunction loadPlayer(){\\n  console.log("Loading Player");\\n  // The video to load\\n  var videoID = "\', escape=False)'
+p111
+sI59
+S'response.write(video.youtube_video_id)'
+p112
+sI60
+S'response.write(\'"; \\n  // Lets Flash from another domain call JavaScript\\n  var params = { allowScriptAccess: "always" };\\n  // The element id of the Flash embed\\n  var atts = { id: "ytPlayer" };\\n  // All of the magic handled by SWFObject (http://code.google.com/p/swfobject/)\\n  swfobject.embedSWF("http://www.youtube.com/v/" + videoID + \\n                     "?version=3&enablejsapi=1&playerapiid=player1", \\n                     "videoDiv", "720", "480", "9", null, null, params, atts);\\n}\\n\\nwindow.onload=function() {loadPlayer();}  \\n\\nfunction setVideoTime(time){\\n    console.log("setting time");    \\n    console.log(time);\\n    //this parses the string hh:mm:ss into values and \\n    var t=time.split(":");\\n    ntime=Number(t[0])*3600+Number(t[1])*60+Number(t[2]);\\n    ytplayer.seekTo(ntime, true);\\n}\\n\\nfunction annotation_submit(){\\n    console.log("summiting form");\\n    ajax("\', escape=False)'
+p113
+sI61
+S"response.write(URL('post_annotation',args=request.args(0)))"
+p114
+sI62
+S'response.write(\'",\\n           ["video_id","video_time","comment"], \\\'annotation_response\\\');\\n    return false;\\n}\\n\\nfunction pause_video(){\\n    if(ytplayer){\\n        ytplayer.pauseVideo();\\n    }\\n}\\n\\n//function set_comment_time(){\\n//}\\n\\nfunction on_comment(){\\n    pause_video();\\n    //set_comment_time();\\n    return false;\\n}\\n\\nfunction on_fast_annotation(type, subtype, evaluation){\\n    time = document.getElementById("video_time");\\n    post_args = []\\n    ajax("\', escape=False)'
+p115
+sI63
+S"response.write(URL('post_annotation',args=post_args))"
+p116
+ssg83
+S'()'
+p117
+sg85
+S'<module>'
+p118
+sasS'pyver'
+p119
+S'Python 2.7.3: /home/leo/projects/heroku_projects/annotatit/venv/bin/python (prefix: /home/leo/projects/heroku_projects/annotatit/venv)'
+p120
+sS'session'
+p121
+g57
+(S's\xe5\x07\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top">auth</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">expiration</td><td valign="top">:</td><td><div>3600</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">hmac_key</td><td valign="top">:</td><td><div>9d1f0cb0-0d12-4833-a933-37b2e6c9cc79</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">last_visit</td><td valign="top">:</td><td><div>datetime.datetime(2013, 5, 9, 17, 15, 42, 568335)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">remember</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">user</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">email</td><td valign="top">:</td><td><div>leo.m.rocha@gmail.com</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">first_name</td><td valign="top">:</td><td><div>leo</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">id</td><td valign="top">:</td><td><div>1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">last_name</td><td valign="top">:</td><td><div>rocha</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">registration_id</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">registration_key</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">reset_password_key</td><td valign="top">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">user_groups</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">1</td><td valign="top">:</td><td><div>user_1</div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">flash</td><td valign="top">:</td><td><div>None</div></td></tr></table></div>'
+tRp122
+sS'etype'
+p123
+S"<type 'exceptions.NameError'>"
+p124
+sS'date'
+p125
+S'Thu May  9 17:15:45 2013'
+p126
+sS'response'
+p127
+g57
+(S's\x01!\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top">body</td><td valign="top">:</td><td><div>&lt;cStringIO.StringO object at 0x31aff80&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">cookies</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">session_id_annotatit</td><td valign="top">:</td><td><div>127.0.0.1-00febca3-ffce-48f4-9527-ff9e5b1c68f1<table><tr><td style="font-weight:bold;vertical-align:top">comment</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">domain</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">expires</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">httponly</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">max-age</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path</td><td valign="top">:</td><td><div>/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">secure</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">version</td><td valign="top">:</td><td><div></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">delimiters</td><td valign="top">:</td><td><div><table><tr><td><div>{{</div></td></tr><tr><td><div>}}</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">files</td><td valign="top">:</td><td><div><table><tr><td><div>/AnnotatIt/static/js/jquery.js</div></td></tr><tr><td><div>/AnnotatIt/static/css/calendar.css</div></td></tr><tr><td><div>/AnnotatIt/static/js/calendar.js</div></td></tr><tr><td><div>/AnnotatIt/static/js/web2py.js</div></td></tr><tr><td><div>/AnnotatIt/static/css/web2py.css</div></td></tr><tr><td><div>/AnnotatIt/static/css/bootstrap.min.css</div></td></tr><tr><td><div>/AnnotatIt/static/css/bootstrap-responsive.min.css</div></td></tr><tr><td><div>/AnnotatIt/static/css/web2py_bootstrap.css</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">flash</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">generic_patterns</td><td valign="top">:</td><td><div><table><tr><td><div>*</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">google_analytics_id</td><td valign="top">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">headers</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">X-Powered-By</td><td valign="top">:</td><td><div>web2py</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">logo</td><td valign="top">:</td><td><div><a class="brand" href="http://www.annotatit.com/"><b>AnnotatIt</b>&trade;&nbsp;</a></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">menu</td><td valign="top">:</td><td><div><table><tr><td><div><table><tr><td><div>Videos</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/videos</div></td></tr><tr><td><div><table><tr><td><div><table><tr><td><div>My videos</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/my_videos</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Upload Video</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/upload_video</div></td></tr></table></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Audio</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/audio</div></td></tr><tr><td><div><table><tr><td><div><table><tr><td><div>My audio</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/my_audio</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Upload Audio</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/upload_audio</div></td></tr></table></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Groups</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/groups</div></td></tr><tr><td><div><table><tr><td><div><table><tr><td><div>My Groups</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/my_groups</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Create Group</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/create_group</div></td></tr></table></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Account</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/edit_account_info</div></td></tr><tr><td><div><table><tr><td><div><table><tr><td><div>My Account</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/my_account</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Privacy</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/my_privacy</div></td></tr></table></div></td></tr></table></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">meta</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">author</td><td valign="top">:</td><td><div>Leonardo M. Rocha &lt;you@example.com&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">description</td><td valign="top">:</td><td><div>Social video and audio annotation for personal development</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">generator</td><td valign="top">:</td><td><div>Web2py Web Framework</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">keywords</td><td valign="top">:</td><td><div>personal development, leadership, spokesman, video, audio, annotation, social</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">models_to_run</td><td valign="top">:</td><td><div><table><tr><td><div>^\\w+\\.py$</div></td></tr><tr><td><div>^default/\\w+\\.py$</div></td></tr><tr><td><div>^default/view_video/\\w+\\.py$</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">postprocessing</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_cookie_expires</td><td valign="top">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_data_name</td><td valign="top">:</td><td><div>session_data_annotatit</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_file</td><td valign="top">:</td><td><div>&lt;open file &#x27;/home/leo/projects/heroku_projects/annotatit/applications/AnnotatIt/sessions/127.0.0.1-00febca3-ffce-48f4-9527-ff9e5b1c68f1&#x27;, mode &#x27;rb+&#x27; at 0x302d390&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_filename</td><td valign="top">:</td><td><div>/home/leo/projects/heroku_projects/annotatit/applications/AnnotatIt/sessions/127.0.0.1-00febca3-ffce-48f4-9527-ff9e5b1c68f1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_id</td><td valign="top">:</td><td><div>127.0.0.1-00febca3-ffce-48f4-9527-ff9e5b1c68f1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_id_name</td><td valign="top">:</td><td><div>session_id_annotatit</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_locked</td><td valign="top">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_new</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_storage_type</td><td valign="top">:</td><td><div>file</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">status</td><td valign="top">:</td><td><div>200</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">subtitle</td><td valign="top">:</td><td><div>Social video and audio annotation for personal development</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">title</td><td valign="top">:</td><td><div>Annotatit</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">view</td><td valign="top">:</td><td><div>default/view_video.html</div></td></tr></table></div>'
+tRp128
+sS'locals'
+p129
+(dp130
+S'Service'
+p131
+S"<class 'gluon.tools.Service'>"
+p132
+sS'OBJECT'
+p133
+S"<class 'gluon.html.OBJECT'>"
+p134
+sS'LOAD'
+p135
+S'<function LOAD>'
+p136
+sS'SQLDB'
+p137
+S"<class 'gluon.dal.DAL'>"
+p138
+sg121
+S"<Storage {'_formkey[login]': 'c091c970-779a-4d82...: '', 'id': 1}>, 'user_groups': {1: 'user_1'}}>}>"
+p139
+sS'LINK'
+p140
+S"<class 'gluon.html.LINK'>"
+p141
+sS'BR'
+p142
+S"<class 'gluon.html.BR'>"
+p143
+sS'local_import'
+p144
+S'<function <lambda>>'
+p145
+sS'OPTGROUP'
+p146
+S"<class 'gluon.html.OPTGROUP'>"
+p147
+sS'__package__'
+p148
+S'None'
+p149
+sS'PRE'
+p150
+S"<class 'gluon.html.PRE'>"
+p151
+sS'IS_INT_IN_RANGE'
+p152
+S"<class 'gluon.validators.IS_INT_IN_RANGE'>"
+p153
+sS'left_sidebar_enabled'
+p154
+S'False'
+p155
+sS'IS_LOWER'
+p156
+S"<class 'gluon.validators.IS_LOWER'>"
+p157
+sS'IS_STRONG'
+p158
+S"<class 'gluon.validators.IS_STRONG'>"
+p159
+sS'cache'
+p160
+S'<gluon.cache.Cache object>'
+p161
+sS'IS_IN_DB'
+p162
+S"<class 'gluon.validators.IS_IN_DB'>"
+p163
+sS'TAG'
+p164
+S'<gluon.html.__TAG__ object>'
+p165
+sS'SQLField'
+p166
+S"<class 'gluon.dal.Field'>"
+p167
+sS'mail'
+p168
+S'<gluon.tools.Mail object>'
+p169
+sS'BODY'
+p170
+S"<class 'gluon.html.BODY'>"
+p171
+sS'IS_DATE_IN_RANGE'
+p172
+S"<class 'gluon.validators.IS_DATE_IN_RANGE'>"
+p173
+sS'IFRAME'
+p174
+S"<class 'gluon.html.IFRAME'>"
+p175
+sS'URL'
+p176
+S'<function URL>'
+p177
+sS'__file__'
+p178
+S"'/home/leo/projects/heroku_projects/annotatit/applications/AnnotatIt/views/default/view_video.html'"
+p179
+sS'db'
+p180
+S'<DAL uri="sqlite://heroku.test.sqlite">'
+p181
+sS'auth'
+p182
+S'<gluon.tools.Auth object>'
+p183
+sS'P'
+S"<class 'gluon.html.P'>"
+p184
+sS'TFOOT'
+p185
+S"<class 'gluon.html.TFOOT'>"
+p186
+sS'XHTML'
+p187
+S"<class 'gluon.html.XHTML'>"
+p188
+sS'datetime'
+p189
+S"<type 'datetime.datetime'>"
+p190
+sS'ON'
+p191
+S'True'
+p192
+sS'OL'
+p193
+S"<class 'gluon.html.OL'>"
+p194
+sS'TEXTAREA'
+p195
+S"<class 'gluon.html.TEXTAREA'>"
+p196
+sS'MENU'
+p197
+S"<class 'gluon.html.MENU'>"
+p198
+sS'IS_IMAGE'
+p199
+S"<class 'gluon.validators.IS_IMAGE'>"
+p200
+sS'DIV'
+p201
+S"<class 'gluon.html.DIV'>"
+p202
+sS'_admin_menu'
+p203
+S'<function _admin_menu>'
+p204
+sS'CODE'
+p205
+S"<class 'gluon.html.CODE'>"
+p206
+sS'HTTP'
+p207
+S"<class 'gluon.http.HTTP'>"
+p208
+sS'HR'
+p209
+S"<class 'gluon.html.HR'>"
+p210
+sS'IS_DATETIME'
+p211
+S"<class 'gluon.validators.IS_DATETIME'>"
+p212
+sS'STYLE'
+p213
+S"<class 'gluon.html.STYLE'>"
+p214
+sS'LABEL'
+p215
+S"<class 'gluon.html.LABEL'>"
+p216
+sS'CLEANUP'
+p217
+S"<class 'gluon.validators.CLEANUP'>"
+p218
+sS'video'
+p219
+S'<Row {\'subtitle\': "by i don\'t know who", \'script...atetime(2013, 4, 19, 12, 2, 32), \'person_id\': 1}>'
+p220
+sS'plugins'
+p221
+S'<gluon.tools.PluginManager object>'
+p222
+sS'SELECT'
+p223
+S"<class 'gluon.html.SELECT'>"
+p224
+sS'CENTER'
+p225
+S"<class 'gluon.html.CENTER'>"
+p226
+sS'prettydate'
+p227
+S'<function prettydate>'
+p228
+sS'Crud'
+p229
+S"<class 'gluon.tools.Crud'>"
+p230
+sS'Auth'
+p231
+S"<class 'gluon.tools.Auth'>"
+p232
+sS'__builtins__'
+p233
+S"{'ArithmeticError': <type 'exceptions.ArithmeticError'>, 'AssertionError': <type 'exceptions.AssertionError'>, 'AttributeError': <type 'exceptions.AttributeError'>, 'BaseException': <type 'exceptions.BaseException'>, 'BufferError': <type 'exceptions.BufferError'>, 'BytesWarning': <type 'exceptions.BytesWarning'>, 'DeprecationWarning': <type 'exceptions.DeprecationWarning'>, 'EOFError': <type 'exceptions.EOFError'>, 'Ellipsis': Ellipsis, 'EnvironmentError': <type 'exceptions.EnvironmentError'>, ...}"
+p234
+sS'HTML'
+p235
+S"<class 'gluon.html.HTML'>"
+p236
+sS'SQLFORM'
+p237
+S"<class 'gluon.sqlhtml.SQLFORM'>"
+p238
+sS'EM'
+p239
+S"<class 'gluon.html.EM'>"
+p240
+sS'redirect'
+p241
+S'<function redirect>'
+p242
+sS'FIELDSET'
+p243
+S"<class 'gluon.html.FIELDSET'>"
+p244
+sS'IS_EQUAL_TO'
+p245
+S"<class 'gluon.validators.IS_EQUAL_TO'>"
+p246
+sS'embed64'
+p247
+S'<function embed64>'
+p248
+sS'IS_LIST_OF'
+p249
+S"<class 'gluon.validators.IS_LIST_OF'>"
+p250
+sS'INPUT'
+p251
+S"<class 'gluon.html.INPUT'>"
+p252
+sS'EMBED'
+p253
+S"<class 'gluon.html.EMBED'>"
+p254
+sS'APP_DOMAIN_NAME'
+p255
+S"'AnnotatIt.com'"
+p256
+sS'H2'
+p257
+S"<class 'gluon.html.H2'>"
+p258
+sS'H3'
+p259
+S"<class 'gluon.html.H3'>"
+p260
+sS'BUTTON'
+p261
+S"<class 'gluon.html.BUTTON'>"
+p262
+sS'H1'
+p263
+S"<class 'gluon.html.H1'>"
+p264
+sS'H6'
+p265
+S"<class 'gluon.html.H6'>"
+p266
+sS'H4'
+p267
+S"<class 'gluon.html.H4'>"
+p268
+sS'H5'
+p269
+S"<class 'gluon.html.H5'>"
+p270
+sS'UL'
+p271
+S"<class 'gluon.html.UL'>"
+p272
+sS'get_db'
+p273
+S'<function get_db>'
+p274
+sS'IS_UPPER'
+p275
+S"<class 'gluon.validators.IS_UPPER'>"
+p276
+sS'xmlescape'
+p277
+S'<function xmlescape>'
+p278
+sS'IS_TIME'
+p279
+S"<class 'gluon.validators.IS_TIME'>"
+p280
+sS'OPTION'
+p281
+S"<class 'gluon.html.OPTION'>"
+p282
+sS'WEBMASTERS_EMAIL'
+p283
+S"'leo.m.rocha@gmail.com'"
+p284
+sS'TITLE'
+p285
+S"<class 'gluon.html.TITLE'>"
+p286
+sS'CRYPT'
+p287
+S"<class 'gluon.validators.CRYPT'>"
+p288
+sS'IS_EMPTY_OR'
+p289
+S"<class 'gluon.validators.IS_EMPTY_OR'>"
+p290
+sS'MARKMIN'
+p291
+S"<class 'gluon.html.MARKMIN'>"
+p292
+sS'__name__'
+p293
+S"'__restricted__'"
+p294
+sS'STRONG'
+p295
+S"<class 'gluon.html.STRONG'>"
+p296
+sS'COL'
+p297
+S"<class 'gluon.html.COL'>"
+p298
+sS'service'
+p299
+S'<gluon.tools.Service object>'
+p300
+sS'SCRIPT'
+p301
+S"<class 'gluon.html.SCRIPT'>"
+p302
+sS'TABLE'
+p303
+S"<class 'gluon.html.TABLE'>"
+p304
+sS'IS_IPV4'
+p305
+S"<class 'gluon.validators.IS_IPV4'>"
+p306
+sS'IS_LENGTH'
+p307
+S"<class 'gluon.validators.IS_LENGTH'>"
+p308
+sS'IS_IPV6'
+p309
+S"<class 'gluon.validators.IS_IPV6'>"
+p310
+sS'XML'
+p311
+S"<class 'gluon.html.XML'>"
+p312
+sS'B'
+S"<class 'gluon.html.B'>"
+p313
+sS'IMG'
+p314
+S"<class 'gluon.html.IMG'>"
+p315
+sS'SQLTABLE'
+p316
+S"<class 'gluon.sqlhtml.SQLTABLE'>"
+p317
+sS'IS_MATCH'
+p318
+S"<class 'gluon.validators.IS_MATCH'>"
+p319
+sS'IS_ALPHANUMERIC'
+p320
+S"<class 'gluon.validators.IS_ALPHANUMERIC'>"
+p321
+sS'SPAN'
+p322
+S"<class 'gluon.html.SPAN'>"
+p323
+sS'IS_JSON'
+p324
+S"<class 'gluon.validators.IS_JSON'>"
+p325
+sS'WEBMASTERS_EMAIL_NAME'
+p326
+S"'leo.m.rocha'"
+p327
+sS'IS_SLUG'
+p328
+S"<class 'gluon.validators.IS_SLUG'>"
+p329
+sS'annotations'
+p330
+S'<Rows (6)>'
+p331
+sS'BEAUTIFY'
+p332
+S"<class 'gluon.html.BEAUTIFY'>"
+p333
+sS'META'
+p334
+S"<class 'gluon.html.META'>"
+p335
+sS'IS_DATE'
+p336
+S"<class 'gluon.validators.IS_DATE'>"
+p337
+sS'IS_EMAIL'
+p338
+S"<class 'gluon.validators.IS_EMAIL'>"
+p339
+sS'IS_NOT_EMPTY'
+p340
+S"<class 'gluon.validators.IS_NOT_EMPTY'>"
+p341
+sS'IS_FLOAT_IN_RANGE'
+p342
+S"<class 'gluon.validators.IS_FLOAT_IN_RANGE'>"
+p343
+sS'TBODY'
+p344
+S"<class 'gluon.html.TBODY'>"
+p345
+sS'CAT'
+p346
+S"<class 'gluon.html.CAT'>"
+p347
+sS'Field'
+p348
+S"<class 'gluon.dal.Field'>"
+p349
+sS'middle_columns'
+p350
+S"'span9'"
+p351
+sS'_guest_menu'
+p352
+S'<function _guest_menu>'
+p353
+sS'LEGEND'
+p354
+S"<class 'gluon.html.LEGEND'>"
+p355
+sS'APP_NAME'
+p356
+S"'AnnotatIt'"
+p357
+sS'COLGROUP'
+p358
+S"<class 'gluon.html.COLGROUP'>"
+p359
+sS'DAL'
+p360
+S"<class 'gluon.dal.DAL'>"
+p361
+sS'TT'
+p362
+S"<class 'gluon.html.TT'>"
+p363
+sS'TR'
+p364
+S"<class 'gluon.html.TR'>"
+p365
+sS'_auth_user_menu'
+p366
+S'<function _auth_user_menu>'
+p367
+sS'LI'
+p368
+S"<class 'gluon.html.LI'>"
+p369
+sS'right_sidebar_enabled'
+p370
+g192
+sS'TH'
+p371
+S"<class 'gluon.html.TH'>"
+p372
+sS'TD'
+p373
+S"<class 'gluon.html.TD'>"
+p374
+sS'PluginManager'
+p375
+S"<class 'gluon.tools.PluginManager'>"
+p376
+sS'IS_URL'
+p377
+S"<class 'gluon.validators.IS_URL'>"
+p378
+sS'A'
+S"<class 'gluon.html.A'>"
+p379
+sS'HEAD'
+p380
+S"<class 'gluon.html.HEAD'>"
+p381
+sS'IS_DATETIME_IN_RANGE'
+p382
+S"<class 'gluon.validators.IS_DATETIME_IN_RANGE'>"
+p383
+sS'FORM'
+p384
+S"<class 'gluon.html.FORM'>"
+p385
+sS'I'
+S"<class 'gluon.html.I'>"
+p386
+sS'crud'
+p387
+S'<gluon.tools.Crud object>'
+p388
+sS'IS_NOT_IN_DB'
+p389
+S"<class 'gluon.validators.IS_NOT_IN_DB'>"
+p390
+sg127
+S"<Storage {'body': <cStringIO.StringO object at 0...t 0x3198e60>, 'view': 'default/view_video.html'}>"
+p391
+sS'WEBMASTERS_EMAIL_DOMAIN'
+p392
+S"'gmail.com'"
+p393
+sS'THEAD'
+p394
+S"<class 'gluon.html.THEAD'>"
+p395
+sS'ANY_OF'
+p396
+S"<class 'gluon.validators.ANY_OF'>"
+p397
+sS'IS_NULL_OR'
+p398
+S"<class 'gluon.validators.IS_EMPTY_OR'>"
+p399
+sg56
+S"<Storage {'function': 'view_video', 'body': <cSt...ications/AnnotatIt/', 'post_vars': <Storage {}>}>"
+p400
+sS'IS_EXPR'
+p401
+S"<class 'gluon.validators.IS_EXPR'>"
+p402
+sS'T'
+S'<gluon.languages.translator object>'
+p403
+sS'IS_IN_SET'
+p404
+S"<class 'gluon.validators.IS_IN_SET'>"
+p405
+sS'IS_UPLOAD_FILENAME'
+p406
+S"<class 'gluon.validators.IS_UPLOAD_FILENAME'>"
+p407
+sS'time'
+p408
+S"<module 'time' (built-in)>"
+p409
+sS'IS_DECIMAL_IN_RANGE'
+p410
+S"<class 'gluon.validators.IS_DECIMAL_IN_RANGE'>"
+p411
+sssS'traceback'
+p412
+S'Traceback (most recent call last):\n  File "/home/leo/projects/heroku_projects/annotatit/gluon/restricted.py", line 212, in restricted\n    exec ccode in environment\n  File "/home/leo/projects/heroku_projects/annotatit/applications/AnnotatIt/views/default/view_video.html", line 63, in <module>\n    // get fresh data from the player\nNameError: name \'post_args\' is not defined\n'
+p413
+s.

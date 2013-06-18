@@ -1,0 +1,8 @@
+{{left_sidebar_enabled= False}}
+{{right_sidebar_enabled=False}}
+
+{{extend 'layout.html'}}
+
+{{block center}}
+    {{T('We are sorry, but that video does not exist anymore.')}}
+{{end}}

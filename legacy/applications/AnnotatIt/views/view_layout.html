@@ -1,0 +1,1133 @@
+{{left_sidebar_enabled= True}}
+{{right_sidebar_enabled=True}}
+
+{{extend 'layout.html'}}
+{{block title}}
+<br/>
+<hr/>
+
+<style>
+/*
+.{{=middle_columns}}{
+    width:50%;
+}
+
+.left-sidebar{
+    width:50%;
+}
+*/
+</style>
+{{end}}
+
+{{block head}}
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/ocanvas/2.4.0/ocanvas.min.js"></script>
+    <style >    
+    .comments_results{
+        border: solid 1px;
+        border-radius: 7px;
+    }
+    #comments_list ul, li{
+        list-style: none;
+        list-style-type: none;
+        margin: 0;
+        padding: 0; 
+    }
+    #comments_list ul.noident li.noident {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        }
+    #comments_list li{
+        background:#eee;
+        //border: solid 1px;
+        border-radius: 7px;
+    }
+    .modify_comment_li{
+        background-color:transparent;
+    }
+
+    #tags_list ul, li{
+        list-style: none;
+        list-style-type: none;
+        margin: 0;
+        padding: 0; 
+    }
+    #tags_list ul.noident li.noident {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        }
+    .tag_options{
+        font-size: x-small;
+    }
+    
+    .tag_context_menu{
+        display:none;
+        position:absolute;
+        font-size: x-small;
+        border-style:solid;
+        border-color:#888;
+        border-width:1px;
+        border-radius: 7px;
+        background:#eee;
+        width:80px;  
+        min-height:30px;
+    }
+     .note_context_menu{
+        display:none;
+        position:absolute;
+        font-size: x-small;
+        border-style:solid;
+        border-color:#888;
+        border-width:1px;
+        border-radius: 7px;
+        background:#eee;
+        //width:80px;  
+        min-height:30px;
+    }   
+    .small_font{
+        font-size: x-small;
+    }
+    </style>
+    
+{{block viewer_head}}
+{{end}}
+{{end}}
+
+{{block center}}
+<div class="videoDiv" id="videoDiv" >
+    {{block media_frame}}    
+    {{end}}
+
+</div>
+<div class="comments_box" id="comments_box" style="{ border:1px solid; border-radius:5px;}" >
+    <!--
+    <div id="canvas_time_display" > </div>
+    <div id="canvas_text_display"> </div>
+    -->
+    <div class="canvas_div" id="canvas_div" >
+        <!--Here canvas will be dynamically added when needed -->
+    </div>
+    
+    <div class="comments_results" style="max-height: 300px; overflow-y: scroll;">
+        <ul id="comments_list">
+        </ul>
+    </div>
+</div>
+
+<div class="note_context_menu" id="note_context_menu">
+    <span > Time: <span id='canvas_comment_time_display'></span>  </span>
+    <a href="javascript:close_note_menu()"> dismiss </a>
+    
+    <textarea id="edit_comment" name="comment" type="text"
+            rows="5" cols="35" ></textarea>
+    <button onClick="modify_comment($('#edit_comment').val()); update_comment($('#edit_comment').val())); return true;" id="comment_button" > Save
+    </button>
+    <a href="javascript:delete_comment_menu()"> (X) Delete comment </a> <br/>
+</div>
+
+<div class="tag_context_menu" id="tag_context_menu">
+    <input id="tag_name" value="Tag name">  </input> <br/>
+    Change to: <br/>
+    <img id="QUESTION" onclick="return change_tag_to('QUESTION')" src="{{=URL('static','images/QUESTION_icon.png')}}" width="15" style="cursor:pointer;"/>
+    <img id="OK" onclick="return change_tag_to('OK')" src="{{=URL('static','images/OK_icon.png')}}" width="15" style="cursor:pointer;"/>
+    <img id="WARNING" onclick="return change_tag_to('WARNING')" src="{{=URL('static','images/WARNING_icon.png')}}" width="15" style="cursor:pointer;"/>
+    <img id="BAD" onclick="return change_tag_to('BAD')" src="{{=URL('static','images/BAD_icon.png')}}" width="15" style="cursor:pointer;"/> <br/>
+    <span><a href="javascript:close_tag_menu()"> dismiss </a></span> <div> <a href="javascript:delete_tag_menu()"> (X) Delete tag </a> </div>
+
+</div>
+
+
+
+<hr/>
+<div id="advices">
+{{try:}}
+    <ul>
+    {{for a in advices:}}
+        <li>
+        By <a href="{{=URL('videos_by', args=a.annotator_id)}}" > {{=a.annotator_id}} </a>
+        <p> {{=a.advice_text}}</p>
+        </li>
+    {{pass}}
+
+    </ul>
+{{except:}}
+    <!--Problem with displaying advice list-->
+{{pass}}
+</div>
+{{end}}
+
+{{block left_sidebar}}
+
+{{=IMG(_src=URL('static','images/annotatit_pencil_300.png'), _alt="AnnotatIt")}}
+    
+{{end}}
+
+
+{{block right_sidebar}} 
+    {{block right_evaluation_menu}}
+    <h4> Comments </h4>
+    <div id="annotation_div">
+    
+    <form id="annotation_form" onsubmit= "return annotation_submit()" enctype="multipart/form-data" >
+        <input id="video_id" name="video_id" readonly="readonly" value="{{=video.id}}" type="hidden"/> 
+        <input id="video_time" name="video_time" value="0"  type="hidden"/>  
+        <input id="video_time_comments" name="video_time_comments" value="0" />  
+        <!--Comment: -->
+        <textarea id="comment" name="comment" type="text"
+            rows="5" cols="35"
+            placeholder="Write here your comments" 
+            onclick="on_comment(); return false;" ></textarea>
+        <input type="submit" id="comment_button" name="Comment" value="Save"/>
+        <span class="small_font">time offset:  
+                        <b><a id="decrease_delay_comments" onclick="return  change_time_delay(-1,'comments');" style="cursor:pointer;">-</a></b>
+                        <span id="time_delay_comments" > -5  </span> seg 
+                        <b><a id="increase_delay_comments" onclick="return  change_time_delay(1,'comments');" style="cursor:pointer;">+</a></b>
+        </span> 
+        <!-- tagging - set automatically by clicks-->
+        <input id="evaluation" name="evaluation" value="" type="hidden" /> 
+        <input id="tag_type_name" name="tag_type_name" value="" type="hidden" /> 
+        <!-- end tagging-->
+    </form>
+
+    <div id="annotation_response"></div>
+    <hr/>    
+{{block left_evaluation_menu}}
+    <h4> Quick Click Comments </h4>
+
+    <ul id="tags_list">
+        {{icount = 0 }}
+        {{for st in suggested_tags:}}
+            <li id="tag_{{=icount}}" >
+                <input class="tag_type_input" id="tag_item_{{=icount}}"  value="{{=st['name']}}" /> 
+                
+                {{for tag in st['fields']:}}
+                 <img id="{{=tag}}" onclick="return on_tag('{{=icount}}' ,'tag_item_{{=icount}}', '{{=tag}}')" src="{{=URL('static','images/'+tag+'_icon.png')}}" width="30" style="cursor:pointer;"/>
+                {{pass}}
+
+                <div class="tag_options" id="tag_options_{{=icount}}" hidden="true">
+                    <div >time offset:  
+                        <b><a id="decrease_delay_{{=icount}}" onclick="return  change_time_delay(-1,'{{=icount}}');" style="cursor:pointer;">-</a></b>
+                         <span id="time_delay_{{=icount}}" > -5  </span> seg 
+                        <b><a id="increase_delay_{{=icount}}" onclick="return  change_time_delay(1,'{{=icount}}');" style="cursor:pointer;">+</a></b>
+                    </div>
+                    <a id="remove_tag_{{=icount}}" onclick="return remove_tag({{=icount}});"  style="cursor:pointer;"> (-) remove tag  </a>
+                </div>
+                <span class="tag_options" id="hide_tag_options_{{=icount}}"   style="display: none"> <a onclick="return hide_tag_options({{=icount}});"  style="cursor:pointer;"> hide options </a> </span>
+                <span class="tag_options"  id="show_tag_options_{{=icount}}" > <a onclick="return show_tag_options({{=icount}});"  style="cursor:pointer;" > + </a> </span>
+            </li>
+            {{icount+=1}}
+        {{pass}}
+        
+    </ul>
+    <a id="add_tag" onclick="return add_tag();"  style="cursor:pointer;"> (+) add tag  </a>
+    <br/>
+    <div id="tag_response"></div>
+    {{end}}
+    
+    
+    </div>
+
+    <hr/>
+    <h4> General Feedback </h4>
+
+    <div id="advice_div">
+    
+    <form id="advice_form" onsubmit= "return advice_submit()" enctype="multipart/form-data" >
+        <input id="annotation_video_id" name="annotation_video_id" readonly="readonly" value="{{=video.id}}" type="hidden"/> 
+        <!--Advice: -->
+        <!--<input id="advice" name="advice"  style="height:50px;"
+            placeholder="Click here to make an advice (max 512 characters)" type="text" />-->
+        <textarea rows="10" cols="30" id="advice_text" name="advice_text" 
+            placeholder="Click here to make an advice (max 512 characters)" ></textarea> 
+        <input type="submit" id="advice_button" name="Advice" value="Post"/>
+    </form>
+    <div id="advice_response"></div>
+
+    {{end}}
+
+{{end}}
+
+  {{block end_scripts}}
+
+<!-- Load ocanvas -->
+
+<script type="text/javascript">
+
+$(".tag_type_input").css("width","80")
+
+var next_tag_id = -1;
+var last_tag_selected = null;
+var current_tag_selected = null;
+var current_tag_selected_json = null;
+var update_comments_time = true;
+var current_comment_selected = null;
+var current_comment_selected_json = null;
+/*
+var commentInFocus = false;
+$('#comment').focus(function() {
+  commentInFocus = true;
+  //bind event to post annotation
+  //bind start writing to stop note time
+});
+
+$('#comment').blur(function() {
+  commentInFocus = false;
+  //unbind enter to post annotation
+  //unbind start writing to stop note time
+});
+*/
+
+//note modify delete menu
+$("#note_context_menu").mouseleave(close_note_menu);
+
+function close_note_menu(){
+    $("#note_context_menu").hide();
+}
+
+function modify_comment(new_comment){
+    var parsed = new Object(); //= JSON.parse(current_comment_selected_json);
+    //console.log("parsed = "+parsed);
+    parsed.comment = current_comment_selected_json.comment;
+    parsed.video_id = current_comment_selected_json.video_id;
+    try{
+        parsed.id = current_comment_selected_json.id;
+        parsed.annotator_id  = current_comment_selected_json.annotator_id;
+    }catch(err){}
+    parsed.video_time = current_comment_selected_json.video_time ;
+    parsed.new_comment = new_comment//TODO here the point that makes it dependent TODO make it better
+    //console.log("new_comment = "+parsed.new_comment);
+    $.ajax({
+           type: "POST",
+           url: '{{=URL("modify_comment")}}',
+           data: parsed
+        }).done(function( msg ) {
+            //console.log("response: "+ msg);
+            if(msg != "False"){
+                current_comment_selected.remove() ;
+                //create a new note in the same place but with the new config
+                current_comment_selected_json = $.parseJSON(msg);
+                current_comment_selected = canvas_draw_comment(current_comment_selected_json);
+            }
+            });    
+    return true;
+
+}
+
+function delete_comment_menu(){
+    //console.log("delete note");
+    //console.log("note "+ current_comment_selected);
+    //console.log("note json "+ current_comment_selected_json);
+    $.ajax({
+           type: "POST",
+           url: '{{=URL("delete_comment")}}',
+           data: current_comment_selected_json
+        }).done(function( msg ) {
+            //console.log("response: "+ msg);
+            if(msg !="False"){
+                current_comment_selected.remove();
+            }
+            });    
+    return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// TAG edit
+////////////////////////////////////////////////////////////////////////////////
+//tag modify delete menu
+$("#tag_context_menu").mouseleave(close_tag_menu);
+
+function close_tag_menu(){
+    $("#tag_context_menu").hide();
+}
+
+function change_tag_to(new_evaluation){
+    //TODO  later add drag and drop tag for changing the position of it
+    //console.log("new evaluation = "+new_evaluation);
+    //console.log("tag "+ current_tag_selected);
+    //console.log("tag json "+ current_tag_selected_json);
+    //creating the output json
+    //console.log("keys = "+Object.keys(current_tag_selected_json));
+    var parsed = new Object(); //= JSON.parse(current_tag_selected_json);
+    //console.log("parsed = "+parsed);
+    parsed.tag_type_name = current_tag_selected_json.tag_type_name;
+    parsed.video_id = current_tag_selected_json.video_id;
+    try{
+        parsed.id = current_tag_selected_json.id;
+        parsed.annotator_id  = current_tag_selected_json.annotator_id;
+    }catch(err){}
+    parsed.evaluation = current_tag_selected_json.evaluation ;
+    parsed.video_time = current_tag_selected_json.video_time ;
+    parsed.new_evaluation = new_evaluation;
+    //console.log("parsed = "+parsed);
+    //var modified_data = JSON.stringify(parsed).toString();
+    //console.log("modified_data = "+modified_data);
+    $.ajax({
+           type: "POST",
+           url: '{{=URL("modify_tag")}}',
+           data: parsed
+        }).done(function( msg ) {
+            //console.log("response: "+ msg);
+            if(msg != "False"){
+                current_tag_selected.remove() ;
+                //create a new tag in the same place but with the new config
+                current_tag_selected_json = $.parseJSON(msg);
+                current_tag_selected = canvas_draw_tag(current_tag_selected_json);
+            }
+            });    
+    return true;
+
+}
+
+function delete_tag_menu(){
+    //console.log("delete tag");
+    //console.log("tag "+ current_tag_selected);
+    //console.log("tag json "+ current_tag_selected_json);
+    $.ajax({
+           type: "POST",
+           url: '{{=URL("delete_tag")}}',
+           data: current_tag_selected_json//{ video_id:vid, video_time:vt, comment:ev}
+        }).done(function( msg ) {
+            //console.log("response: "+ msg);
+            if(msg !="False"){
+                current_tag_selected.remove();
+            }
+            });    
+    return true;
+}
+
+function add_tag(){//I know there should be a better way of doing this, maybe clonning and later changing all IDs
+    //console.log("adding TAG");
+    //get the tag list
+    var ul = $("#tags_list");
+    //find number of items in the list, this is the newt id
+    var tag_id = next_tag_id;
+    next_tag_id+=1;
+    //console.log("start next id = "+next_tag_id);
+    if(tag_id <0){ //for some reason jquery does not notice the change the length field of the ul when elements are added
+        var llen = $("#tags_list li").length;
+        //console.log("llen = "+llen);
+        tag_id = llen;
+        next_tag_id = llen+1;
+        //console.log("nex id = "+next_tag_id);
+    }
+    //console.log("tag_id = "+tag_id);
+    //var tname = "dtag_"+tag_id;
+    //create the li with all the things inside (images, etc etc etc)
+    var li = $("<div>", {"id" : "tag_"+tag_id,} );
+    var input = $("<input>", {"id":"tag_item_"+tag_id,  "value":"custom_tag_"+tag_id} ).css("width","80");
+    
+    var qimg = $("<img>", { "id":"QUESTION",
+                         "onclick":"return on_tag('"+tag_id+"','tag_item_"+tag_id+"', 'QUESTION')",
+                         "src":"{{=URL('static','images/QUESTION_icon.png')}}",
+                         "width":"30", "style":"cursor:pointer;" });
+    var okimg = $("<img>", { "id":"OK",
+                         "onclick":"return on_tag('"+tag_id+"','tag_item_"+tag_id+"', 'OK')",
+                         "src":"{{=URL('static','images/OK_icon.png')}}",
+                         "width":"30", "style":"cursor:pointer;" });
+    var wimg = $("<img>", { "id":"WARNING",
+                         "onclick":"return on_tag('"+tag_id+"','tag_item_"+tag_id+"', 'WARNING')",
+                         "src":"{{=URL('static','images/WARNING_icon.png')}}",
+                         "width":"30", "style":"cursor:pointer;" });
+    var bimg = $("<img>", { "id":"BAD",
+                         "onclick":"return on_tag('"+tag_id+"','tag_item_"+tag_id+"', 'BAD')",
+                         "src":"{{=URL('static','images/BAD_icon.png')}}",
+                         "width":"30", "style":"cursor:pointer;" });
+    //as width is not taking effect in the initialization dictionary, I reset everything by hand
+    qimg.width("30");
+    okimg.width("30");
+    wimg.width("30");
+    bimg.width("30");
+    li.append(input).append(qimg).append(okimg).append(wimg).append(bimg);
+    
+    ul.append(li);
+    var opt = $("<div>", {"id":"tag_options_"+tag_id,  "hidden":"true" });
+    opt.append( '<div >time offset:  <b><a id="decrease_delay_custom_tag_'+tag_id+'" href="javascript:change_time_delay(-1,'+ "'"+tag_id+"'"+ ')" style="cursor:pointer;">-</a></b> <span id="time_delay_'+tag_id+'" > -5  </span> seg <b><a id="increase_delay_custom_tag_'+tag_id+'" onclick="return  change_time_delay(1,'+ "'"+tag_id+"'"+ ');" style="cursor:pointer;">+</a></b> </div>');
+    opt.append('<a id="remove_tag_'+tag_id+'" href="javascript:remove_tag('+tag_id+')"  style="cursor:pointer;"> (-) remove tag  </a>');
+    li.append(opt);
+    li.append('<span class="tag_options" id="hide_tag_options_'+tag_id+'" style="display: none"> <a href="javascript:hide_tag_options('+tag_id+')"  style="cursor:pointer;"> hide options </a> </span>');
+    li.append('<span class="tag_options" id="show_tag_options_'+tag_id+'""> <a onclick="return show_tag_options('+tag_id+');"  style="cursor:pointer;"> + </a> </span>');
+    //console.log("END add tag");
+}
+
+function remove_tag(tag_id){
+    //console.log("remove tag "+tag_id);
+    //will not remove, just hide the tag, for the moment this is easier for checking certain debugging things
+    $("#tag_"+tag_id).hide();
+}
+
+function show_tag_options(tag_id){
+    //will not remove, just hide the tag, for the moment this is easier
+    //console.log("show tag options "+tag_id);
+    $("#tag_options_"+tag_id).show();
+    $('#hide_tag_options_'+tag_id).show();
+    $('#show_tag_options_'+tag_id).hide();
+}
+
+function hide_tag_options(tag_id){
+    //console.log("hide tag options "+tag_id);
+    //will not remove, just hide the tag, for the moment this is easier
+    $("#tag_options_"+tag_id).hide();
+    $('#hide_tag_options_'+tag_id).hide();
+    $('#show_tag_options_'+tag_id).show();
+
+}
+
+
+
+
+
+    var current_time = 0;
+    var current_note_time = 0;
+    //console.log("setting duration to 0");
+    var video_duration = 0;
+    var vmplayer = null;
+
+    /*
+     * Polling the player for information
+     */
+
+    // Update a particular HTML element with a new value
+    function updateHTML(elmId, value) {
+      document.getElementById(elmId).innerHTML = value;
+    }
+
+    function updateValue(elmId, val) {
+      document.getElementById(elmId).value = val;
+    }
+
+    function updateTime(elmId, val) {
+        val = Number(val);
+        current_time = val;
+        var hh = Math.floor(val/3600);
+        var mm = Math.floor(val/60);
+        var ss = val%60; 
+        tval = hh.toString()+':'+mm.toString()+':'+ss.toString()
+        //document.getElementById(elmId).value = tval;//TODO change to jQuery style
+        $("#"+elmId).val(tval);
+        if(update_comments_time){
+            current_note_time = val;
+            $("#video_time_comments").val(tval);
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////
+    //// On FORMS and tags actions
+    ////////////////////////////////////////////////////////////////////////////////
+    function annotation_submit(){
+        //console.log("summiting annotation");
+        //ajax("{{=URL('post_annotation',args=request.args(0))}}",
+        //       ["video_id","video_time","comment"], 'annotation_response');
+        var time_delay = Number(document.getElementById("time_delay_comments").innerHTML);
+        //console.log("comment delay = "+time_delay);
+        var json_response = new Object();
+        var ntime=current_note_time + time_delay;
+        //console.log("ntime ="+ntime);
+        if (ntime<0){
+            ntime = 0;
+        }
+        var hh = Math.floor(ntime/3600);
+        var mm = Math.floor(ntime/60);
+        var ss = Math.floor(ntime%60); 
+        tval = hh.toString()+':'+mm.toString()+':'+ss.toString()
+        var vid = document.getElementById("video_id").value;
+        var vt = tval; //document.getElementById("video_time").value;
+        var ev = document.getElementById("comment").value;
+        $.ajax({
+               type: "POST",
+               url: '{{=URL("post_annotation")}}',
+               data: { video_id:vid, video_time:vt, comment:ev}
+            }).done(function( msg ) {
+                //console.log("response: "+ msg);
+                });    
+        
+        json_response.video_time = tval; //
+        
+        json_response.comment = document.getElementById("comment").value;
+        json_response.video_id = document.getElementById("video_id").value;
+        canvas_draw_comment( json_response);
+        add_comment_to_list( json_response );
+        //cleanup comment field
+        $("#comment").val('');
+        return false;
+    }
+
+
+    function advice_submit(){
+        //console.log("summiting advice");
+        ajax("{{=URL('post_advice',args=request.args(0))}}",
+               ["annotation_video_id", "advice_text"], 'advice_response');
+        //add advice to advice list TODO
+        return false;
+    }
+
+    function on_comment(){
+        //pause_video();
+        //pause_note_time();
+        //set_comment_time();
+        return false;
+    }
+
+    function on_tag(tag_id, tag_type, evaluation){
+    //console.log("ON TAG");
+        //console.log("tag type: "+ tag_type);
+        //console.log("evaluation: "+ evaluation);
+        //set tag type name
+        var tag_name = $('#'+tag_type).val(); //document.getElementById(tag_type).value; //innerHTML;
+        //console.log("creating tag name: "+ tag_name);
+        $("#tag_type_name").prop("value", tag_name);
+        //set evaluation
+        $("#evaluation").prop("value", evaluation);
+        //time = document.getElementById("video_time");
+        //console.log("tag_name = "+tag_name);
+        //console.log("time offset tag "+ $("#time_delay_"+tag_id));
+        var time_delay = Number($("#time_delay_"+tag_id).val());
+        //console.log("tag delay = "+time_delay);
+        var json_response = new Object();
+        var ntime=current_time + time_delay;
+        if (ntime<0){
+            ntime = 0;
+        }
+        var hh = Math.floor(ntime/3600);
+        var mm = Math.floor(ntime/60);
+        var ss = Math.floor(ntime%60); //put to integer second values, it makes my life easier when comparing tags  
+        tval = hh.toString()+':'+mm.toString()+':'+ss.toString()
+        //console.log("setting time to = "+tval);
+         //post_args = []
+        //ajax("{{=URL('post_tag',args="")}}",
+        //         ["tag_type_name", "video_id","video_time","evaluation"], 'tag_response');   
+        var ttn = document.getElementById("tag_type_name").value;
+        var vid = document.getElementById("video_id").value;
+        var vt = tval; //document.getElementById("video_time").value;
+        var ev = document.getElementById("evaluation").value;
+        $.ajax({
+               type: "POST",
+               url: '{{=URL("post_tag")}}',
+               //data: "{ video_id:"+vid+", tag_type_name:"+ttn+", video_time:"+vt+" ,evaluation:"+ev+"}"
+               data: { video_id:vid, tag_type_name:ttn, video_time:vt,evaluation:ev}
+            }).done(function( msg ) {
+                //console.log("response: "+ msg);
+                });    
+        json_response.video_time = String(tval); //
+        //console.log("tag time = "+document.getElementById("video_time").value);
+        //console.log("tag json_response.video_time = "+json_response.video_time);
+        //json_response.video_time = document.getElementById("video_time").value;
+        json_response.tag_type_name = document.getElementById("tag_type_name").value;
+        json_response.evaluation = document.getElementById("evaluation").value;
+        json_response.video_id = document.getElementById("video_id").value;
+        canvas_draw_tag( json_response);
+                       
+        return false;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////
+    //// NEW canvas things -- more interactive
+    ////////////////////////////////////////////////////////////////////////////////
+
+    //Vars
+    ///////////////////////
+
+    var all_comments = new Array();
+    var all_tags = new Array();
+    var all_canvas = new Object(); // {};
+    var interactive_canvas_div = $('#canvas_div');
+    //Functions
+    ////////////////////////
+    function add_canvas(canvas_name, field_name){
+        //find where to put the canvas
+        // add the canvas object to DOM
+        var canvas_text = '<canvas id="'+canvas_name+'" width="520" height="30"></canvas>';
+        //console.log('canvas_text = '+canvas_text);
+        
+        //WARNING this takes out the text indicating the canvas name
+        //interactive_canvas_div.append("<div ><h4>"+field_name+"</h4> </div>");
+        
+        
+        /*del_tag =  "<div id='"+field_name+"_del_tag_option' > </div>"
+        tag_options = ""
+        //change_tag = "<div id='"+field_name+"_change_tag_option' > "+ tag_options+"  </div>"
+        time_display = "<div id='"+field_name+"_time_display' > </div>"
+        menu_options = del_tag + change_tag
+        canvas_menu = "<div id='canvas_menu_"+field_name+"' > "+ menu_ options +" </div>"
+        */
+        interactive_canvas_div.append();
+        interactive_canvas_div.append(canvas_text);
+        //console.log('init oCanvas for this instance');
+        // init ocanvas 
+        var canvas = oCanvas.create({
+	        canvas: "#"+canvas_name,
+	        background: "#EEF",
+        });
+        //console.log('adding to canvas dict');
+        all_canvas[canvas_name] = canvas;
+        //console.log('DONE');
+        // done
+    }
+
+    function canvas_draw_tag( tag_json ){
+        //console.log("drawing tag");
+        //console.log("drawing tag json "+ tag_json);
+        //console.log("drawing tag keys"+ Object.getOwnPropertyNames(tag_json));
+        //console.log("tag_json.tag_type_name = "+tag_json.tag_type_name);
+        tag_json.tag_type_name = tag_json.tag_type_name.replace(" ","_"); // TODO sanitize strings names!!!!
+        //console.log("tag_json.evaluation = "+tag_json.evaluation);
+        //console.log("tag_json.video_time = "+tag_json.video_time);
+        var canvas_name = tag_json.tag_type_name+"_canvas";// document.getElementById("tags_canvas");
+        //console.log(" canvas name "+ canvas_name);
+        canvas_name = "Comments_canvas"; //WARNING this overrides writing many canvases
+        try{
+            if(!all_canvas[canvas_name] ){
+                //add_canvas(canvas_name, tag_json.tag_type_name);
+                add_canvas(canvas_name, "Comments");//WARNING this overrides writing many canvases
+            }
+        }
+        catch(err){
+            //console.log(err);
+            add_canvas(canvas_name, tag_json.tag_type_name);
+        }
+        //get canvas
+        var canvas = all_canvas[canvas_name];
+        //console.log("canvas = "+canvas);
+        //console.log("canvas_name = "+canvas_name);
+        //get coordinates
+        var t=tag_json.video_time.split(":");
+        var ntime=Number(t[0])*3600+Number(t[1])*60+Number(t[2]);
+        //console.log("tag_json.video_time = "+tag_json.video_time);
+        //console.log("video time = "+ntime);
+        //console.log("video duration = "+video_duration);
+        //var video_duration = 
+        var xpos =  (ntime/video_duration ) * 520;
+        var ypos = 0;
+        //set image source according to result
+        var img_src="{{=URL('static','images/QUESTION_icon_20px.png')}}";
+        if (tag_json.evaluation=="OK"){
+            img_src="{{=URL('static','images/OK_icon_20px.png')}}"
+            ypos = 0;
+        }else if(tag_json.evaluation=="WARNING"){
+            img_src="{{=URL('static','images/WARNING_20px.png')}}"
+            ypos = 5;
+        }else if(tag_json.evaluation=="BAD"){
+            img_src="{{=URL('static','images/BAD_icon_20px.png')}}"    
+            ypos = 10;
+        }else if(tag_json.evaluation=="QUESTION"){
+            img_src="{{=URL('static','images/QUESTION_icon_20px.png')}}"
+            ypos = 5;
+        }
+        //console.log(xpos);
+        //console.log(ypos);
+        //console.log(img_src);
+        //draw tag on canvas
+        var tag_obj = canvas.display.image({
+	        x: xpos,
+	        y: ypos,
+	        //origin: { x: "center", y: "center" },
+	        image: img_src,
+	        height: 20,
+	        width: 20,
+	        opacity: 0.6,
+        });
+        canvas.addChild(tag_obj);
+        //bind calls 
+        tag_obj.bind("click tap", function (e) {
+	            $("#tag_context_menu").offset({left:e.pageX - 30,top:e.pageY + 20});
+	            //console.log("this = ", this);
+	            //console.log("tag_obj = ", tag_obj);
+	            on_tag_click(canvas, this, tag_json);
+	            
+            });
+        tag_obj.bind("mouseenter touchenter", function (e) {
+	            $("#tag_context_menu").offset({left:e.pageX - 30,top:e.pageY + 20});
+	            on_tag_enter(canvas, this, tag_json);
+
+	            
+            });
+        tag_obj.bind("mouseleave touchleave", function (e) {
+	            on_tag_leave(canvas, this, tag_json, ypos);
+	            //$("#tag_context_menu").hide();
+            });
+        return tag_obj;
+    }
+    //function get_tags(callback){
+    function get_tags(){
+        //get the tags from dtabase, AJAX call
+        //console.log('getting tags by AJAX call');
+        //var parsed = null;
+        jQuery.ajax({
+               type: "POST",
+               url: '{{=URL("get_tags")}}',
+               data: "video_id={{=video.id}}"
+            }).done(function( msg ) {
+                //console.log(msg);
+                var parsed = jQuery.parseJSON(msg);
+                all_tags = parsed;
+                for (var i = 0, len = parsed.length; i < len; ++i) {
+                    //console.log("JSON object: ");
+                    //console.log(parsed[i]);
+                    canvas_draw_tag( parsed[i] );
+                    add_tag_to_list( parsed[i]);
+                    
+                }
+                //console.log("callback");
+                //callback(parsed);
+              });
+            return false;
+        //for every tag, draw it
+        //return parsed_tags;
+    }
+
+
+    function on_tag_click(canvas, obj, tag_json){
+        //console.log("tag click");
+        //console.log("obj = ", obj);
+        current_tag_selected = obj;
+        //console.log("current_tag_selected = ", current_tag_selected);
+        current_tag_selected_json = tag_json;
+        //console.log("tag_json = ", tag_json);
+        $("#tag_context_menu #tag_name").val(tag_json.tag_type_name).css("width", "90%");
+        $("#tag_context_menu").show();
+        //on_tag_click_specific(canvas, obj, tag_json);
+    }
+
+    function on_comment_click(canvas, obj, comment_json){
+        //console.log("comment click");
+        current_comment_selected = obj;
+        current_comment_selected_json = comment_json;
+        $("#edit_comment").text(comment_json.comment);
+        on_comment_click_specific(canvas, obj, comment_json);
+    }
+
+    function on_tag_enter(canvas, obj, tag_json){
+        //console.log("tag enter");
+        current_tag_selected = obj;
+        current_tag_selected_json = tag_json;
+        $("#tag_context_menu #tag_name").val(tag_json.tag_type_name).css("width", "90%");
+        $("#tag_context_menu").show();
+
+        //set cursor to arrow
+        document.body.style.cursor = 'pointer';
+        canvas.removeChild(obj);
+        canvas.addChild(obj);
+        obj.animate({
+		            width: 30,
+		            height: 30,
+		            y: 0,
+		            opacity: 1,
+		            }, 350);
+        //display time
+        //console.log("obj = "+tag_json.video_time);
+        //$("#canvas_time_display").text(tag_json.video_time);
+    }
+
+    function on_tag_leave(canvas, obj, tag_json, ypos){
+        //console.log("tag leave");
+        //$("#tag_context_menu").
+        //$("#tag_context_menu").hide();
+        //set cursor to arrow
+        document.body.style.cursor = 'default';
+        obj.animate({
+		            width: 20,
+		            height: 20,
+		            y: ypos,
+		            opacity: 0.6,
+	            }, 350);
+    }
+
+    function canvas_draw_comment(comment_json){
+     //console.log("drawing comment");
+        //console.log("drawing comment json "+ comment_json);
+        //console.log("drawing comment keys"+ Object.getOwnPropertyNames(comment_json));
+        //console.log("comment_json.video_time = "+comment_json.video_time);
+        //select the correct canvas to draw in (name)
+        //if canvas does not exist
+        //  add_canvas
+        //  select canvas
+        //draw
+        var canvas_name = "Comments_canvas";// document.getElementById("tags_canvas");
+        //console.log(" canvas name "+ canvas_name);
+        if(!all_canvas[canvas_name] ){
+            add_canvas(canvas_name, "Comments");
+            //for interactive display
+            //interactive_canvas_div.append("<div id='comments_interactive_show'> <span id='canvas_comment_time_display'></span> | <span id='canvas_comment_text_display'></span> </div>");
+            //interactive_canvas_div.append("");
+        }
+        //get canvas
+        var canvas = all_canvas[canvas_name];
+        //console.log(" canvas  "+ canvas);
+        //get coordinates
+        var t=comment_json.video_time.split(":");
+        var ntime=Number(t[0])*3600+Number(t[1])*60+Number(t[2]);
+        var xpos =  (ntime/video_duration ) * 520;
+        var ypos = 0;
+        //set image source according to result
+        var img_src="{{=URL('static','images/comment_icon_20px.png')}}";
+        //console.log(xpos);
+        //console.log(ypos);
+        //console.log(img_src);
+        //draw tag on canvas
+        var com_obj = canvas.display.image({
+	        x: xpos,
+	        y: ypos,
+	        //origin: { x: "center", y: "center" },
+	        image: img_src,
+	        height: 20,
+	        width: 20,
+	        opacity: 0.6,
+        });
+        canvas.addChild(com_obj);
+        //bind calls 
+        com_obj.bind("click tap", function (e) {
+	            on_comment_click(canvas, this, comment_json);
+	            
+            });
+        com_obj.bind("mouseenter touchenter", function (e) {
+	            on_comment_enter(canvas, this, comment_json);
+	            $("#note_context_menu").offset({left:e.pageX - 30,top:e.pageY + 20});
+            });
+        com_obj.bind("mouseleave touchleave", function (e) {
+	            on_comment_leave(canvas, this, comment_json);
+            });
+        
+    }
+    
+    
+    //bind comments to enter event
+    $('#comment').bind('keypress', function(e) {
+        //console.log("comment key pressed = "+e.keyCode);
+        //if not whitespace
+        if(e.keyCode!=13 && e.keyCode!=32){
+            update_comments_time=false;
+        }
+	    if(e.keyCode==13){
+		    update_comments_time=true;
+		    annotation_submit();
+		    e.preventDefault();
+		    $("#comment").val('');
+		    return true;
+	    }
+	    //console.log("update_comments_time = "+update_comments_time);
+    });
+    //bind comments to enter event
+    $('.modify_comment_li').bind('keypress', function(e) {
+        console.log("comment key pressed = "+e.keyCode);
+        
+	    if(e.keyCode==13){
+		    modify_comment($("#edit_comment").val());
+		    e.preventDefault();
+		    return true;
+	    }
+	    //console.log("update_comments_time = "+update_comments_time);
+    });
+    
+    function sort_comments(){
+        
+        var list = $('#comments_list');
+        var listItems = list.find('li').sort(
+                function(a,b){ 
+                    //$(a).attr('data-sort')
+                    //$(b).attr('data-sort')
+                    var t=$(a).attr('data-sort').split(":");
+                    var numa=Number(t[0])*3600+Number(t[1])*60+Number(t[2]);
+                    t=$(b).attr('data-sort').split(":");
+                    var numb=Number(t[0])*3600+Number(t[1])*60+Number(t[2]);
+                    return numa-numb; 
+                    });
+        list.find('li').remove();
+        list.append(listItems);
+        return true;
+    }
+    
+    function edit_note(e){
+        //
+        console.log("current_comment_selected_json = "+current_comment_selected_json.comment);
+        $("#note_context_menu").offset({left:e.pageX - 30,top:e.pageY - 50});
+        $("#edit_comment").text(current_comment_selected_json.comment); 
+        $("#note_context_menu").show();
+        
+    }
+    
+    function update_comment(new_message){
+    
+    }
+    
+    function setCurrentComment(video_id, video_time, annotator_id, comment){
+        var cc = new Object();
+        cc.video_id = video_id;
+        cc.video_time = video_time;
+        cc.annotator_id = annotator_id
+        cc.comment = comment;
+        current_comment_selected = null;
+        current_comment_selected_json = cc;
+    }
+    var current_comment_id
+    var comment_bind_id=0
+    function add_comment_to_list( comment_json){
+        //TODO comments_list add
+        //var ttxt = "<table class='comment_frame' id='"+comment_json.video_time+"'> <tr> <td><span style='cursor:pointer;'>  <a class='li_time' onClick='return setVideoTime(\""+comment_json.video_time+"\");'> "+comment_json.video_time+" </a> </span> </td> <td rowspan='3'> <textarea class='modify_comment_li' type='text' cols='35' max-rows='5' onclick='setCurrentComment("+comment_json.video_id+","+ comment_json.video_time+", "+comment_json.annotator_id+", "+comment_json.comment+"); modify_comment($("#edit_comment").val());' >"+comment_json.comment+"  </textarea></td> </tr> <tr>  </tr>  <tr> <td> <span style='cursor:pointer;'> <a class='small_font' onClick=' return edit_note("+comment_json.video_time+");' > save </a> </span> </td> </tr> </table>";// TODO add edit function to this
+        
+        var ttxt = "<table class='comment_frame' id='"+comment_json.video_time+"'> <tr> <td><span style='cursor:pointer;'>  <a class='li_time' onClick='return setVideoTime(\""+comment_json.video_time+"\");'> "+comment_json.video_time+" </a> </span> </td> <td rowspan='3'> <span >"+comment_json.comment+"  </span></td> </tr> <tr>  </tr>  <tr> <td> <span style='cursor:pointer;'> <a class='small_font' id='edit_"+comment_bind_id+"' > edit </a> </span> </td> </tr> </table>";// TODO add edit function to this
+        
+        $("#comments_list").prepend("<li data-sort='"+comment_json.video_time+"'>"+ttxt+"</li>")
+        
+        console.log("Select "+$("#edit_"+comment_bind_id).text());
+        
+        $("#edit_"+comment_bind_id).live('click', function(e){
+        //console.log("before set ="+current_comment_selected_json.comment);
+          setCurrentComment(comment_json.video_id, comment_json.video_time, comment_json.annotator_id, comment_json.comment);
+          console.log("setCurrentComment ="+current_comment_selected_json.comment);
+          edit_note(e); });
+        comment_bind_id = comment_bind_id+1;//increment, so ids are never repeated
+        //
+        sort_comments();
+        //TODO focus on this last inserted comment
+        /*var ttag = "#"+comment_json.video_time;
+        //console.log(ttag);
+        //console.log($(ttag));
+        //console.log($(ttag).position());
+        var container = $("#comments_list"), scrollTo = $("#"+comment_json.video_time);
+        container.animate({
+            scrollTop: scrollTo.position().top - container.offset().top + container.scrollTop()
+        }); //position and offset are giving  "undefined" and I don't know why
+        */
+    }
+
+    function setCurrentTag(video_id, video_time, annotator_id, tag_type_name, evaluation){
+        var cc = new Object();
+        cc.video_id = video_id;
+        cc.video_time = video_time;
+        cc.annotator_id = annotator_id;
+        cc.tag_type_name = tag_type_name;
+        cc.evaluation = evaluation;
+        current_tag_selected = null;
+        current_tag_selected_json = cc;
+    }
+    var current_comment_id
+    function add_tag_to_list( tag_json){
+        //TODO comments_list add
+        //var ttxt = "<table class='comment_frame' id='"+comment_json.video_time+"'> <tr> <td><span style='cursor:pointer;'>  <a class='li_time' onClick='return setVideoTime(\""+comment_json.video_time+"\");'> "+comment_json.video_time+" </a> </span> </td> <td rowspan='3'> <textarea class='modify_comment_li' type='text' cols='35' max-rows='5' onclick='setCurrentComment("+comment_json.video_id+","+ comment_json.video_time+", "+comment_json.annotator_id+", "+comment_json.comment+"); modify_comment($("#edit_comment").val());' >"+comment_json.comment+"  </textarea></td> </tr> <tr>  </tr>  <tr> <td> <span style='cursor:pointer;'> <a class='small_font' onClick=' return edit_note("+comment_json.video_time+");' > save </a> </span> </td> </tr> </table>";// TODO add edit function to this
+        
+        var ttxt = "<table class='comment_frame' id='"+tag_json.video_time+"'> <tr> <td><span style='cursor:pointer;'>  <a class='li_time' onClick='return setVideoTime(\""+tag_json.video_time+"\");'> "+tag_json.video_time+" </a> </span> </td> <td rowspan='3'> <span >"+tag_json.tag_type_name+"  </span></td> <td rowspan='3'> <span ><img id='"+tag_json.evaluation+"' src='{{=URL('static','images')}}/"+tag_json.evaluation+"_icon.png' width='15'/ >  </span></td> </tr> <tr>  </tr>  <tr> <td> <span style='cursor:pointer;'> <a class='small_font' id='edit_"+comment_bind_id+"' > edit </a> </span> </td> </tr> </table>";// TODO add edit function to this
+        
+        $("#comments_list").prepend("<li data-sort='"+tag_json.video_time+"'>"+ttxt+"</li>")
+        
+        console.log("Select "+$("#edit_"+comment_bind_id).text());
+        
+        $("#edit_"+comment_bind_id).live('click', function(e){
+        //console.log("before set ="+current_comment_selected_json.comment);
+          setCurrentTag(tag_json.video_id, tag_json.video_time, tag_json.annotator_id, tag_json.tag_type_name, tag_json.evaluation);
+        $("#tag_context_menu").offset({left:e.pageX - 30,top:e.pageY + 20});
+          //console.log("setCurrentComment ="+current_comment_selected_json.comment);
+        $("#tag_context_menu #tag_name").val(tag_json.tag_type_name).css("width", "90%");
+        $("#tag_context_menu").show();
+          });
+        comment_bind_id = comment_bind_id+1;//increment, so ids are never repeated
+        //
+        sort_comments();
+        //TODO focus on this last inserted comment
+        /*var ttag = "#"+comment_json.video_time;
+        //console.log(ttag);
+        //console.log($(ttag));
+        //console.log($(ttag).position());
+        var container = $("#comments_list"), scrollTo = $("#"+comment_json.video_time);
+        container.animate({
+            scrollTop: scrollTo.position().top - container.offset().top + container.scrollTop()
+        }); //position and offset are giving  "undefined" and I don't know why
+        */
+    }
+
+    
+    function get_comments(){
+        //get the tags from dtabase, AJAX call
+        //console.log('getting comments by AJAX call');
+        //var parsed = null;
+        $.ajax({
+               type: "POST",
+               url: '{{=URL("get_comments")}}',
+               data: "video_id={{=video.id}}"
+            }).done(function( msg ) {
+                //console.log(msg);
+                var parsed = $.parseJSON(msg);
+                all_comments = parsed;
+                for (var i = 0, len = parsed.length; i < len; ++i) {
+                    //console.log("JSON object: ");
+                    //console.log(parsed[i]);
+                    canvas_draw_comment( parsed[i] ); //draws the comment in the results canvas
+                    add_comment_to_list( parsed[i] ); //writes the comment in the 
+                    
+                }
+                //console.log("callback");
+                //callback(parsed);
+              });
+            return false;
+    }
+
+    function on_comment_enter(canvas, obj, comment_json){
+        //console.log("comment enter");
+        //set cursor to arrow
+        $("#note_context_menu").show();
+        current_comment_selected = obj;
+        current_comment_selected_json = comment_json;
+        $("#edit_comment").text(comment_json.comment);
+        document.body.style.cursor = 'pointer';
+        canvas.removeChild(obj);
+        canvas.addChild(obj);
+        obj.animate({
+		            width: 30,
+		            height: 30,
+		            y: 0,
+		            opacity: 1,
+		            }, 350);
+        //$("#canvas_time_display").text(comment_json.video_time);
+        $("#canvas_comment_time_display").text(comment_json.video_time);
+        //$("#canvas_comment_text_display").text(comment_json.comment);
+    }
+
+    function on_comment_leave(canvas, obj, comment_json, ypos){
+        //console.log("comment leave");
+        $("#tag_context_menu").hide();
+        //set cursor to arrow
+        document.body.style.cursor = 'default';
+        obj.animate({
+		            width: 20,
+		            height: 20,
+		            y: ypos,
+		            opacity: 0.6,
+	            }, 350);
+    }
+
+    function updateInteractiveComments(time){
+        //TODO make update of comments that are around the time 
+        // ...need for a good algorithm
+    }
+
+    function change_time_delay(td, tag_name){
+        //console.log("change time offset "+ td);
+        //console.log("change time offset "+ tag_name);
+        //console.log("get field time offset "+$("#time_delay_"+tag_name).html() );
+        var time_delay = Number($("#time_delay_"+tag_name).html())+td;
+        document.getElementById("time_delay_"+tag_name).innerHTML = time_delay;
+        //console.log("change time offset "+ time_delay);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////
+    ////INIT
+    ////////////////////////////////////////////////////////////////////////////////
+
+    //init functions for interactive canvas 
+
+    function init_interactive_canvas() {
+        //console.log('INIT interactive canvas');
+        //get tagging options TODO
+        //draw interactive tagging canvas TODO
+        //console.log('getting comments');
+        var comments = get_comments();
+        //console.log(comments);
+        //console.log('getting tags');
+        var tags = get_tags();
+        //console.log(tags);
+        //console.log('DONE init interactive canvas');
+    }
+    </script>
+    {{block video_init_scripts}}
+    {{end}}
+{{end}}
+
