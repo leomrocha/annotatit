@@ -1,0 +1,121 @@
+
+################################################################################
+Data Types:
+################################################################################
+################################################################################
+
+Media: 
+    id #id of the record
+    owner_id
+    title
+    subtitle
+    # each address should be different in order to avoid possible security problems
+    media_edit_key # for generating the edition/annotation link address
+    media_view_results_key # for generating the view results on page address
+    media_embed_key #for generating the iframe address for embedding
+    media_network [youtube, vimeo, own, bitsontherun, ...]
+    media_id #unique id provided by the media network to identify the media
+    media_url # url to access the media file
+    privacy #["unlisted", "public", "private"]
+    annotation_permissions # ["only_me", "authorized_groups", "authorized_people", "all" ]
+    creation_datetime # creation timestamp
+    update_daytime # last update timestamp
+    )
+
+################################################################################
+####Annotations
+################################################################################
+General Comments:
+    id #id of the record
+    owner_id
+    media_id #reference to unique media id of the record
+    parent_id #reference to general comment parent if nested
+    text 
+    creation_datetime # creation timestamp
+    update_daytime # last update timestamp
+
+
+Synchronized Comments:
+    id #id of the record
+    owner_id
+    media_id #reference to unique media id of the record
+    media_time #temporal reference to the moment of the media where the comment must refer to
+    text 
+    creation_datetime # creation timestamp
+    update_daytime # last update timestamp
+    
+##########
+#Tags:
+##########
+
+Tag:
+    id #unique
+    media_id #what is the target media
+    owner_id #who made the tag
+    comment_id #when a tag belongs to a comment
+    name #text
+    icon #optional
+
+Suggested Tags:
+    id #unique
+    media_id
+    tag_name
+    tag_icon #optional
+
+
+#A mark is a simple tagging system tath allows only 3 options [OK, WARNING, QUESTION]
+#this options allow for rapid marking the media file to later come back
+Marked & Synchronized Comments:
+    id #id of the record unique
+    owner_id
+    media_id #reference to unique media id of the record
+    media_time #temporal reference to the moment of the media where the comment must refer to
+    mark_icon [OK, WARNING, QUESTION]
+    text 
+    creation_datetime # creation timestamp
+    update_daytime # last update timestamp
+
+
+Permissions:
+
+What a User can do:
+
+Can invite other people to invite
+Can create groups
+Can delete own group
+Can add users to group if owner
+Can remove users to group if owner
+For each new media, there is an automatic group (non visible to user) that will 
+hold all users added directly
+
+Invites:
+    id #unique
+    person_id #
+    target_email
+    accepted #if invitation was accepted and now there is a new real user associated with the email
+
+Contact:
+    id #unique
+    source_id
+    target_id
+
+View Access to Media:
+    id #unique
+    group_id
+    media_id
+   
+Edit Access to Media:
+    id #unique
+    group_id
+    media_id
+    
+Group Membership: (use auth_membership from web2py)
+    id #unique
+    user_id
+    group_id
+    
+Group (use auth_group from web2py)
+    id
+    role
+    description
+
