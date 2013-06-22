@@ -10,7 +10,7 @@ Media:
     title
     subtitle
     # each address should be different in order to avoid possible security problems
-    media_edit_key # for generating the edition/annotation link address
+    media_annotate_key # for generating the edition/annotation link address
     media_view_results_key # for generating the view results on page address
     media_embed_key #for generating the iframe address for embedding
     media_network [youtube, vimeo, own, bitsontherun, ...]
@@ -35,12 +35,39 @@ General Comments:
     update_daytime # last update timestamp
 
 
+#this is legacy, will be replaced by marked & synchronized comments
 Synchronized Comments:
     id #id of the record
     owner_id
     media_id #reference to unique media id of the record
+    parent_id
     media_time #temporal reference to the moment of the media where the comment must refer to
     text 
+    creation_datetime # creation timestamp
+    update_daytime # last update timestamp
+    
+#A mark is a simple tagging system tath allows only 3 options [OK, WARNING, QUESTION]
+#this options allow for rapid marking the media file to later come back and later 
+# make the detailed comment
+Marked & Synchronized Comments:  -> Marked comment
+    id #id of the record unique
+    owner_id
+    media_id #reference to unique media id of the record
+    parent_id
+    media_time #temporal reference to the moment of the media where the comment must refer to
+    mark_icon [OK, WARNING, QUESTION]
+    text 
+    creation_datetime # creation timestamp
+    update_daytime # last update timestamp
+    
+## Independent marks, as for giving a possibility to users
+# is what before was called TAG, but now I changed the name
+Mark:
+    id #unique
+    media_id #what is the target media
+    owner_id #who made the tag
+    name #text
+    media_time
     creation_datetime # creation timestamp
     update_daytime # last update timestamp
     
@@ -56,25 +83,30 @@ Tag:
     name #text
     icon #optional
 
-Suggested Tags:
+Suggested Tags: #for sugesting tags to a certain
     id #unique
     media_id
     tag_name
     tag_icon #optional
 
 
-#A mark is a simple tagging system tath allows only 3 options [OK, WARNING, QUESTION]
-#this options allow for rapid marking the media file to later come back
-Marked & Synchronized Comments:
-    id #id of the record unique
-    owner_id
-    media_id #reference to unique media id of the record
-    media_time #temporal reference to the moment of the media where the comment must refer to
-    mark_icon [OK, WARNING, QUESTION]
-    text 
+
+
+
+####################
+# Sections , mark media sections
+####################
+
+Section
+    id #unique
+    media_id #
+    owner_id #the person who made the section
+    name
+    timestamp_begin
+    timestamp_end
     creation_datetime # creation timestamp
     update_daytime # last update timestamp
-
+    
 
 Permissions:
 
