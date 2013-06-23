@@ -1,0 +1,25 @@
+<html>
+	<head>
+		<!-- Javascript Libraries -->
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript" src="js/knockback.js"></script>
+		<script type="text/javascript" src="js/backbone-relational.js"></script>
+		<script type="text/javascript" src="js/lib.js"></script>
+		<!-- Knockback View Templates -->
+	</head>
+	<body>
+		<header>
+			<h1>Annotatit comments demo</h1>
+		</header>
+		<section id="mainsection">
+			<ul id="comments" data-bind="foreach: comments">
+				<li data-bind="text: comment"></li>
+			</ul>
+			<!-- <section id="new_comment">
+				<input type="text" data-bind="text: comment">
+				<button data-bind="click: addNewComment">Add Comment</button>
+			</section> -->
+		</section>
+	</body>
+</html>
+
