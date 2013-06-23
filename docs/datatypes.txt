@@ -101,7 +101,9 @@ Section
     id #unique
     media_id #
     owner_id #the person who made the section
+    parent_id #default = None , in case of sub-sections
     name
+    color #extra, being able to select the color for display... Put a color by default
     timestamp_begin
     timestamp_end
     creation_datetime # creation timestamp
