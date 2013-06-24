@@ -69,8 +69,34 @@
 	// ViewModels //
 	////////////////
 
+	var CommentsViewModel = function(projects) {
+	  var _this = this;
+	  this.filter = ko.observable('');
+	  this.projects = kb.collectionObservable(projects, {
+	    view_model: CommentViewModel,
+	    sort_attribute: 'name',
+	    filters: function(model) {
+	      var filter;
+	      filter = _this.filter();
+	      if (!filter) return false;
+	      return model.get('name').search(filter) < 0;
+	    }
+	  });
+	};
+
+	var ViewModel = kb.ViewModel.extend({
+  	constructor: function(model){
+	    kb.ViewModel.prototype.constructor.apply(this, arguments);
+	    this.new_comment = ko.observable("");
+	    this.addNewComment = ko.dependentObservable(function() { 
+	    	model.get('comments').add(new Comment({comment: this.new_comment()})); 
+	    }, this);
+	  }
+	});
+	
+
 	/** @type {viewModel} View for rendering the comments_list data into the view */
-	var view_model = kb.viewModel(comments_list);
+	var view_model = new ViewModel(comments_list);
 
 $( document ).ready(function() {
 

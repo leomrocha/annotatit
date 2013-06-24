@@ -1,13 +1,15 @@
 describe("Comments", function() {
   var comments_list;
   var new_comment;
-  
-  beforeEach(function() {
-    comments_list = new CommentsList({});
-  });
+  var view_model;
+
 
   describe("CommentsList Model: ", function() {
 
+    beforeEach(function() {
+      comments_list = new CommentsList({});
+    });
+    
     it("should be able to add comments", function() {
       var new_comment = new Comment({comment: "Lorem ipsum dolor sit amet,"});
       expect(comments_list.get('comments').add(new_comment)
@@ -20,6 +22,18 @@ describe("Comments", function() {
       .contains(new_comment)).toBeFalsy();
     });
     
+  });
+
+  describe("CommentsList ViewModel: ", function() {
+    
+    beforeEach(function() {
+      comments_list = new CommentsList({});
+    });
+    
+    it("should be able to add new comments", function() {
+      expect(view_model.addNewComment()).toBeFalsy();
+    });
+
   });
 
   // describe("when song has been paused", function() {
