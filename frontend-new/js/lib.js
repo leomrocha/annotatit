@@ -1,29 +1,12 @@
+	////////////////////////
+	// Constant Variable //
+	////////////////////////
+
+	var ENTER_KEY = 13;
+
 	////////////
 	// Models //
 	////////////
-
-	/**
-	 * CommentsList Model : Contains all the comments related to a list
-	 * @type {Backbone.RelatinalModel}
-	 * @keys [comments]
-	 */
-	// var CommentsList = Backbone.RelationalModel.extend({
-	//   relations: [{
-	//     type: Backbone.HasMany,
-	//     key: 'comments',
-	//     relatedModel: 'Comment',
-	//     reverseRelation: {
-	//       key: 'listedIn'
-	//     }
-	//   }]
-	// });
-
-	/**
-	 * Comments Model : Contains a comment
-	 * @type {Backbone.RelatinalModel}
-	 * @keys [comment]
-	 */
-	// var Comment = Backbone.RelationalModel.extend({});
 
 	/**
 	 * Comment : Contains one comment
@@ -36,7 +19,6 @@
 		}
 	});
 
-
 	/**
 	 * Comments: Contains all the comments related inside a CommentsList
 	 * @type {Backbone.Collection}
@@ -46,57 +28,59 @@
 		model: Comment
 	});
 
-	/**
-	 * CommentsList: Contains a Comments model inside comments
-	 * @type {Backbone.Model}
-	 * @keys [comments]
-	 */
-	var CommentsList = Backbone.Model.extend({
-		defaults: {
-			comments: new Comments([
-				new Comment({comment: "Lorem ipsum dolor sit amet,"}),
-				new Comment({comment: "Lorem ipsum dolor sit amet,"}),
-				new Comment({comment: "Lorem ipsum dolor sit amet,"}),
-				new Comment({comment: "Lorem ipsum dolor sit amet,"})
-			])
-		}
-	}); 
-
-	/** @type {CommentsList} A Lorem list of comments for initial testing */
-	var comments_list = new CommentsList({});
-
 	////////////////
 	// ViewModels //
 	////////////////
 
-	// var CommentsViewModel = function(projects) {
-	//   var _this = this;
-	//   this.filter = ko.observable('');
-	//   this.projects = kb.collectionObservable(projects, {
-	//     view_model: CommentViewModel,
-	//     sort_attribute: 'name',
-	//     filters: function(model) {
-	//       var filter;
-	//       filter = _this.filter();
-	//       if (!filter) return false;
-	//       return model.get('name').search(filter) < 0;
-	//     }
-	//   });
-	// };
+	/**
+	 * CommentViewModel: ViewModel for Comment
+	 * @type {kb.ViewModel}
+	 * @attribute comment
+	 * @param  {Comment} model
+	 * @return {CommentViewModel}   
+	 */
+	var CommentViewModel = kb.ViewModel.extend({
+	  constructor: function(model) {
+	    kb.ViewModel.prototype.constructor.call(this, model, {internals: ['comment']});   
+	    this.comment = kb.defaultObservable(this._comment, '');
+	    return this;
+	  }
+	});
 
-	// var ViewModel = kb.ViewModel.extend({
- //  	constructor: function(model){
-	//     kb.ViewModel.prototype.constructor.apply(this, arguments);
-	//     this.new_comment = ko.observable("");
-	//     this.addNewComment = ko.dependentObservable(function() { 
-	//     	model.get('comments').add(new Comment({comment: this.new_comment()})); 
-	//     }, this);
-	//   }
-	// });
-	
+	/**
+	 * CommentsViewModel: ViewModel for Comments
+	 * @attribute comments
+	 * @param  {Comments} comments 
+	 * @return {CommentsViewModel}
+	 */
+	var CommentsViewModel = function(comments) {
+		var _this = this;
+	  this.comments = kb.collectionObservable(comments, {
+	    view_model: CommentViewModel,
+	    sort_attribute: 'comment'
+	  });
 
-	/** @type {viewModel} View for rendering the comments_list data into the view */
-	var view_model = kb.viewModel(comments_list);
+	  this.new_comment = ko.observable('');
+    this.onAddComment = function(view_model, event) {
+      if (!$.trim(_this.new_comment()) || (event.keyCode !== ENTER_KEY)) {
+        return true;
+      }
+      _this.comments.collection().create({
+        comment: $.trim(_this.new_comment())
+      });
+      return _this.new_comment('');
+    };
+	};
+
+	/** @type {viewModel} View for rendering a Lorem data into the view */
+	var view_model = new CommentsViewModel(
+		new Comments([
+	    new Comment({comment: "Lorem ipsum dolor sit amet,"}),
+	    new Comment({comment: "Lorem ipsum dolor sit amet,"}),
+	    new Comment({comment: "Lorem ipsum dolor sit amet,"}),
+	    new Comment({comment: "Lorem ipsum dolor sit amet,"})
+  	])
+	);
 
 $( document ).ready(function() {
 

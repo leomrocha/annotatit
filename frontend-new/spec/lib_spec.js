@@ -1,79 +1,72 @@
 describe("Comments", function() {
-  var comments_list;
-  var new_comment;
-  var view_model;
 
-
-  describe("CommentsList Model: ", function() {
+  describe("Comment ViewModel: ", function() {
+    var comment, new_comment, comment_view_model, new_content;
 
     beforeEach(function() {
-      comments_list = new CommentsList({});
+      comment = new Comment();
+      new_comment = new Comment({comment: "New Comment" });
     });
     
-    it("should be able to add comments", function() {
-      var new_comment = new Comment({comment: "Lorem ipsum dolor sit amet,"});
-      expect(comments_list.get('comments').add(new_comment)
-      .contains(new_comment)).toBeTruthy();
+    it("should be able to generate the ViewModel", function() {
+      expect(new CommentViewModel(comment)).toEqual(jasmine.any(CommentViewModel));
     });
 
-    it("should be able to remove comments", function() {
-      var new_comment = new Comment({comment: "Lorem ipsum dolor sit amet,"});
-      expect(comments_list.get('comments').add(new_comment).remove(new_comment)
-      .contains(new_comment)).toBeFalsy();
+    it("should be able to get the model", function() {
+      comment_view_model = new CommentViewModel(comment);
+      expect(comment_view_model.model()).toEqual(comment);
     });
-    
-  });
 
-  describe("CommentsList ViewModel: ", function() {
-    
-    beforeEach(function() {
-      comments_list = new CommentsList({});
+    it("should be able to set the model", function() {
+      comment_view_model = new CommentViewModel(comment);
+      expect(function() {comment_view_model.model(new_comment);}).not.toThrow();
+      expect(comment_view_model.model()).toEqual(new_comment);
     });
-    
-    it("should be able to add new comments", function() {
-      expect(view_model.addNewComment()).toBeFalsy();
+
+    it("should be able to change the content of the comment", function() {
+      comment_view_model = new CommentViewModel(comment);
+      new_content = "New Text";
+      expect(function() {comment_view_model.model().set('comment', new_content);}).not.toThrow();
+      expect(comment_view_model.model().get('comment')).toEqual(new_content);
     });
 
   });
 
-  // describe("when song has been paused", function() {
-  //   beforeEach(function() {
-  //     player.play(song);
-  //     player.pause();
-  //   });
+  describe("Comments ViewModel: ", function() {
+    var comments_view_model, comments, new_comments;
 
-  //   it("should indicate that the song is currently paused", function() {
-  //     expect(player.isPlaying).toBeFalsy();
+    beforeEach(function() {
+      comments = new Comments([
+        new Comment({comment: "Lorem ipsum dolor sit amet,"}),
+        new Comment({comment: "Lorem ipsum dolor sit amet,"}),
+        new Comment({comment: "Lorem ipsum dolor sit amet,"}),
+        new Comment({comment: "Lorem ipsum dolor sit amet,"})
+      ]);
+      new_comments = new Comments([
+        new Comment({comment: "Zorem ipsum dolor sit amet,"}),
+        new Comment({comment: "Zorem ipsum dolor sit amet,"}),
+        new Comment({comment: "Zorem ipsum dolor sit amet,"}),
+        new Comment({comment: "Zorem ipsum dolor sit amet,"})
+      ]);
+    });
+    
+    it("should be able to generate the ViewModel", function() {
+      expect(new CommentsViewModel(comments)).toEqual(jasmine.any(CommentsViewModel));
+    });
 
-  //     // demonstrates use of 'not' with a custom matcher
-  //     expect(player).not.toBePlaying(song);
-  //   });
+    it("should be able to get the collection", function() {
+      comments_view_model = new CommentsViewModel(comments);
+      expect(comments_view_model.comments.collection()).toEqual(comments);
+    });
 
-  //   it("should be possible to resume", function() {
-  //     player.resume();
-  //     expect(player.isPlaying).toBeTruthy();
-  //     expect(player.currentlyPlayingSong).toEqual(song);
-  //   });
-  // });
+    it("should be able to set the collection", function() {
+      comments_view_model = new CommentsViewModel(comments);
+      expect(function() {
+        comments_view_model.comments.collection(new_comments);
+      }).not.toThrow();
+      expect(comments_view_model.comments.collection()).toEqual(new_comments);
+    });
 
-  // // demonstrates use of spies to intercept and test method calls
-  // it("tells the current song if the user has made it a favorite", function() {
-  //   spyOn(song, 'persistFavoriteStatus');
+  });
 
-  //   player.play(song);
-  //   player.makeFavorite();
-
-  //   expect(song.persistFavoriteStatus).toHaveBeenCalledWith(true);
-  // });
-
-  // //demonstrates use of expected exceptions
-  // describe("#resume", function() {
-  //   it("should throw an exception if song is already playing", function() {
-  //     player.play(song);
-
-  //     expect(function() {
-  //       player.resume();
-  //     }).toThrow("song is already playing");
-  //   });
-  // });
 });

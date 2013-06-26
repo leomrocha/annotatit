@@ -12,14 +12,12 @@
 		<header>
 			<h1>Annotatit comments demo</h1>
 		</header>
-		<section id="mainsection">
+		<section id="main-section">
 			<ul id="comments" data-bind="foreach: comments">
 				<li data-bind="text: comment"></li>
 			</ul>
-	<!-- 		<section id="new_comment">
-				<input type="text" data-bind="text: new_comment">
-				<button data-bind="click: addNewComment">Add Comment</button>
-			</section> -->
+			<input id="new-comment" type="text" placeholder="New Comment" autofocus
+			data-bind="value: new_comment, valueUpdate: 'afterkeydown', event: {keyup: onAddComment}">
 		</section>
 	</body>
 </html>
