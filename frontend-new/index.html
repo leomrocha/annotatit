@@ -14,7 +14,11 @@
 		</header>
 		<section id="main-section">
 			<ul id="comments" data-bind="foreach: comments">
-				<li data-bind="text: comment"></li>
+				<li>
+					<p data-bind="text: comment"></p>
+					<input type="text" data-bind="value: comment">
+					<button data-bind="click: onDestroyComment">X</button>
+				</li>
 			</ul>
 			<input id="new-comment" type="text" placeholder="New Comment" autofocus
 			data-bind="value: new_comment, valueUpdate: 'afterkeydown', event: {keyup: onAddComment}">

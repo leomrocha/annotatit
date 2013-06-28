@@ -33,7 +33,7 @@ describe("Comments", function() {
   });
 
   describe("Comments ViewModel: ", function() {
-    var comments_view_model, comments, new_comments;
+    var comments_view_model, comments, new_comments, new_content;
 
     beforeEach(function() {
       comments = new Comments([
@@ -48,6 +48,7 @@ describe("Comments", function() {
         new Comment({comment: "Zorem ipsum dolor sit amet,"}),
         new Comment({comment: "Zorem ipsum dolor sit amet,"})
       ]);
+      new_content = "New Comment";
     });
     
     it("should be able to generate the ViewModel", function() {
@@ -66,7 +67,18 @@ describe("Comments", function() {
       }).not.toThrow();
       expect(comments_view_model.comments.collection()).toEqual(new_comments);
     });
+    it("should be albe to write a comment in new_comment", function() {
+      expect(function() {comments_view_model.new_comment(new_content)}).not.toThrow();
+      expect(comments_view_model.new_comment()).toEqual(new_content);
+    });
 
+    xit("should be able to add a new comment", function() {
+      comments_view_model.new_comment(new_content);
+      expect(function() {comments_view_model.onAddComment()}).not.toThrow();
+      expect(
+        comments_view_model.comments.collection().findWhere({comment: new_content}).get("comment")
+      ).toEqual(new_content);
+    });
   });
 
 });

@@ -36,13 +36,23 @@
 	 * CommentViewModel: ViewModel for Comment
 	 * @type {kb.ViewModel}
 	 * @attribute comment
+	 * @attribute editing
 	 * @param  {Comment} model
 	 * @return {CommentViewModel}   
 	 */
 	var CommentViewModel = kb.ViewModel.extend({
 	  constructor: function(model) {
+
 	    kb.ViewModel.prototype.constructor.call(this, model, {internals: ['comment']});   
+			var _this = this;	    
+	    // Data
 	    this.comment = kb.defaultObservable(this._comment, '');
+	    this.editing = ko.observable(false);
+    	
+    	// Operations
+    	this.onDestroyComment = function() {
+	    	return model.destroy();
+	    }
 	    return this;
 	  }
 	});
