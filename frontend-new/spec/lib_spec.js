@@ -1,4 +1,4 @@
-describe("Comments", function() {
+describe("ViewModels", function() {
 
   describe("Comment ViewModel: ", function() {
     var comment, new_comment, comment_view_model, new_content;
@@ -33,7 +33,7 @@ describe("Comments", function() {
   });
 
   describe("Comments ViewModel: ", function() {
-    var comments_view_model, comments, new_comments;
+    var comments_view_model, comments, new_comments, new_content;
 
     beforeEach(function() {
       comments = new Comments([
@@ -48,6 +48,7 @@ describe("Comments", function() {
         new Comment({comment: "Zorem ipsum dolor sit amet,"}),
         new Comment({comment: "Zorem ipsum dolor sit amet,"})
       ]);
+      new_content = "New Comment";
     });
     
     it("should be able to generate the ViewModel", function() {
@@ -66,7 +67,33 @@ describe("Comments", function() {
       }).not.toThrow();
       expect(comments_view_model.comments.collection()).toEqual(new_comments);
     });
+    it("should be albe to write a comment in new_comment", function() {
+      expect(function() {comments_view_model.new_comment(new_content)}).not.toThrow();
+      expect(comments_view_model.new_comment()).toEqual(new_content);
+    });
 
+    xit("should be able to add a new comment", function() {
+      comments_view_model.new_comment(new_content);
+      expect(function() {comments_view_model.onAddComment()}).not.toThrow();
+      expect(
+        comments_view_model.comments.collection().findWhere({comment: new_content}).get("comment")
+      ).toEqual(new_content);
+    });
   });
 
+});
+
+describe("Models", function() {
+  describe("SyncComment", function() {
+    var new_sync_comment;
+    it("should be able to create a new one", function() {
+      expect(new SyncComment()).toEqual(jasmine.any(SyncComment));
+    });
+    xit("should have the actual date as creation date when is created", function() {
+      new_sync_comment = new SyncComment();
+      expect(new_sync_comment.get("creation_datetime"))
+      .toEqual((new Date()).toJSON());
+    });
+
+  });
 });
