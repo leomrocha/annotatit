@@ -1,0 +1,8 @@
+{{left_sidebar_enabled= False}}
+{{right_sidebar_enabled=False}}
+
+{{extend 'annotatit_layout.html'}}
+
+{{block center}}
+    {{=T('We are sorry, but you do not have permissions to see this media file.')}}
+{{end}}

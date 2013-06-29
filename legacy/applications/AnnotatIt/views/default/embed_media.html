@@ -1,0 +1,37 @@
+{{extend 'embed_layout.html'}}
+
+{{block viewer_head}}
+
+{{end}}
+
+{{block media_frame}}    
+    <div class="MediaPlayerDiv" id="MediaPlayerDiv" ></div>
+{{end}}
+
+{{block comments_frame}}
+    <div class="CommentsDisplayDiv" id="CommentsDisplayDiv" ></div>
+{{end}}
+
+{{block graph_frame}}
+    <div class="GraphDiv" id="GraphDiv" ></div>
+{{end}}
+
+
+<!-- Scripts --> 
+{{block end_scripts}}
+
+<script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js "></script> 
+
+<!-- Facade for media players auto loads the needed library-->
+<script src="{{=URL('static','js/media_player_facade.js')}}"></script>
+
+<script  type="text/javascript">
+    //loading after window loaded
+    window.onload=function() {
+        console.log("starting media player facade");
+        MediaPlayerFacade.init("{{=media.media_network}}","{{=media.media_id}}");
+        console.log("media player facade started");
+    }  
+    </script>
+{{end}}
+

@@ -39,8 +39,8 @@ def _auth_user_menu():
                         #(T('Upload'), False, URL('send_card')),
                         #(T('My contacts'), False, URL('my_contacts')),
                         (T('Media'), False, URL('videos'), [
-                            (T('My media'), False, URL('my_videos')),
-                            (T('Add media'), False, URL('upload_video')),
+                            (T('My media'), False, URL('my_media')),
+                            (T('Add media'), False, URL('add_media')),
                         ]),
                         #(T('Audio'), False, URL('audio'), [
                         #    (T('My audio'), False, URL('my_audio')),

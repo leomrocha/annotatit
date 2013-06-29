@@ -1,704 +1,173 @@
-{{left_sidebar_enabled= False}}
-{{right_sidebar_enabled=True}}
+<!--[if HTML5]><![endif]-->
+<!DOCTYPE html>
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7]><html class="ie ie6 ie-lte9 ie-lte8 ie-lte7 no-js" lang="{{=T.accepted_language or 'en'}}"> <![endif]-->
+<!--[if IE 7]><html class="ie ie7 ie-lte9 ie-lte8 ie-lte7 no-js" lang="{{=T.accepted_language or 'en'}}"> <![endif]-->
+<!--[if IE 8]><html class="ie ie8 ie-lte9 ie-lte8 no-js" lang="{{=T.accepted_language or 'en'}}"> <![endif]-->
+<!--[if IE 9]><html class="ie9 ie-lte9 no-js" lang="{{=T.accepted_language or 'en'}}"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js" lang="{{=T.accepted_language or 'en'}}"> <!--<![endif]-->
+<head>
+<title>{{=response.title or request.application}}</title>
+  <!--[if !HTML5]>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge{{=not request.is_local and ',chrome=1' or ''}}">
+  <![endif]-->
+  <!-- www.phpied.com/conditional-comments-block-downloads/ -->
+  <!-- Always force latest IE rendering engine
+       (even in intranet) & Chrome Frame
+       Remove this if you use the .htaccess -->
+	   
+  <meta charset="utf-8" />
 
-{{extend 'layout.html'}}
+  <!-- http://dev.w3.org/html5/markup/meta.name.html -->
+  <meta name="application-name" content="{{=request.application}}" />
 
-{{block head}}
-<!-- <script type="text/javascript" src="https://www.google.com/jsapi"></script> -->
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/ocanvas/2.4.0/ocanvas.min.js"></script>
-<!-- <script src="{{=URL('static','js/ocanvas-2.4.0.min.js')}}"></script>  version but local-->
+  <!-- Speaking of Google, don't forget to set your site up:
+       http://google.com/webmasters -->
+  <meta name="google-site-verification" content="" />
 
-{{end}}
+  <!--  Mobile Viewport Fix
+        j.mp/mobileviewport & davidbcalhoun.com/2010/viewport-metatag
+        device-width: Occupy full width of the screen in its current orientation
+        initial-scale = 1.0 retains dimensions instead of zooming out if page height > device height
+        user-scalable = yes allows the user to zoom in -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-{{block center}}
-<div class="videoDiv" id="videoDiv" >
-    <object class="ytPlayer" id="ytPlayer" > </object>
-</div>
-<hr/>
-<div class="notes_box" id="notes_box" style="{ border:1px solid; border-radius:5px;}" >
-    
-    <div id="canvas_time_display" > </div>
-    <div id="canvas_text_display"> </div>
-    <div class="canvas_div" id="canvas_div"   >
-        <!--Here canvas will be dynamically added when needed -->
+  <link rel="shortcut icon" href="{{=URL('static','images/favicon.ico')}}" type="image/x-icon">
+  <link rel="apple-touch-icon" href="{{=URL('static','images/favicon.png')}}">
+
+  <!-- All JavaScript at the bottom, except for Modernizr which enables
+       HTML5 elements & feature detects -->
+  <script src="{{=URL('static','js/modernizr.custom.js')}}"></script>
+
+  <!-- include stylesheets -->
+  {{  
+  response.files.append(URL('static','css/web2py.css'))
+  response.files.append(URL('static','css/bootstrap.min.css'))
+  response.files.append(URL('static','css/bootstrap-responsive.min.css'))
+  response.files.append(URL('static','css/web2py_bootstrap.css'))
+  }}
+
+  {{include 'web2py_ajax.html'}}
+
+  {{
+  # using sidebars need to know what sidebar you want to use
+  left_sidebar_enabled = globals().get('left_sidebar_enabled',False)
+  right_sidebar_enabled = globals().get('right_sidebar_enabled',False)
+  middle_columns = {0:'span12',1:'span9',2:'span6'}[
+    (left_sidebar_enabled and 1 or 0)+(right_sidebar_enabled and 1 or 0)]
+  }}
+
+   <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/start/jquery-ui.css" type="text/css" media="all" />
+   <!--<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/sunny/jquery-ui.css" type="text/css" media="all" />-->
+   <!--<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" type="text/css" media="all" />-->
+   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" type="text/javascript"></script>
+  <noscript><link href="{{=URL('static', 'css/web2py_bootstrap_nojs.css')}}" rel="stylesheet" type="text/css" /></noscript>
+  {{block head}}{{end}}
+</head>
+
+<body>
+  <!-- Navbar ================================================== -->
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="flash">{{=response.flash or ''}}</div>
+    <div class="navbar-inner">
+      <div class="container">
+        <!-- the next tag is necessary for bootstrap menus, do not remove -->
+        <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+	{{=response.logo or ''}}
+        <ul id="navbar" class="nav pull-right">{{='auth' in globals() and auth.navbar(mode="dropdown") or ''}}</ul>
+        <div class="nav-collapse">
+          {{is_mobile=request.user_agent().is_mobile}}
+          {{if response.menu:}}
+          {{=MENU(response.menu, _class='mobile-menu nav' if is_mobile else 'nav',mobile=is_mobile,li_class='dropdown',ul_class='dropdown-menu')}}
+          {{pass}}
+        </div><!--/.nav-collapse -->
+      </div>
     </div>
-</div>
-<hr/>
-<div id="advices">
-{{try:}}
-    <ul>
-    {{for a in advices:}}
-        <li>
-        By <a href="{{=URL('videos_by', args=a.annotator_id)}}" > {{=a.annotator_id}} </a>
-        <p> {{=a.advice_text}}</p>
-        </li>
+  </div><!--/top navbar -->
+
+  <div class="container">
+    <!-- Masthead ================================================== -->
+    {{block title}}
+    {{if response.title:}}
+    <header class="mastheader row" id="header">
+        <div class="span12">
+            <div class="page-header">
+                <h1>
+                    {{=response.logo_img}}
+                    <small>{{=response.subtitle or ''}}</small>
+                </h1>
+            </div>
+        </div>
+    </header>
+    {{end}}
     {{pass}}
 
-    </ul>
-{{except:}}
-    <!--Problem with displaying advice list-->
-{{pass}}
-</div>
-{{end}}
-
-{{block right_sidebar}}
-
-    {{block evaluation_menu}}
-    <hr/>
-    <h4> Observations </h4>
-    <hr/>
-    You can create and change the names of the observations
-    <!-- TODO add here the retro timer -->
-    <ul>
-        {{icount = 0 }}
-        {{for st in suggested_tags:}}
-            <li>
-                <input id="tag_item_{{=icount}}"  value="{{=st['name']}}" /> <br/>
-                
-                {{for tag in st['fields']:}}
-                 <img id="{{=tag}}" onclick="return on_tag('tag_item_{{=icount}}', '{{=tag}}')" src="{{=URL('static','images/'+tag+'_icon.png')}}" width="30" style="cursor:pointer;"/>
-                {{pass}}
-                {{icount+=1}}
-                <div >time delay:  
-                    <b><span id="decrease_delay_{{=st['name']}}" onclick="return  change_time_delay(-1,'{{=st['name']}}');" style="cursor:pointer;">-</span></b>
-                    | <span id="time_delay_{{=st['name']}}" > -5  </span> seg |
-                    <b><span id="increase_delay_{{=st['name']}}" onclick="return  change_time_delay(1,'{{=st['name']}}');" style="cursor:pointer;">+</span></b>
-                </div>
-            </li>
+    <section id="main" class="main row">
+        {{if left_sidebar_enabled:}}
+        <div class="span3 left-sidebar">
+            {{block left_sidebar}}
+            <h3>Left Sidebar</h3>
+            <p></p>
+            {{end}}
+        </div>
         {{pass}}
-    </ul>
-    <br/>
-    Click to make an observation!
-    <div id="tag_response"></div>
-    
-    <hr/>
-    <h4> Notes </h4>
-    <hr/>
-    <div id="annotation_div">
-    
-    <form id="annotation_form" onsubmit= "return annotation_submit()" enctype="multipart/form-data" >
-        <input id="video_id" name="video_id" readonly="readonly" value="{{=video.id}}" type="hidden"/> 
-        <input id="video_time" name="video_time"     value="0" type="hidden" /> 
-        <!--Comment: -->
-        <input id="comment" name="comment"  type="text" placeholder="Write your notes here" 
-            onclick="on_comment(); return false;" />
-        <input type="submit" id="comment_button" name="Comment" value="Post"/>
-        <!-- tagging - set automatically by clicks-->
-        <input id="evaluation" name="evaluation" value="" type="hidden" /> 
-        <input id="tag_type_name" name="tag_type_name" value="" type="hidden" /> 
-        <!-- end tagging-->
-    </form>
-    <div >Comments time delay:  
-                    <b><span id="decrease_delay_comments" onclick="return  change_time_delay(-1,'comments');" style="cursor:pointer;">-</span></b>
-                    | <span id="time_delay_comments" > -5  </span> seg |
-                    <b><span id="increase_delay_comments" onclick="return  change_time_delay(1,'comments');" style="cursor:pointer;">+</span></b>
+
+        <div class="{{=middle_columns}}">
+            {{block center}}
+            {{include}}
+            {{end}}
+        </div>
+
+        {{if right_sidebar_enabled:}}
+        <div class="span3">
+            {{block right_sidebar}}
+            <h3>Right Sidebar</h3>
+            <p></p>
+            {{end}}
+        </div>
+        {{pass}}
+    </section><!--/main-->
+
+    <!-- Footer ================================================== -->
+    <div class="row">
+        <footer class="footer span12" id="footer">
+            <div class="footer-content">
+                {{block footer}} <!-- this is default footer -->
+                <div class="copyright pull-left">{{=T('Copyright')}} &#169; {{=request.now.year}}</div>
+                {{end}}
+            </div>
+        </footer>
     </div>
-    <div id="annotation_response"></div>
-    
-    
-    </div>
-    <hr/>
-    <h4> Advice </h4>
-    <hr/>
-    <div id="advice_div">
-    
-    <form id="advice_form" onsubmit= "return advice_submit()" enctype="multipart/form-data" >
-        <input id="annotation_video_id" name="annotation_video_id" readonly="readonly" value="{{=video.id}}" type="hidden"/> 
-        <!--Advice: -->
-        <!--<input id="advice" name="advice"  style="height:50px;"
-            placeholder="Click here to make an advice (max 512 characters)" type="text" />-->
-        <textarea rows="10" cols="30" id="advice_text" name="advice_text" 
-            placeholder="Click here to make an advice (max 512 characters)" ></textarea> 
-        <input type="submit" id="advice_button" name="Advice" value="Post"/>
-    </form>
-    <div id="advice_response"></div>
-    
 
-    {{end}}
+  </div> <!-- /container -->
 
-{{end}}
-
+  <!-- The javascript =============================================
+       (Placed at the end of the document so the pages load faster) -->
+  <script src="{{=URL('static','js/bootstrap.min.js')}}"></script>
+  <script src="{{=URL('static','js/web2py_bootstrap.js')}}"></script>
+  <!--[if lt IE 7 ]>
+      <script src="{{=URL('static','js/dd_belatedpng.js')}}"></script>
+      <script> DD_belatedPNG.fix('img, .png_bg'); //fix any <img> or .png_bg background-images </script>
+      <![endif]-->
   {{block end_scripts}}
-
-<!-- Load ocanvas -->
-
-<script type="text/javascript">
-var current_time = 0;
-
-
-/*
- * Polling the player for information
- */
-
-// Update a particular HTML element with a new value
-function updateHTML(elmId, value) {
-  document.getElementById(elmId).innerHTML = value;
-}
-
-function updateValue(elmId, val) {
-  document.getElementById(elmId).value = val;
-}
-
-function updateTime(elmId, val) {
-    val = Number(val);
-    current_time = val;
-    var hh = Math.floor(val/3600);
-    var mm = Math.floor(val/60);
-    var ss = val%60; 
-    tval = hh.toString()+':'+mm.toString()+':'+ss.toString()
-    document.getElementById(elmId).value = tval;
-}
-// This function is called when an error is thrown by the player
-function onPlayerError(errorCode) {
-  alert("An error occured of type:" + errorCode);
-  console.log("An error occured of type:" + errorCode);
-}
-
-// This function is called when the player changes state
-function onPlayerStateChange(newState) {
-  updateHTML("playerState", newState);
-}
-
-// Display information about the current state of the player
-function updatePlayerInfo() {
-  // Also check that at least one function exists since when IE unloads the
-  // page, it will destroy the SWF before clearing the interval.
-  if(ytplayer && ytplayer.getDuration) {
-    updateTime("video_time", ytplayer.getCurrentTime());
-    updateInteractiveComments(ytplayer.getCurrentTime());
-  }
-}
-
-// This function is automatically called by the player once it loads
-function onYouTubePlayerReady(playerId) {
-  //console.log("Player loaded and ready, setting callbacks");
-  ytplayer = document.getElementById("ytPlayer");
-  // This causes the updatePlayerInfo function to be called every 50ms to
-  // get fresh data from the player
-  setInterval(updatePlayerInfo, 50);
-  updatePlayerInfo();
-  //ytplayer.addEventListener("onStateChange", "onPlayerStateChange");
-  ytplayer.addEventListener("onError", "onPlayerError");
-  //need to start playing to get video metadata.
-  //NEED video metadata to get duration of the video for calculating the positions of tags and comments!!
-  ytplayer.mute();
-  // play video to get meta data
-  ytplayer.playVideo();
-  yt_get_duration = function(){
-        // if duration is available
-        if (ytplayer.getDuration() > 0) {
-            // pause video
-            ytplayer.pauseVideo();
-            // unmute
-            ytplayer.unMute();
-            // save duration
-            return ytplayer.getDuration();
-
-        }
-        // else keep trying
-        else {
-            setTimeout(yt_get_duration[index], 150)
-        }
-    }
-  var duration = yt_get_duration();
-  //now init the visualization
-  //init_canvas(); //deprecated
-  init_interactive_canvas();
-}
-
-function loadPlayer(){
-  //console.log("Loading Player");
-  // The video to load
-  var videoID = "{{=video.video_id}}"; 
-  // Lets Flash from another domain call JavaScript
-  var params = { allowScriptAccess: "always" };
-  // The element id of the Flash embed
-  var atts = { id: "ytPlayer" };
-  // All of the magic handled by SWFObject (http://code.google.com/p/swfobject/)
-  swfobject.embedSWF("http://www.youtube.com/v/" + videoID + 
-                     "?version=3&enablejsapi=1&playerapiid=player1", 
-                     "videoDiv", "720", "480", "9", null, null, params, atts);
-}
-
-
-function setVideoTime(time){
-    //console.log("setting time");    
-    //console.log(time);
-    //this parses the string hh:mm:ss into values and 
-    var t=time.split(":");
-    ntime=Number(t[0])*3600+Number(t[1])*60+Number(t[2]);
-    ytplayer.seekTo(ntime, true);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//// On FORMS and tags actions
-////////////////////////////////////////////////////////////////////////////////
-function annotation_submit(){
-    //console.log("summiting annotation");
-    //ajax("{{=URL('post_annotation',args=request.args(0))}}",
-    //       ["video_id","video_time","comment"], 'annotation_response');
-    var time_delay = Number(document.getElementById("time_delay_comments").innerHTML);
-    //console.log("comment delay = "+time_delay);
-    var json_response = new Object();
-    var ntime=current_time + time_delay;
-    if (ntime<0){
-        ntime = 0;
-    }
-    var hh = Math.floor(ntime/3600);
-    var mm = Math.floor(ntime/60);
-    var ss = ntime%60; 
-    tval = hh.toString()+':'+mm.toString()+':'+ss.toString()
-    var vid = document.getElementById("video_id").value;
-    var vt = tval; //document.getElementById("video_time").value;
-    var ev = document.getElementById("comment").value;
-    $.ajax({
-           type: "POST",
-           url: '{{=URL("post_annotation")}}',
-           data: { video_id:vid, video_time:vt, comment:ev}
-        }).done(function( msg ) {
-            console.log("response: "+ msg);
-            });    
-    
-    json_response.video_time = tval; //
-    
-    json_response.comment = document.getElementById("comment").value;
-    json_response.video_id = document.getElementById("video_id").value;
-    canvas_draw_comment( json_response);
-    return false;
-}
-
-
-function advice_submit(){
-    console.log("summiting advice");
-    ajax("{{=URL('post_advice',args=request.args(0))}}",
-           ["annotation_video_id", "advice_text"], 'advice_response');
-    //add advice to advice list TODO
-    return false;
-}
-
-function pause_video(){
-    if(ytplayer){
-        ytplayer.pauseVideo();
-    }
-}
-
-function on_comment(){
-    pause_video();
-    //set_comment_time();
-    return false;
-}
-
-
-function on_tag(tag_type, evaluation){
-    //set tag type name
-    var tag_name = document.getElementById(tag_type).value; //innerHTML;
-    //console.log("creating tag: "+ tag_name);
-    document.getElementById("tag_type_name").value = tag_name;
-    //set evaluation
-    document.getElementById("evaluation").value = evaluation;
-    //time = document.getElementById("video_time");
-    //console.log(tag_name);
-    //console.log(document.getElementById("time_delay_"+tag_name));
-    var time_delay = Number(document.getElementById("time_delay_"+tag_name).innerHTML);
-    //console.log("tag delay = "+time_delay);
-    var json_response = new Object();
-    var ntime=current_time + time_delay;
-    if (ntime<0){
-        ntime = 0;
-    }
-    var hh = Math.floor(ntime/3600);
-    var mm = Math.floor(ntime/60);
-    var ss = ntime%60; 
-    tval = hh.toString()+':'+mm.toString()+':'+ss.toString()
-    console.log("setting time to = "+tval);
-     //post_args = []
-    //ajax("{{=URL('post_tag',args="")}}",
-    //         ["tag_type_name", "video_id","video_time","evaluation"], 'tag_response');   
-    var ttn = document.getElementById("tag_type_name").value;
-    var vid = document.getElementById("video_id").value;
-    var vt = tval; //document.getElementById("video_time").value;
-    var ev = document.getElementById("evaluation").value;
-    $.ajax({
-           type: "POST",
-           url: '{{=URL("post_tag")}}',
-           //data: "{ video_id:"+vid+", tag_type_name:"+ttn+", video_time:"+vt+" ,evaluation:"+ev+"}"
-           data: { video_id:vid, tag_type_name:ttn, video_time:vt,evaluation:ev}
-        }).done(function( msg ) {
-            console.log("response: "+ msg);
-            });    
-    json_response.video_time = String(tval); //
-    //console.log("tag time = "+document.getElementById("video_time").value);
-    //console.log("tag json_response.video_time = "+json_response.video_time);
-    //json_response.video_time = document.getElementById("video_time").value;
-    json_response.tag_type_name = document.getElementById("tag_type_name").value;
-    json_response.evaluation = document.getElementById("evaluation").value;
-    json_response.video_id = document.getElementById("video_id").value;
-    canvas_draw_tag( json_response);
-                   
-    return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//// NEW canvas things -- more interactive
-////////////////////////////////////////////////////////////////////////////////
-
-//Vars
-///////////////////////
-
-var all_comments = new Array();
-var all_tags = new Array();
-var all_canvas = new Object(); // {};
-var interactive_canvas_div = $('#canvas_div');
-//Functions
-////////////////////////
-function add_canvas(canvas_name, field_name){
-    //find where to put the canvas
-    // add the canvas object to DOM
-    var canvas_text = '<canvas id="'+canvas_name+'" width="720" height="30"></canvas>';
-    //console.log('canvas_text = '+canvas_text);
-    interactive_canvas_div.append("<div ><h4>"+field_name+"</h4> </div>");
-    /*del_tag =  "<div id='"+field_name+"_del_tag_option' > </div>"
-    tag_options = ""
-    //change_tag = "<div id='"+field_name+"_change_tag_option' > "+ tag_options+"  </div>"
-    time_display = "<div id='"+field_name+"_time_display' > </div>"
-    menu_options = del_tag + change_tag
-    canvas_menu = "<div id='canvas_menu_"+field_name+"' > "+ menu_ options +" </div>"
-    */
-    interactive_canvas_div.append();
-    interactive_canvas_div.append(canvas_text);
-    //console.log('init oCanvas for this instance');
-    // init ocanvas 
-    var canvas = oCanvas.create({
-	    canvas: "#"+canvas_name,
-	    background: "#EEF",
-    });
-    //console.log('adding to canvas dict');
-    all_canvas[canvas_name] = canvas;
-    //console.log('DONE');
-    // done
-}
-
-function canvas_draw_tag( tag_json ){
-    //console.log("drawing tag");
-    //console.log("drawing tag json "+ tag_json);
-    //console.log("drawing tag keys"+ Object.getOwnPropertyNames(tag_json));
-    //console.log("tag_json.tag_type_name = "+tag_json.tag_type_name);
-    tag_json.tag_type_name = tag_json.tag_type_name.replace(" ","_"); // TODO sanitize strings names!!!!
-    //console.log("tag_json.evaluation = "+tag_json.evaluation);
-    //console.log("tag_json.video_time = "+tag_json.video_time);
-    var canvas_name = tag_json.tag_type_name+"_canvas";// document.getElementById("tags_canvas");
-    //console.log(" canvas name "+ canvas_name);
-    try{
-        if(!all_canvas[canvas_name] ){
-            add_canvas(canvas_name, tag_json.tag_type_name);
-        }
-    }
-    catch(err){
-        console.log(err);
-        add_canvas(canvas_name, tag_json.tag_type_name);
-    }
-    //get canvas
-    var canvas = all_canvas[canvas_name];
-    //console.log("canvas = "+canvas);
-    //console.log("canvas_name = "+canvas_name);
-    //get coordinates
-    var t=tag_json.video_time.split(":");
-    var ntime=Number(t[0])*3600+Number(t[1])*60+Number(t[2]);
-    ytplayer = document.getElementById("ytPlayer");
-    var duration = ytplayer.getDuration();
-    //console.log("duration = "+duration);
-    //console.log(ntime);
-    var xpos =  (ntime/duration ) * 720;
-    var ypos = 0;
-    //set image source according to result
-    var img_src="{{=URL('static','images/QUESTION_icon_20px.png')}}";
-    if (tag_json.evaluation=="OK"){
-        img_src="{{=URL('static','images/OK_icon_20px.png')}}"
-        ypos = 0;
-    }else if(tag_json.evaluation=="WARNING"){
-        img_src="{{=URL('static','images/WARNING_20px.png')}}"
-        ypos = 5;
-    }else if(tag_json.evaluation=="BAD"){
-        img_src="{{=URL('static','images/BAD_icon_20px.png')}}"    
-        ypos = 10;
-    }else if(tag_json.evaluation=="QUESTION"){
-        img_src="{{=URL('static','images/QUESTION_icon_20px.png')}}"
-        ypos = 5;
-    }
-    //console.log(xpos);
-    //console.log(ypos);
-    //draw tag on canvas
-    var tag_obj = canvas.display.image({
-	    x: xpos,
-	    y: ypos,
-	    //origin: { x: "center", y: "center" },
-	    image: img_src,
-	    height: 20,
-	    width: 20,
-	    opacity: 0.6,
-    });
-    canvas.addChild(tag_obj);
-    //bind calls 
-    tag_obj.bind("click tap", function () {
-	        on_tag_click(canvas, this, tag_json);
-	        
-        });
-    tag_obj.bind("mouseenter touchenter", function () {
-	        on_tag_enter(canvas, this, tag_json);
-	        
-        });
-    tag_obj.bind("mouseleave touchleave", function () {
-	        on_tag_leave(canvas, this, tag_json, ypos);
-        });
-}
-/*
-function canvas_draw_all_tags(tags){
-    //console.log('drawing all tags');
-    //console.log(tags);
-    for (var i = 0, len = tags.length; i < len; ++i) {
-                //console.log("JSON object: ");
-                //console.log(tags[i]);
-                canvas_draw_tag(tags[i]);
-            }
-    //console.log('DONE drawing tags');
-}
-*/
-//function get_tags(callback){
-function get_tags(){
-    //get the tags from dtabase, AJAX call
-    //console.log('getting tags by AJAX call');
-    //var parsed = null;
-    jQuery.ajax({
-           type: "POST",
-           url: '{{=URL("get_tags")}}',
-           data: "video_id={{=video.id}}"
-        }).done(function( msg ) {
-            //console.log(msg);
-            var parsed = jQuery.parseJSON(msg);
-            all_tags = parsed;
-            for (var i = 0, len = parsed.length; i < len; ++i) {
-                //console.log("JSON object: ");
-                //console.log(parsed[i]);
-                canvas_draw_tag( parsed[i] );
-                
-            }
-            //console.log("callback");
-            //callback(parsed);
-          });
-        return false;
-    //for every tag, draw it
-    //return parsed_tags;
-}
-
-function on_tag_enter(canvas, obj, tag_json){
-    //console.log("tag enter");
-    //set cursor to arrow
-    document.body.style.cursor = 'pointer';
-    canvas.removeChild(obj);
-    canvas.addChild(obj);
-    obj.animate({
-		        width: 30,
-		        height: 30,
-		        y: 0,
-		        opacity: 1,
-		        }, 350);
-    //display time
-    //console.log("obj = "+tag_json.video_time);
-    $("#canvas_time_display").text(tag_json.video_time);
-}
-
-function on_tag_leave(canvas, obj, tag_json, ypos){
-    //console.log("tag leave");
-    //set cursor to arrow
-    document.body.style.cursor = 'default';
-    obj.animate({
-		        width: 20,
-		        height: 20,
-		        y: ypos,
-		        opacity: 0.6,
-	        }, 350);
-}
-
-function on_tag_click(canvas, obj, tag_json){
-    //console.log("tag click");
-    setVideoTime(tag_json.video_time);
-    //play;
-    if(!ytplayer){
-        ytplayer = document.getElementById("ytPlayer");
-        }
-    ytplayer.playVideo();
-}
-
-
-function canvas_draw_comment(comment_json){
- //console.log("drawing comment");
-    //console.log("drawing comment json "+ comment_json);
-    //console.log("drawing comment keys"+ Object.getOwnPropertyNames(comment_json));
-    //console.log("comment_json.video_time = "+comment_json.video_time);
-    //select the correct canvas to draw in (name)
-    //if canvas does not exist
-    //  add_canvas
-    //  select canvas
-    //draw
-    var canvas_name = "Comments_canvas";// document.getElementById("tags_canvas");
-    //console.log(" canvas name "+ canvas_name);
-    if(!all_canvas[canvas_name] ){
-        add_canvas(canvas_name, "Comments");
-        //for interactive display
-        interactive_canvas_div.append("<div id='comments_interactive_show'> <span id='canvas_comment_time_display'></span> | <span id='canvas_comment_text_display'></span> </div>");
-        interactive_canvas_div.append("");
-    }
-    //get canvas
-    var canvas = all_canvas[canvas_name];
-    //console.log(" canvas  "+ canvas);
-    //get coordinates
-    var t=comment_json.video_time.split(":");
-    var ntime=Number(t[0])*3600+Number(t[1])*60+Number(t[2]);
-    ytplayer = document.getElementById("ytPlayer");
-    var duration = ytplayer.getDuration();
-    //console.log("duration = "+duration);
-    //console.log(ntime);
-    var xpos =  (ntime/duration ) * 720;
-    var ypos = 0;
-    //set image source according to result
-    var img_src="{{=URL('static','images/comment_icon_20px.png')}}";
-    //console.log(xpos);
-    //console.log(ypos);
-    //console.log(img_src);
-    //draw tag on canvas
-    var com_obj = canvas.display.image({
-	    x: xpos,
-	    y: ypos,
-	    //origin: { x: "center", y: "center" },
-	    image: img_src,
-	    height: 20,
-	    width: 20,
-	    opacity: 0.6,
-    });
-    canvas.addChild(com_obj);
-    //bind calls 
-    com_obj.bind("click tap", function () {
-	        on_comment_click(canvas, this, comment_json);
-	        
-        });
-    com_obj.bind("mouseenter touchenter", function () {
-	        on_comment_enter(canvas, this, comment_json);
-	        
-        });
-    com_obj.bind("mouseleave touchleave", function () {
-	        on_comment_leave(canvas, this, comment_json);
-        });
-    
-}
-
-function canvas_draw_all_comments(comments){
-    //for each comment:
-    //  create comment object on canvas  
-    //  draw comment
-}
-
-function get_comments(){
-
-    //get the tags from dtabase, AJAX call
-    //console.log('getting comments by AJAX call');
-    //var parsed = null;
-    jQuery.ajax({
-           type: "POST",
-           url: '{{=URL("get_comments")}}',
-           data: "video_id={{=video.id}}"
-        }).done(function( msg ) {
-            ////console.log(msg);
-            var parsed = jQuery.parseJSON(msg);
-            all_comments = parsed;
-            for (var i = 0, len = parsed.length; i < len; ++i) {
-                //console.log("JSON object: ");
-                //console.log(parsed[i]);
-                canvas_draw_comment( parsed[i] );
-                
-            }
-            //console.log("callback");
-            //callback(parsed);
-          });
-        return false;
-}
-
-function on_comment_enter(canvas, obj, comment_json){
-    //console.log("comment enter");
-    //set cursor to arrow
-    document.body.style.cursor = 'pointer';
-    canvas.removeChild(obj);
-    canvas.addChild(obj);
-    obj.animate({
-		        width: 30,
-		        height: 30,
-		        y: 0,
-		        opacity: 1,
-		        }, 350);
-    $("#canvas_time_display").text(comment_json.video_time);
-    $("#canvas_comment_time_display").text(comment_json.video_time);
-    $("#canvas_comment_text_display").text(comment_json.comment);
-}
-
-function on_comment_leave(canvas, obj, comment_json, ypos){
-    //console.log("comment leave");
-    //set cursor to arrow
-    document.body.style.cursor = 'default';
-    obj.animate({
-		        width: 20,
-		        height: 20,
-		        y: ypos,
-		        opacity: 0.6,
-	        }, 350);
-}
-
-function on_comment_click(canvas, obj, comment_json){
-    //console.log("comment click");
-    setVideoTime(comment_json.video_time);
-    //play;
-    if(!ytplayer){
-        ytplayer = document.getElementById("ytPlayer");
-        }
-    ytplayer.playVideo();
-}
-
-function updateInteractiveComments(time){
-    //TODO make update of comments that are around the time 
-    // ...need for a good algorithm
-}
-
-function change_time_delay(td, tag_name){
-    //console.log("change time delay "+ td);
-    //console.log("change time delay "+ time_delay);
-    var time_delay = Number(document.getElementById("time_delay_"+tag_name).innerHTML)+td;
-    document.getElementById("time_delay_"+tag_name).innerHTML = time_delay;
-    //console.log("change time delay "+ time_delay);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-////INIT
-////////////////////////////////////////////////////////////////////////////////
-
-//init functions for interactive canvas 
-
-function init_interactive_canvas() {
-    //console.log('INIT interactive canvas');
-    //get tagging options TODO
-    //draw interactive tagging canvas TODO
-    //console.log('getting comments');
-    var comments = get_comments();
-    //console.log('getting tags');
-    var tags = get_tags();
-    //console.log('DONE init interactive canvas');
-
-}
-
-//loading after window loaded
-window.onload=function() {
-    loadPlayer();
-    //init_canvas();
-    
-}  
-</script>
   {{end}}
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-41054956-1', 'annotatit.com');
+      ga('send', 'pageview');
+
+    </script>
+  <!-- <script src="{{=URL('static','js/share.js',vars=dict(static=URL('static','images')))}}"></script> -->
+  
+  
+</body>
+</html>
 
