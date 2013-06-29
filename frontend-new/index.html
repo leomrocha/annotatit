@@ -5,6 +5,10 @@
 		<script type="text/javascript" src="js/jquery.js"></script>
 		<script type="text/javascript" src="js/knockback.js"></script>
 		<script type="text/javascript" src="js/backbone-relational.js"></script>
+		
+		<script type="text/javascript" src="js/shared.js"></script>
+		<script type="text/javascript" src="js/models.js"></script>
+		<script type="text/javascript" src="js/view-models.js"></script>
 		<script type="text/javascript" src="js/lib.js"></script>
 		<!-- Knockback View Templates -->
 	</head>
@@ -12,15 +16,15 @@
 		<header>
 			<h1>Annotatit comments demo</h1>
 		</header>
-		<section id="main-section">
-			<ul id="comments" data-bind="foreach: comments">
+		<section data-name="Comments">
+			<ul data-name="CommentsDisplayer" data-bind="foreach: comments">
 				<li>
 					<p data-bind="text: comment"></p>
 					<input type="text" data-bind="value: comment">
 					<button data-bind="click: onDestroyComment">X</button>
 				</li>
 			</ul>
-			<input id="new-comment" type="text" placeholder="New Comment" autofocus
+			<input data-name="NewComments" type="text" placeholder="New Comment" autofocus
 			data-bind="value: new_comment, valueUpdate: 'afterkeydown', event: {keyup: onAddComment}">
 		</section>
 	</body>

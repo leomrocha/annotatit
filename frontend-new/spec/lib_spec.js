@@ -1,4 +1,4 @@
-describe("Comments", function() {
+describe("ViewModels", function() {
 
   describe("Comment ViewModel: ", function() {
     var comment, new_comment, comment_view_model, new_content;
@@ -81,4 +81,19 @@ describe("Comments", function() {
     });
   });
 
+});
+
+describe("Models", function() {
+  describe("SyncComment", function() {
+    var new_sync_comment;
+    it("should be able to create a new one", function() {
+      expect(new SyncComment()).toEqual(jasmine.any(SyncComment));
+    });
+    xit("should have the actual date as creation date when is created", function() {
+      new_sync_comment = new SyncComment();
+      expect(new_sync_comment.get("creation_datetime"))
+      .toEqual((new Date()).toJSON());
+    });
+
+  });
 });
