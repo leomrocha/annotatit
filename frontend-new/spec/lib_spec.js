@@ -30,6 +30,16 @@ describe("ViewModels", function() {
       expect(comment_view_model.model().get('comment')).toEqual(new_content);
     });
 
+    xit("should be able to add responses", function() {
+      
+      expect(comment_view_model.model().get('responses').add([
+        {comment: "Lorem ipsum dolor sit amet,", responses: []},
+        {comment: "Lorem ipsum dolor sit amet,", responses: []},
+        {comment: "Lorem ipsum dolor sit amet,", responses: []},
+        {comment: "Lorem ipsum dolor sit amet,", responses: []}
+      ])).not.toThrow();
+    });
+
   });
 
   describe("Comments ViewModel: ", function() {
@@ -37,16 +47,16 @@ describe("ViewModels", function() {
 
     beforeEach(function() {
       comments = new Comments([
-        new Comment({comment: "Lorem ipsum dolor sit amet,"}),
-        new Comment({comment: "Lorem ipsum dolor sit amet,"}),
-        new Comment({comment: "Lorem ipsum dolor sit amet,"}),
-        new Comment({comment: "Lorem ipsum dolor sit amet,"})
+        {comment: "Lorem ipsum dolor sit amet,", responses: []},
+        {comment: "Lorem ipsum dolor sit amet,", responses: []},
+        {comment: "Lorem ipsum dolor sit amet,", responses: []},
+        {comment: "Lorem ipsum dolor sit amet,", responses: []}
       ]);
       new_comments = new Comments([
-        new Comment({comment: "Zorem ipsum dolor sit amet,"}),
-        new Comment({comment: "Zorem ipsum dolor sit amet,"}),
-        new Comment({comment: "Zorem ipsum dolor sit amet,"}),
-        new Comment({comment: "Zorem ipsum dolor sit amet,"})
+        {comment: "Zorem ipsum dolor sit amet,", responses: []},
+        {comment: "Zorem ipsum dolor sit amet,", responses: []},
+        {comment: "Zorem ipsum dolor sit amet,", responses: []},
+        {comment: "Zorem ipsum dolor sit amet,", responses: []}
       ]);
       new_content = "New Comment";
     });
@@ -89,11 +99,35 @@ describe("Models", function() {
     it("should be able to create a new one", function() {
       expect(new SyncComment()).toEqual(jasmine.any(SyncComment));
     });
+
     xit("should have the actual date as creation date when is created", function() {
       new_sync_comment = new SyncComment();
       expect(new_sync_comment.get("creation_datetime"))
       .toEqual((new Date()).toJSON());
     });
 
+  });
+
+  describe("Comments", function() {
+    var comments, new_comment;
+    it("should be able to create a new one", function() {
+      expect(new Comments([])).toEqual(jasmine.any(Comments));
+    });
+
+    it("should be able to create a new one using a JSON object as source", function() {
+      expect(new Comments([
+        {comment: "Lorem ipsum dolor sit amet,"},
+        {comment: "Lorem ipsum dolor sit amet,"},
+        {comment: "Lorem ipsum dolor sit amet,"},
+        {comment: "Lorem ipsum dolor sit amet,"}
+      ])).toEqual(jasmine.any(Comments));
+    });
+
+    it("should be able to get add a comment", function() {
+      comments = new Comments([]);
+      new_comment = {comment: "Lorem ipsum dolor sit amet," , responses: []};
+      expect(function(){comments.add(new_comment);}).not.toThrow();
+      expect(comments.toJSON()).toContain(new_comment);
+    });
   });
 });

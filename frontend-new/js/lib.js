@@ -1,10 +1,10 @@
 /** @type {viewModel} View for rendering a Lorem data into the view */
 var view_model = new CommentsViewModel(
 	new Comments([
-    new Comment({comment: "Lorem ipsum dolor sit amet,"}),
-    new Comment({comment: "Lorem ipsum dolor sit amet,"}),
-    new Comment({comment: "Lorem ipsum dolor sit amet,"}),
-    new Comment({comment: "Lorem ipsum dolor sit amet,"})
+    {comment: "Lorem ipsum dolor sit amet,"},
+    {comment: "Lorem ipsum dolor sit amet,"},
+    {comment: "Lorem ipsum dolor sit amet,"},
+    {comment: "Lorem ipsum dolor sit amet,"}
 	])
 );
 

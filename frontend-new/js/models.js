@@ -1,23 +1,27 @@
 ////////////
 // Models //
 ////////////
+var Comment, Comments, SyncComment, SyncCommentFlags;
 
 /**
  * Comment : Contains one comment
  * @type {Backbone.Model}
- * @keys [comment]
+ * @contains Comments
+ * @keys [comment, responses]
  */
-var Comment = Backbone.Model.extend({
+Comment = Backbone.Model.extend({
+	
 	defaults: {
-		comment: ""
+		comment: "",
+		responses: []
 	}
 });
 
-var SyncCommentFlags = Backbone.Model.extend({
+SyncCommentFlags = Backbone.Model.extend({
 	
 });
 
-var SyncComment = Backbone.Model.extend({
+SyncComment = Backbone.Model.extend({
 	defaults: {
 	}
 });
@@ -27,6 +31,6 @@ var SyncComment = Backbone.Model.extend({
  * @type {Backbone.Collection}
  * @contains Comment
  */
-var Comments = Backbone.Collection.extend({
+Comments = Backbone.Collection.extend({
 	model: Comment
 });
