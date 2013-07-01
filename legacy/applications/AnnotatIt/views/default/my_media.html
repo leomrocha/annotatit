@@ -1,0 +1,213 @@
+{{left_sidebar_enabled= False}}
+{{right_sidebar_enabled=False}}
+
+{{extend 'annotatit_layout.html'}}
+{{block head}}
+    <style>
+    
+    /* MARKETING CONTENT
+    -------------------------------------------------- */
+    .step_container .span4 {
+      text-align: center;
+      border:0px solid;
+      border-radius:25px;
+    }
+    .step_container h2 {
+      font-weight: normal;
+    }
+    .step_container .span4 p {
+      margin-left: 10px;
+      margin-right: 10px;
+       text-align: center;
+    }
+
+    .container .button p{
+       text-align: center;
+    }
+    /**/
+    </style>
+
+{{end}}
+
+{{block center}}
+
+<!-- Step 2 --> 
+<!-- If add link -->
+    <!-- Show  -->
+        <!-- Box for adding link -->
+        <!-- Choice for privacy: private, unlisted, public  -->
+        <!-- Checkbox: Send me an email when done -->
+
+<div id="tabs">
+  <ul>
+    <li><a href="#tabs-1">My media</a></li>
+    <li><a href="#tabs-2">Media I can annotate</a></li>
+    <li><a href="#tabs-3">Media I can view</a></li>
+  </ul>
+
+<div class="container my_media" id="tabs-1">
+
+{{for m in my_media:}}
+  <div class="row media" id="my_media_id-{{=m.id}}">
+    <div class="span2 media_thumbnail">
+        <div id="thumbnail">
+            {{if m.media_network == "youtube":}}
+                <img src='http://img.youtube.com/vi/{{=m.media_id}}/default.jpg' /> 
+            {{elif m.media_network == "vimeo":}}
+                <img src="{{=URL('static', 'images/Video_200px.png')}}" /> 
+            {{pass}}
+        </div>
+    </div><!-- /.span4 -->
+    <div class="span3 media_info">
+        <p> <span > {{=m.title }} </span></p> 
+        <p> Created on <span > {{=m.creation_datetime }} </span> </p> 
+    </div><!-- /.span4 -->
+    <div class="span4 media_links">
+        <p><a class="btn btn-primary" id="annotation_link" href="{{=URL('annotate_media', m.media_annotate_key, scheme=True, host=True)}}">Annotate this file</a></p>
+        <p> <a class="btn btn-info" id="view_link" href="{{=URL('view_media', m.media_view_results_key, scheme=True, host=True)}}">View Results</a></p>
+        <p> <span > Embed Code: (?)</span> <textarea  id="embed_code" readonly>{{='<iframe src= "'+URL('embed_media', m.media_embed_key,scheme=True, host=True)+'" width="530" height="800" ></iframe>' }}</textarea></p> 
+    </div><!-- /.span4 -->
+     <div class="span1 media_menu">
+        <!--<p> <a class="btn btn-warning" id="view_link" href="#">Edit</a></p>-->
+        <p> <a class="btn btn-danger" id="view_link" href="javascript:deleteRequest({{=m.id}});">Delete</a></p>
+    </div> <!-- /.span4 -->
+  </div><!-- /.row -->
+  <hr id="hr_id-{{=m.id}}"/>
+{{pass}}<!-- /.for m in my_media -->
+
+</div><!-- /.container -->
+
+
+<div class="container annotate_media" id="tabs-2">
+
+{{for m in can_annotate:}}
+  <div class="row media" id="my_media_id-{{=m.id}}">
+    <div class="span2 media_thumbnail">
+        <div id="thumbnail">
+            {{if m.media_network == "youtube":}}
+                <img src='http://img.youtube.com/vi/{{=m.media_id}}/default.jpg' /> 
+            {{elif m.media_network == "vimeo":}}
+                <img src="{{=URL('static', 'images/Video_200px.png')}}" /> 
+            {{pass}}
+        </div>
+    </div><!-- /.span4 -->
+    <div class="span3 media_info">
+        <p> <span > {{=m.title }} </span></p> 
+        <p> Created on <span > {{=m.creation_datetime }} </span> By <span > {{=m.owner_id}} </span> </p> 
+    </div><!-- /.span4 -->
+    <div class="span4 media_links">
+        <p><a class="btn btn-primary" id="annotation_link" href="{{=URL('annotate_media', m.media_annotate_key, scheme=True, host=True)}}">Annotate this file</a></p>
+        <p> <a class="btn btn-info" id="view_link" href="{{=URL('view_media', m.media_view_results_key, scheme=True, host=True)}}">View Results</a></p>
+        <!--<p> <span > Embed Code: (?)</span> <textarea  id="embed_code" readonly>{{='<iframe>'+URL('view_media', m.media_embed_key,scheme=True, host=True)+'</iframe>' }}</textarea></p> -->
+    </div><!-- /.span4 -->
+  </div><!-- /.row -->
+  <hr id="hr_id-{{=m.id}}"/>
+{{pass}}<!-- /.for m in my_media -->
+
+</div><!-- /.container -->
+
+
+<div class="container view_media" id="tabs-3">
+
+{{for m in can_view:}}
+  <div class="row media" id="my_media_id-{{=m.id}}">
+    <div class="span2 media_thumbnail">
+        <div id="thumbnail">
+            {{if m.media_network == "youtube":}}
+                <img src='http://img.youtube.com/vi/{{=m.media_id}}/default.jpg' /> 
+            {{elif m.media_network == "vimeo":}}
+                <img src="{{=URL('static', 'images/Video_200px.png')}}" /> 
+            {{pass}}
+        </div>
+    </div><!-- /.span4 -->
+    <div class="span3 media_info">
+        <p> <span > {{=m.title }} </span></p> 
+        <p> Created on <span > {{=m.creation_datetime }} </span> By <span > {{=m.owner_id}} </span> </p> 
+    </div><!-- /.span4 -->
+    <div class="span4 media_links">
+        <p> <a class="btn btn-info" id="view_link" href="{{=URL('view_media', m.media_view_results_key, scheme=True, host=True)}}">View Results</a></p>
+    </div><!-- /.span4 -->
+  </div><!-- /.row -->
+  <hr id="hr_id-{{=m.id}}"/>
+{{pass}}<!-- /.for m in my_media -->
+
+</div><!-- /.container -->
+
+
+
+
+</div> <!-- /.tabs-->
+
+<!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js "></script> -->
+
+
+<script>
+    
+    //things for web2py to complete  during template processing
+    var ajax_url = '{{=URL("ajax", scheme=True, host=True)}}';
+    var annotate_url = '{{=URL("annotate_media", scheme=True, host=True)}}';
+    var view_url = '{{=URL("view_media", scheme=True, host=True)}}';
+    var images_url = '{{=URL("static","images")}}';
+
+    $(function() {
+        $( "#tabs" ).tabs();
+      });
+
+    function submitSuccess(msg){
+        //TODO  check the response and act consequently
+        //if response was successful and record was deleted
+        console.log("success ajax msg ="+msg)
+        //find out wich is the element to delete from the list
+        $("#my_media_id-"+msg.id).remove();//delete it
+        $("#hr_id-"+msg.id).remove();//delete it
+    }
+    
+    function submitFail(msg){
+        //TODO
+    }
+    
+    function deleteRequest(media_id){
+        console.log("delete request id "+media_id);
+        var obj = new  Object();
+        //get link
+        obj.media_id = media_id;
+        console.log("obj = "+JSON.stringify(obj));
+        submitQuery("_delete_media", obj, submitSuccess, submitFail)
+        //send message
+        //if success
+            //hide 
+    }
+    
+    //name in the possibilities for the service
+    //jsonData the JSON text or object
+    function submitQuery(name, jsonData, successCallback, failCallback){
+        //TODO check that name is one of the available services
+        //TODO check that jsonData is a valid 
+        //      else, return an error
+        //make call
+        $.ajax({
+               type: "POST",
+               url: ajax_url+name,
+               data: jsonData
+            }).done(function( msg ) {
+                console.log("response: "+ msg);
+                if(msg !== "False" && msg !==false && 
+                    msg !=="Error" && msg !=="undefined"){
+                    //parse msg
+                    try{
+                        var parsed = $.parseJSON(msg);
+                        successCallback(parsed);
+                        return msg;
+                    }catch(err){
+                        console.log("ERROR unexpected error parsing msg "+msg);
+                        console.log("ERROR = "+err);
+                        failCallback(msg);
+                    }
+                }
+                });
+        return true;
+    }
+
+</script>
+
+{{end}}

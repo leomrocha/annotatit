@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# this file is released under public domain and you can use without limitations
 
 #########################################################################
 ## This is a samples controller
@@ -9,8 +8,10 @@
 ## - call exposes all registered services (none by default)
 #########################################################################
 from urlparse import urlparse, parse_qs
-
-#import os, sys
+import json
+helpers = local_import('helpers')
+from helpers import *
+from gluon.validators import *
 
 def index():
     """
@@ -18,11 +19,305 @@ def index():
     """
     return dict()
 
+def media_not_found():
+    '''
+    On media not found
+    '''
+    return dict()
+
+def unallowed():
+    '''
+    Not having permissions to see a file
+    '''
+    return dict()
+
 def video_not_found():
     '''
     On video not found
     '''
     return dict()
+
+##############################################################
+#CRUD MEDIA pages with its web services, ajax and email senders
+##############################################################
+
+
+#######
+# PAGE
+#######
+
+#@auth.requires_login()
+def embed_media():
+    """
+    Page for embedding media by an iframe
+    """
+    #print "embed media print test"
+    #generate page only ... the things will happen by ajax.
+    #get media embed code from request
+    _key = request.args(0, cast=str)#youtube videoID
+    #print "_key ="
+    #print str(_key)    
+    _media = db(db.media.media_embed_key == _key).select(
+                                                    db.media.id,    
+                                                    db.media.owner_id,
+                                                    db.media.title,
+                                                    db.media.subtitle,
+                                                    db.media.media_id,
+                                                    db.media.media_network,
+                                                    db.media.media_url,
+                                                    db.media.privacy,
+                                                    db.media.view_permissions,
+                                                    db.media.creation_datetime,
+                                                    db.media.update_datetime
+                                                    ).first()
+    #comments =  [ (owner_thumb, owner's link, parent_id, media_time, flag_name, flag_color, text, creation_datetime) ]
+    #_comments = db( (db.auth_user.id == db.flagged_comment.owner_id) &(db.flagged_comment.media_id == _media.id) ).select()
+    #_sections = db( (db.auth_user.id == db.section.owner_id) &(db.section.media_id == _media.id) ).select()
+    
+                                        
+    #print "_media ="
+    #print str(_media)
+    #print "query print test "
+    #print str()
+    if not _media:
+        redirect(URL('media_not_found'))
+    #owner ?
+    if auth.user_id == _media.owner_id:
+        return dict(media = _media,
+                    #comments = _comments,
+                    #sections = _sections,
+                    )
+    #public ?
+    if _media.view_permissions == "all":
+        return dict(media = _media,
+                    #comments = _comments,
+                    #sections = _sections,
+                    )
+    #individuals
+    if _media.view_permissions == "authorized_people":
+        #check permissions of current user
+        #TODO check that this actually works ... TEST        
+        if (not  db( (db.view_media_access_email.media_id == _media.id ) & (db.view_media_access_email.email == auth.user.email  ) ).isempty() ):
+            return dict(media = _media,
+                    #comments = _comments,
+                    #sections = _sections,
+                    )
+        #return redirect(URL("unallowed") )
+    if _media.view_permissions == "authorized_groups":
+        #TODO implement group checking
+        return redirect(URL("unallowed") )    
+        #return dict(media = _media,
+        #            comments = _comments,
+        #            sections = _sections,
+        #            )
+    #this should not arrive due to the first if
+    #if _media.view_permissions == "only_me" and auth.user_id == _media.owner_id:
+    #    return dict(media = _media)
+    #check if media can be embedded
+    #Maybe I can do everything from here, but I rather have more control
+    return redirect(URL("unallowed") )
+
+
+@auth.requires_login()
+def add_media():
+    """
+    Page for adding media for a user
+    """
+    #generate page only ... the things will happen by ajax.
+    #Maybe I can do everything from here, but I rather have more control
+    return dict()
+
+
+@auth.requires_login()
+def my_media():
+    """
+    Page for adding media for a user
+    """
+    my_media = db(db.media.owner_id == auth.user_id).select()
+    can_annotate = db(db.annotate_media_access_email.email == auth.user.email).select()
+    can_view = db(db.view_media_access_email.email == auth.user.email).select()
+    return dict(
+                my_media = my_media,
+                can_annotate = can_annotate,
+                can_view = can_view
+                )
+
+
+###############
+# WEB SERVICES
+###############
+
+
+#######
+# AJAX
+#######
+
+@auth.requires_login()
+def ajax_add_media():
+    """
+    Add media link for external service
+    """
+    #print "add media"
+    #print "request = "+str(request.vars)
+    #TODO check request method is PUT
+    #if (request.env.request_method != "PUT"):
+    #    return "{ response:error, response-detail: Invalid request}"
+    if (not IS_URL(request.vars.link) or request.vars.link.strip()==""):
+        #print "ERROR incorrect url"
+        #return json.dumps( { "response":"error", "response-detail": "URL not valid. Try with a Vimeo or Youtube link"} )
+        response.flash = "URL not valid. Try with a Vimeo or Youtube link"
+    service =  get_service(request.vars.link)
+    #print "1"
+    #print service
+    permissions = get_permissions(request.vars)
+    #print "2"
+    #print permissions
+    if not permissions:
+        #print "ERROR permissions not set"
+        #return json.dumps( { "response":"error", "response-detail": "Permissions are not worreclty set"} )
+        response.flash = "Permissions are not worreclty set"
+    if not request.vars.title or request.vars.title.strip() =="" :
+        #print "ERROR title not set"
+        #return json.dumps( { "response":"error", "response-detail": "You need to write a title"} )
+        response.flash = "You need to write a title"
+    reg = {"title": request.vars.title.strip()}
+    #print "3"
+    #print reg
+    reg.update(service)
+    #print "4"
+    #print reg
+    reg.update(permissions)
+    #print "5"
+    #print reg
+    #print "inserting record"
+    try:
+        query_add_media = db.media.insert(**reg)
+        #print "6"
+        #print "isnert success!!!"
+    except Exception as err:
+        #print "Error inserting record"
+        #print err
+        return None
+    #print "7"
+    #print "query result = "+str(query_add_media)
+    #check that link validates
+    #obtain the service of the link
+    # if seccess return the links
+    new_media = db.media(db.media.id == query_add_media)
+    #print "8"
+    #print "creating permissions"
+    if permissions['view_permissions'] == "authorized_people":
+        invited = parse_permissions(request.vars.invited_annotators, new_media.id, "view")
+        for i in invited:
+            db.view_media_access_email.insert(
+                                                  media_id = new_media.id,
+                                                  email = i
+                                                    )
+    if permissions['annotation_permissions'] == "authorized_people":
+        invited = parse_permissions(request.vars.invited_annotators, new_media.id, "annotation")
+        for i in invited:
+            db.annotate_media_access_email.insert(
+                                                  media_id = new_media.id,
+                                                  email = i
+                                                    )
+    #print "sending emails invites to people"
+    #TODO send invites, this should go to another process, not the main that should return instantly
+    
+    return response.json( new_media )
+
+@auth.requires_login()
+def ajax_upload_media():
+    """
+    User will upload a file
+    """
+    #TODO after setting up storage service
+    pass
+
+@auth.requires_login()
+def ajax_delete_media():
+    """
+    User will upload a file
+    """
+    #read the request
+    #print "Delete request: "
+    if (request.env.request_method != "DELETE"):
+        #return json.dumps( { "response":"error", "response-detail": "Invalid request"} )
+        response.flash = "Invalid Request"
+    #print request
+    #print request.vars
+    #check that the requester is the owner of the record
+    media_record = db(db.media.id == int(request.vars.media_id) ).select().first()
+    #print media_record
+    if not media_record.owner_id == auth.user_id:
+       #return json.dumps( { "response":"error", "response-detail": "You do not own this record, you can not delete it"} )
+       response.flash = "You do not own this record, you can not delete it"
+    #else
+    db(db.media.id == int(request.vars.media_id) ).delete()
+    #print "check: "
+    #print media_record
+    #print db(db.media.id == int(request.vars.media_id) ).select().first()
+    #TODO find all the records that point to this one and delete or mark them as deleted
+    return response.json(media_record)
+
+@auth.requires_login()
+def ajax_set_permissions():
+    """
+    Sets annotate/view permissions by default
+    private, public, unlisted
+    ##NOTE shoud have been set before
+    """
+    pass
+
+@auth.requires_login()
+def ajax_set_viewers():
+    """
+    Adds groups to the current media file
+    """
+    pass
+
+@auth.requires_login()
+def ajax_set_annotators():
+    """
+    Adds annotators to the current media file
+    Annotators can be groups OR single users (emails or user ids)
+    """
+    pass
+
+
+    
+############################################################
+#  END  - ADD MEDIA page and web services
+############################################################
+    
+    
+#########################################################################
+#Invites, by massimo di piero in a post here:
+# http://www.mail-archive.com/web2py@googlegroups.com/msg78529.html
+
+#def invite():
+#    form = SQLFORM(db.invite)
+#    db.invite.uuid.default=str(uuid.uuid4())
+#    if form.process().accepted:
+#         auth.mailer.send(to=form.vars.email,
+#                          message = db.invite.uuid.default)
+#    return dict(form=form)
+
+########### end invites
+
+#########################################################################
+
+
+
+
+
+#########################################################################
+#########################################################################
+#########################################################################
+#########################################################################
+##LEGACY
+#########################################################################
+#########################################################################
+
 
 #########################################################################
 #Login Not needed
@@ -62,7 +357,6 @@ def embed_vimeo_video():
     return dict(
                 video = _video,
                 )
-    
     return dict()
 
 

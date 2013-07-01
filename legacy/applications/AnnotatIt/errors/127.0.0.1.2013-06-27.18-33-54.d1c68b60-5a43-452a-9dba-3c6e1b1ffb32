@@ -1,0 +1,401 @@
+(dp1
+S'output'
+p2
+S"<type 'exceptions.TypeError'> unsupported operand type(s) for &: 'long' and 'Field'"
+p3
+sS'layer'
+p4
+S'/home/leo/projects/heroku_projects/annotatit/applications/AnnotatIt/controllers/default.py'
+p5
+sS'code'
+p6
+S'# -*- coding: utf-8 -*-\n\n#########################################################################\n## This is a samples controller\n## - index is the default action of any application\n## - user is required for authentication and authorization\n## - download is for downloading files uploaded in the db (does streaming)\n## - call exposes all registered services (none by default)\n#########################################################################\nfrom urlparse import urlparse, parse_qs\nimport json\nhelpers = local_import(\'helpers\')\nfrom helpers import *\nfrom gluon.validators import *\n\ndef index():\n    """\n\n    """\n    return dict()\n\ndef media_not_found():\n    \'\'\'\n    On media not found\n    \'\'\'\n    return dict()\n\ndef unallowed():\n    \'\'\'\n    Not having permissions to see a file\n    \'\'\'\n    return dict()\n\ndef video_not_found():\n    \'\'\'\n    On video not found\n    \'\'\'\n    return dict()\n\n##############################################################\n#CRUD MEDIA pages with its web services, ajax and email senders\n##############################################################\n\n\n#######\n# PAGE\n#######\n\n#@auth.requires_login()\ndef embed_media():\n    """\n    Page for embedding media by an iframe\n    """\n    print "embed media print test"\n    #generate page only ... the things will happen by ajax.\n    #get media embed code from request\n    _key = request.args(0, cast=str)#youtube videoID\n    print "_key ="\n    print str(_key)    \n    _media = db(db.media.media_embed_key == _key).select(\n                                                    db.media.id,    \n                                                    db.media.owner_id,\n                                                    db.media.title,\n                                                    db.media.subtitle,\n                                                    db.media.media_id,\n                                                    db.media.media_network,\n                                                    db.media.media_url,\n                                                    db.media.privacy,\n                                                    db.media.view_permissions,\n                                                    db.media.creation_datetime,\n                                                    db.media.update_datetime\n                                                    ).first()\n                                        \n    print "_media ="\n    print str(_media)\n    print "query print test "\n    print str( db( db.view_media_access_email.media_id == _media.id  & db.view_media_access_email.email == auth.user.email  ).select() )\n    if not _media:\n        redirect(URL(\'media_not_found\'))\n    #owner ?\n    if auth.user_id == _media.owner_id:\n        return dict(media = _media)\n    #public ?\n    if _media.view_permissions == "all":\n        return dict(media = _media)\n    #individuals\n    if _media.view_permissions == "authorized_people":\n        #check permissions of current user\n        #TODO TODO\n        can_view = db(db.view_media_access_email.email == auth.user.email).select()\n        if ():\n            return dict(media = _media)\n        #return redirect(URL("unallowed") )\n    if _media.view_permissions == "authorized_groups":\n        #TODO implement group checking\n        return dict()\n    #this should not arrive due to the first if\n    #if _media.view_permissions == "only_me" and auth.user_id == _media.owner_id:\n    #    return dict(media = _media)\n    #check if media can be embedded\n    #Maybe I can do everything from here, but I rather have more control\n    return redirect(URL("unallowed") )\n\n\n@auth.requires_login()\ndef add_media():\n    """\n    Page for adding media for a user\n    """\n    #generate page only ... the things will happen by ajax.\n    #Maybe I can do everything from here, but I rather have more control\n    return dict()\n\n\n@auth.requires_login()\ndef my_media():\n    """\n    Page for adding media for a user\n    """\n    my_media = db(db.media.owner_id == auth.user_id).select()\n    can_annotate = db(db.annotate_media_access_email.email == auth.user.email).select()\n    can_view = db(db.view_media_access_email.email == auth.user.email).select()\n    return dict(\n                my_media = my_media,\n                can_annotate = can_annotate,\n                can_view = can_view\n                )\n\n\n###############\n# WEB SERVICES\n###############\n\n\n#######\n# AJAX\n#######\n\n@auth.requires_login()\ndef ajax_add_media():\n    """\n    Add media link for external service\n    """\n    #print "add media"\n    #print "request = "+str(request.vars)\n    #TODO check request method is PUT\n    #if (request.env.request_method != "PUT"):\n    #    return "{ response:error, response-detail: Invalid request}"\n    if (not IS_URL(request.vars.link) or request.vars.link.strip()==""):\n        #print "ERROR incorrect url"\n        #return json.dumps( { "response":"error", "response-detail": "URL not valid. Try with a Vimeo or Youtube link"} )\n        response.flash = "URL not valid. Try with a Vimeo or Youtube link"\n    service =  get_service(request.vars.link)\n    #print "1"\n    #print service\n    permissions = get_permissions(request.vars)\n    #print "2"\n    #print permissions\n    if not permissions:\n        #print "ERROR permissions not set"\n        #return json.dumps( { "response":"error", "response-detail": "Permissions are not worreclty set"} )\n        response.flash = "Permissions are not worreclty set"\n    if not request.vars.title or request.vars.title.strip() =="" :\n        #print "ERROR title not set"\n        #return json.dumps( { "response":"error", "response-detail": "You need to write a title"} )\n        response.flash = "You need to write a title"\n    reg = {"title": request.vars.title.strip()}\n    #print "3"\n    #print reg\n    reg.update(service)\n    #print "4"\n    #print reg\n    reg.update(permissions)\n    #print "5"\n    #print reg\n    #print "inserting record"\n    try:\n        query_add_media = db.media.insert(**reg)\n        #print "6"\n        #print "isnert success!!!"\n    except Exception as err:\n        #print "Error inserting record"\n        #print err\n        return None\n    #print "7"\n    #print "query result = "+str(query_add_media)\n    #check that link validates\n    #obtain the service of the link\n    # if seccess return the links\n    new_media = db.media(db.media.id == query_add_media)\n    #print "8"\n    #print "creating permissions"\n    if permissions[\'view_permissions\'] == "authorized_people":\n        invited = parse_permissions(request.vars.invited_annotators, new_media.id, "view")\n        for i in invited:\n            db.view_media_access_email.insert(\n                                                  media_id = new_media.id,\n                                                  email = i\n                                                    )\n    if permissions[\'annotation_permissions\'] == "authorized_people":\n        invited = parse_permissions(request.vars.invited_annotators, new_media.id, "annotation")\n        for i in invited:\n            db.annotate_media_access_email.insert(\n                                                  media_id = new_media.id,\n                                                  email = i\n                                                    )\n    #print "sending emails invites to people"\n    #TODO send invites, this should go to another process, not the main that should return instantly\n    \n    return response.json( new_media )\n\n@auth.requires_login()\ndef ajax_upload_media():\n    """\n    User will upload a file\n    """\n    #TODO after setting up storage service\n    pass\n\n@auth.requires_login()\ndef ajax_delete_media():\n    """\n    User will upload a file\n    """\n    #read the request\n    #print "Delete request: "\n    if (request.env.request_method != "DELETE"):\n        #return json.dumps( { "response":"error", "response-detail": "Invalid request"} )\n        response.flash = "Invalid Request"\n    #print request\n    #print request.vars\n    #check that the requester is the owner of the record\n    media_record = db(db.media.id == int(request.vars.media_id) ).select().first()\n    #print media_record\n    if not media_record.owner_id == auth.user_id:\n       #return json.dumps( { "response":"error", "response-detail": "You do not own this record, you can not delete it"} )\n       response.flash = "You do not own this record, you can not delete it"\n    #else\n    db(db.media.id == int(request.vars.media_id) ).delete()\n    #print "check: "\n    #print media_record\n    #print db(db.media.id == int(request.vars.media_id) ).select().first()\n    #TODO find all the records that point to this one and delete or mark them as deleted\n    return response.json(media_record)\n\n@auth.requires_login()\ndef ajax_set_permissions():\n    """\n    Sets annotate/view permissions by default\n    private, public, unlisted\n    ##NOTE shoud have been set before\n    """\n    pass\n\n@auth.requires_login()\ndef ajax_set_viewers():\n    """\n    Adds groups to the current media file\n    """\n    pass\n\n@auth.requires_login()\ndef ajax_set_annotators():\n    """\n    Adds annotators to the current media file\n    Annotators can be groups OR single users (emails or user ids)\n    """\n    pass\n\n\n    \n############################################################\n#  END  - ADD MEDIA page and web services\n############################################################\n    \n    \n#########################################################################\n#Invites, by massimo di piero in a post here:\n# http://www.mail-archive.com/web2py@googlegroups.com/msg78529.html\n\n#def invite():\n#    form = SQLFORM(db.invite)\n#    db.invite.uuid.default=str(uuid.uuid4())\n#    if form.process().accepted:\n#         auth.mailer.send(to=form.vars.email,\n#                          message = db.invite.uuid.default)\n#    return dict(form=form)\n\n########### end invites\n\n#########################################################################\n\n\n\n\n\n#########################################################################\n#########################################################################\n#########################################################################\n#########################################################################\n##LEGACY\n#########################################################################\n#########################################################################\n\n\n#########################################################################\n#Login Not needed\n#########################################################################\n\ndef embed_youtube_video():\n    """\n    the page can be embedded in an iframe\n    """\n    \n    """\n    Shows the list of uploaded videos\n    """\n    #if(not auth.user):\n    #    redirect(URL(\'index\'))\n    _video_id = request.args(0, cast=str)#youtube videoID\n    _video = db(db.video.video_id == _video_id)(db.video.video_network == "YOUTUBE").select()[0]\n    if not _video:\n        redirect(URL(\'video_not_found\'))\n    #check for permissions of individual and group to actually see the video, else show not allowed \n    return dict(\n                video = _video,\n                )\n\n\ndef embed_vimeo_video():\n    """\n    the page can be embedded in an iframe\n    """\n    #if(not auth.user):\n    #    redirect(URL(\'index\'))\n    _video_id = request.args(0, cast=str)#youtube videoID\n    _video = db(db.video.video_id == _video_id)(db.video.video_network == "YOUTUBE").select()[0]\n    if not _video:\n        redirect(URL(\'video_not_found\'))\n    #check for permissions of individual and group to actually see the video, else show not allowed \n    return dict(\n                video = _video,\n                )\n    return dict()\n\n\n    \ndef results():\n    """\n    results page for a certain video, only shows the results, no possibility \n    of annotation\n    """\n    return dict()\n\n\n\n#########################################################################\n#Login Required\n#########################################################################\n\n\n@auth.requires_login()\ndef videos_by():\n    """\n    Shows the list of My uploaded videos,\n    And options to update, modify and erase them\n    """\n    #check that the user has permission to see what he sees\n    #if(not auth.user):\n    #    redirect(URL(\'index\'))\n    \n    user_id = request.args(0, cast=int)#youtube user id\n    _videos = db(db.videos.person_id == user_id)(db.video.video_network == "YOUTUBE").select()\n    #TODO should check also for permissions of the user cheking the video\n    \n    return dict(\n                videos = _videos,\n                )\n\n\n\n@auth.requires_login()\ndef videos():\n    """\n    Shows me a list of all the videos I have the right to see\n    """\n    #if(not auth.user):\n    #    redirect(URL(\'index\'))\n    _videos = db(db.video.person_id == auth.user_id).select()\n    \n    return dict(\n                videos = _videos,\n                )\n\n@auth.requires_login()\ndef my_videos():\n    """\n    Shows the list of My uploaded videos,\n    And options to update, modify and erase them\n    """\n    #if(not auth.user):\n    #    redirect(URL(\'index\'))\n    _ytvideos = db(db.video.person_id == auth.user_id)(db.video.video_network == "YOUTUBE").select()\n    _vvideos = db(db.video.person_id == auth.user_id)(db.video.video_network == "VIMEO").select()\n    return dict(\n                youtube_videos = _ytvideos,\n                vimeo_videos = _vvideos,\n                )\n\n\n#TODO  change this to an ajax service AND make it for other services too (soundcloud)\n@auth.requires_login()\ndef upload_video():\n    """\n    Form to upload a new video (in fact, for the moment is only add a video from youtube)\n    """\n    uform=FORM(\'Title: \',\n              INPUT(_name=\'title\', requires=IS_NOT_EMPTY()),\n              \'Video Link: \',\n              INPUT(_name=\'link\', requires=IS_NOT_EMPTY()),\n              INPUT(_type=\'submit\'),\n              formname=\'simple_upload_video_form\')\n    if uform.process(formname=\'simple_upload_video_form\').accepted:\n        #os.system("echo \'upload form fields: "+str(uform.vars)+" \'")\n        url_data = urlparse(uform.vars.link)\n        #os.system("echo \'url_data: "+str(url_data)+" \'")\n        #now check if youtube or vimeo\n        if (url_data[1].lower().find("youtube") >=0 ):\n            query = parse_qs(url_data.query)\n            #os.system("echo \'query: "+str(query)+" \'")\n            video_id = query["v"][0]\n            db.video.insert(title = uform.vars.title,\n                                     video_id= video_id,\n                                     video_network="YOUTUBE",\n                                     full_url = uform.vars.link,\n                                    )\n        elif (url_data[1].lower().find("youtu.be") >=0 ):\n            vid = url_data.path.split("/")\n            video_id =  vid[-1] if len(vid[-1]) > 0 else vid[-2]\n            db.video.insert(title = uform.vars.title,\n                                     video_id= video_id,\n                                     video_network="YOUTUBE",\n                                     full_url = uform.vars.link,\n                                    )\n        elif (url_data[1].lower().find("vimeo") >=0 ):\n            ##treat like youtube and save data on youtube db Table\n            vid = url_data.path.split("/")\n            video_id =  vid[-1] if len(vid[-1]) > 0 else vid[-2]\n            db.video.insert(title = uform.vars.title,\n                                     video_id= video_id,\n                                     video_network="VIMEO",\n                                     full_url = uform.vars.link,\n                                    )\n        else:\n            #fail!!\n            pass\n        #response.flash = \'form accepted\'\n        pass\n    elif uform.errors:\n        response.flash = \'form has errors, please check\'\n    else:\n        #response.flash = \'please fill out the form\'\n        pass\n    return dict(\n                upload_form = uform,\n                )\n\n\n#############################\n#AJAX calls\n#############################\n\ndef get_tags():\n    """\n    ajax call for the view_video view for commenting on a video \n    with the fast annotation system\n    """\n    #os.system("echo \' getting tags "+str(request.vars)+"\'")\n    if (request.vars.video_id):\n        rows = db(db.tag.video_id == request.vars.video_id).select();\n        #os.system("echo \' tags get "+str(rows)+"\'")\n        return response.json(rows)\n    else:\n        return None\n\n\ndef get_comments():\n    """\n    ajax call for the view_video view for commenting on a video \n    with the fast annotation system\n    """\n    #os.system("echo \' getting comments "+str(request.vars)+"\'")\n    if (request.vars.video_id):\n        rows = db(db.annotations.video_id == request.vars.video_id).select(orderby=db.annotations.video_time);\n        #os.system("echo \' comments get "+str(rows)+"\'")\n        return response.json(rows)\n    else:\n        return None\n\n\n@auth.requires_login() \ndef post_annotation():\n    """\n    ajax call for the view_video view for commenting on a video\n    """\n    form = SQLFORM(db.annotations,showid = False,\n                    fields=[\'video_id\',\'video_time\', \'comment\'],)\n    form.vars.annotator_id = auth.user_id\n    #os.system("echo \'post annotation form.vars "+str(form.vars)+"\'")\n    #os.system("echo \'post annotatino request.vars "+str(request.vars)+"\'")\n    #os.system("echo \'post annotatino auth.user_id "+str(auth.user_id)+"\'")\n    if form.accepts(request, formname=None):\n        response.flash = T(\'Your comment has been successfully posted\')\n        #os.system("echo \'everything OK\'")\n        #return DIV(T("Comment posted"))\n        #return DIV(BEAUTIFY(form.vars))\n        return None\n    elif form.errors:\n        #os.system("echo \'form has errors OK\'")\n        return TABLE(*[TR(k, v) for k, v in form.errors.items()])\n\n\n@auth.requires_login() \ndef post_advice():\n    """\n    ajax call for the view_video view for commenting on a video\n    """\n    form = SQLFORM(db.advice,showid = False,\n                    fields=[ \'advice_text\'],)\n    #os.system("echo advice vars: \'"+str(request.vars)+"\'")\n    form.vars.annotator_id = auth.user_id\n    #os.system("echo advice form.vars: \'"+str(form.vars)+"\'")\n    form.vars.video_id = request.vars.annotation_video_id\n    if form.accepts(request, formname=None):\n        response.flash = T(\'Your advice has been successfully posted\')\n        #return DIV(T("Comment posted"))\n        return DIV(BEAUTIFY(form.vars))\n        #return None\n    elif form.errors:\n        return TABLE(*[TR(k, v) for k, v in form.errors.items()])\n\n@auth.requires_login()\ndef post_tag():\n    """\n    ajax call for the view_video view for commenting on a video \n    with the fast annotation system\n    """\n    form = SQLFORM(db.tag,showid = False,\n                    fields=[\'tag_type_name\', \'video_id\',\'evaluation\',\'video_time\'],)\n    form.vars.annotator_id = auth.user_id\n    #os.system("echo \'post tag "+str(form.vars)+"\'")\n    #os.system("echo \'post tag request "+str(request)+"\'")\n    #os.system("echo \'post tag request vars "+str(request.vars)+"\'")\n    #os.system("echo \'post tag "+str(auth.user_id)+"\'")\n    #try:\n    if form.accepts(request, formname=None):\n        response.flash = T(\'Tagged\')\n        #os.system("echo \'tag OK\'")\n        #return DIV(T("Comment posted"))\n        return DIV(BEAUTIFY(form.vars))\n        #return None\n    elif form.errors:\n        #os.system("echo \'tag has errors\'")\n        return TABLE(*[TR(k, v) for k, v in form.errors.items()])\n    #except Exception as e:\n    #    #os.system("echo \'There was an exception and is crazy\'")\n    #    #os.system("echo \'Exception = "+str(e)+"\'")\n        \n\n@auth.requires_login()\ndef modify_comment():\n    """\n    ajax call for the view_video view for modifying a fast commenting on a video \n    with the fast annotation system\n    """\n    if(request.vars.annotator_id and int(request.vars.annotator_id) != auth.user_id):\n        return False\n    aid = auth.user_id\n    if (request.vars.annotator_id):\n        aid = request.vars.annotator_id\n    #this fixes a BUG that happens due to time text format\n    vt = request.vars.video_time\n    svt = vt.split(\':\')\n    tsvt = []\n    #os.system("echo \' 3\'")\n    for i in svt:\n        if len(i)<2:\n            i = \'0\'+i\n        tsvt.append(i)\n    vt = \':\'.join(tsvt)\n    #os.system("echo \'vt "+str(vt)+"\'")\n    row = db(\n                db.annotations.video_id == request.vars.video_id and \n                db.annotations.annotator_id == aid and \n                db.annotations.comment == request.vars.comment and \n                db.annotations.video_time == vt \n                ).update(comment = request.vars.new_comment)\n    #os.system("echo \'row "+str(row)+"\'")\n    ret = db.annotations(\n                db.annotations.video_id == request.vars.video_id and \n                db.annotations.annotator_id == aid and \n                db.annotations.comment == request.vars.new_comment and \n                db.annotations.video_time == vt\n                )\n    #os.system("echo \'ret "+str(ret)+"\'")\n    return response.json(ret)\n\n    \n@auth.requires_login()\ndef delete_comment():\n    """\n    ajax call for the view_video view for deleting a fast commenting on a video \n    with the fast annotation system\n    """\n    if(request.vars.annotator_id and int(request.vars.annotator_id) != auth.user_id):\n        return False\n    aid = auth.user_id\n    if (request.vars.annotator_id):\n        aid = request.vars.annotator_id\n    #this fixes a BUG that happens due to time text format\n    vt = request.vars.video_time\n    svt = vt.split(\':\')\n    tsvt = []\n    #os.system("echo \' 3\'")\n    for i in svt:\n        if len(i)<2:\n            i = \'0\'+i\n        tsvt.append(i)\n    vt = \':\'.join(tsvt)\n    #os.system("echo \'vt "+str(vt)+"\'")\n    ret = db(\n                db.annotations.video_id == request.vars.video_id and \n                db.annotations.annotator_id == aid and \n                db.annotations.comment == request.vars.comment and \n                db.annotations.video_time == vt \n                ).delete()\n    #os.system("echo \'ret "+str(ret)+"\'")\n    return ret\n\n@auth.requires_login()\ndef modify_tag():\n    """\n    ajax call for the view_video view for modifying a fast commenting on a video \n    with the fast annotation system\n    """\n    #check the user is the one who created the comment or tag or the owner of the video\n    #os.system("echo \'delete tag \'")\n    #os.system("echo \'request.vars "+str(request.vars)+"\'")\n    #there are two cases, when the tag is being done by the current user and modified, and when the tag\n    #was loaded from the DB, in the first case annotator_id will not exist, so assume that is the same as the logged in user\n    #Field(\'tag_type_id\', \'reference tag_type\', requires=IS_NOT_EMPTY()),#will belong to a tag (e.g. hesitation)\n    if(request.vars.annotator_id and int(request.vars.annotator_id) != auth.user_id):\n        return False\n    aid = auth.user_id\n    if (request.vars.annotator_id):\n        aid = request.vars.annotator_id\n    #this fixes a BUG that happens due to time text format\n    vt = request.vars.video_time\n    svt = vt.split(\':\')\n    tsvt = []\n    #os.system("echo \' 3\'")\n    for i in svt:\n        if len(i)<2:\n            i = \'0\'+i\n        tsvt.append(i)\n    vt = \':\'.join(tsvt)\n    #os.system("echo \'vt "+str(vt)+"\'")\n    row = db(db.tag.tag_type_name == request.vars.tag_type_name and\n                db.tag.video_id == request.vars.video_id and \n                db.tag.annotator_id == aid and \n                db.tag.evaluation == request.vars.evaluation and \n                db.tag.video_time == vt \n                ).update(evaluation = request.vars.new_evaluation)\n    #os.system("echo \'row "+str(row)+"\'")\n    ret = db.tag(db.tag.tag_type_name == request.vars.tag_type_name and\n                db.tag.video_id == request.vars.video_id and \n                db.tag.annotator_id == aid and \n                db.tag.evaluation == request.vars.new_evaluation and \n                db.tag.video_time == vt \n                )\n    #os.system("echo \'ret "+str(ret)+"\'")\n    return response.json(ret)\n    \n@auth.requires_login()\ndef delete_tag():\n    """\n    ajax call for the view_video view for deleting a fast commenting on a video \n    with the fast annotation system\n    """\n    #check the user is the one who created the comment or tag or the owner of the video\n    #os.system("echo \'delete tag \'")\n    #os.system("echo \'request.vars "+str(request.vars)+"\'")\n    #there are two cases, when the tag is being done by the current user and modified, and when the tag\n    #was loaded from the DB, in the first case annotator_id will not exist, so assume that is the same as the logged in user\n    #Field(\'tag_type_id\', \'reference tag_type\', requires=IS_NOT_EMPTY()),#will belong to a tag (e.g. hesitation)\n    #os.system("echo \'annotator "+str(request.vars.annotator_id)+"\'")\n    #os.system("echo \'user_id "+str(auth.user_id)+"\'")\n    #os.system("echo \' type annotator "+str(type(request.vars.annotator_id))+"\'")\n    #os.system("echo \' type user_id "+str(type(auth.user_id))+"\'")\n    #os.system("echo \'compare "+str(auth.user_id != request.vars.annotator_id)+"\'")\n    #os.system("echo \'compare "+str(auth.user_id == request.vars.annotator_id)+"\'")\n    if(request.vars.annotator_id and int(request.vars.annotator_id) != auth.user_id):\n        return False\n    aid = auth.user_id\n    if (request.vars.annotator_id):\n        aid = request.vars.annotator_id\n   #this fixes a BUG that happens due to time text format\n    vt = request.vars.video_time\n    svt = vt.split(\':\')\n    tsvt = []\n    for i in svt:\n        if len(i)<2:\n            i = \'0\'+i\n        tsvt.append(i)\n    vt = \':\'.join(tsvt)\n    ret = db(db.tag.tag_type_name == request.vars.tag_type_name and\n                db.tag.video_id == request.vars.video_id and \n                db.tag.annotator_id == aid and \n                db.tag.evaluation == request.vars.evaluation and \n                db.tag.video_time == vt \n                ).delete()\n    return ret\n    \n#############################\n#############################\n\n#@auth.requires_login() #TODO make user authentication control here!!! .. for the moment a link is needed\ndef view_video(): #youtube Videos TODO, refactor name, but for the moment live it that way (there are some people depending on the name)\n    """\n    Shows the list of uploaded videos\n    """\n    #if(not auth.user):\n    #    redirect(URL(\'index\'))\n    _video_id = request.args(0, cast=str)#youtube videoID\n    \n    _video = db(db.video.video_id == _video_id)(db.video.video_network == "YOUTUBE").select()[0]\n    if not _video:\n        redirect(URL(\'video_not_found\'))\n    #os.system("echo \'video =  "+str(_video)+"\'")\n    #os.system("echo \'video.id =  "+str(_video.id)+"\'")\n    #_annotations = db(db.annotations.video_id == _video.id).select(orderby=db.annotations.video_time)\n    _advices = db(db.advice.video_id == _video.id).select()\n    _suggested_tags = [{\'name\': \'Voice\', \'fields\': [\'QUESTION\',\'OK\', \'WARNING\', \'BAD\'] } ,\n                       { \'name\':\'Gestual\', \'fields\': [\'QUESTION\',\'OK\', \'WARNING\', \'BAD\']} , \n                       { \'name\':\'Look\', \'fields\': [\'QUESTION\',\'OK\', \'WARNING\', \'BAD\']} ,\n                       { \'name\':\'Space Use\', \'fields\': [\'QUESTION\',\'OK\', \'WARNING\', \'BAD\']} , \n                       { \'name\':\'Hesitation\', \'fields\': [\'QUESTION\', \'WARNING\', \'BAD\']}\n                      ] #TODO this should come from DB and be more detailed about the fields (OK, Warning, Bad, don\'t know yet). should be passed as JSON\n    #os.system("echo \'annotations =  "+str(_annotations)+"\'")\n    #check for permissions of individual and group to actually see the video, else show not allowed \n    return dict(\n                video = _video,\n                #annotations = _annotations,\n                advices = _advices,\n                #annotation_form = aform\n                suggested_tags = _suggested_tags,\n                )\n\n\n#@auth.requires_login() #TODO make user authentication control here!!! .. for the moment a link is needed\ndef view_vimeo_video():\n    """\n    Shows the list of uploaded videos\n    """\n    #if(not auth.user):\n    #    redirect(URL(\'index\'))\n    _video_id = request.args(0, cast=str)#youtube videoID\n    \n    _video = db.video(db.video.video_id == _video_id)\n    if not _video:\n        redirect(URL(\'video_not_found\'))\n    #os.system("echo \'video.id =  "+str(_video.id)+"\'")\n    #_annotations = db(db.annotations.video_id == _video.id).select(orderby=db.annotations.video_time)\n    _advices = db(db.advice.video_id == _video.id).select()\n    _suggested_tags = [{\'name\': \'Voice\', \'fields\': [\'QUESTION\',\'OK\', \'WARNING\', \'BAD\'] } ,\n                       { \'name\':\'Gestual\', \'fields\': [\'QUESTION\',\'OK\', \'WARNING\', \'BAD\']} , \n                       { \'name\':\'Look\', \'fields\': [\'QUESTION\',\'OK\', \'WARNING\', \'BAD\']} ,\n                       { \'name\':\'Space Use\', \'fields\': [\'QUESTION\',\'OK\', \'WARNING\', \'BAD\']} , \n                       { \'name\':\'Hesitation\', \'fields\': [\'QUESTION\', \'WARNING\', \'BAD\']}\n                      ] \n    return dict(\n                video = _video,\n                #annotations = _annotations,\n                advices = _advices,\n                #annotation_form = aform\n                suggested_tags = _suggested_tags,\n                )\n\n\n\n\n#########################################################################\n#########################################################################\ndef user():\n    """\n    exposes:\n    http://..../[app]/default/user/login\n    http://..../[app]/default/user/logout\n    http://..../[app]/default/user/register\n    http://..../[app]/default/user/profile\n    http://..../[app]/default/user/retrieve_password\n    http://..../[app]/default/user/change_password\n    use @auth.requires_login()\n        @auth.requires_membership(\'group name\')\n        @auth.requires_permission(\'read\',\'table name\',record_id)\n    to decorate functions that need access control\n    """\n    return dict(form=auth())\n\n\ndef download():\n    """\n    allows downloading of uploaded files\n    http://..../[app]/default/download/[filename]\n    """\n    return response.download(request, db)\n\n\ndef call():\n    """\n    exposes services. for example:\n    http://..../[app]/default/call/jsonrpc\n    decorate with @services.jsonrpc the functions to expose\n    supports xml, json, xmlrpc, jsonrpc, amfrpc, rss, csv\n    """\n    return service()\n\n\n@auth.requires_signature()\ndef data():\n    """\n    http://..../[app]/default/data/tables\n    http://..../[app]/default/data/create/[table]\n    http://..../[app]/default/data/read/[table]/[id]\n    http://..../[app]/default/data/update/[table]/[id]\n    http://..../[app]/default/data/delete/[table]/[id]\n    http://..../[app]/default/data/select/[table]\n    http://..../[app]/default/data/search/[table]\n    but URLs must be signed, i.e. linked with\n      A(\'table\',_href=URL(\'data/tables\',user_signature=True))\n    or with the signed load operator\n      LOAD(\'default\',\'data.load\',args=\'tables\',ajax=True,user_signature=True)\n    """\n    return dict(form=crud())\n\nresponse._vars=response._caller(embed_media)\n'
+p7
+sS'snapshot'
+p8
+(dp9
+S'exception'
+p10
+(dp11
+S'__hash__'
+p12
+S"<method-wrapper '__hash__' of exceptions.TypeError object>"
+p13
+sS'__setattr__'
+p14
+S"<method-wrapper '__setattr__' of exceptions.TypeError object>"
+p15
+sS'__reduce_ex__'
+p16
+S'<built-in method __reduce_ex__ of exceptions.TypeError object>'
+p17
+sS'__getslice__'
+p18
+S"<method-wrapper '__getslice__' of exceptions.TypeError object>"
+p19
+sS'__getitem__'
+p20
+S"<method-wrapper '__getitem__' of exceptions.TypeError object>"
+p21
+sS'__setstate__'
+p22
+S'<built-in method __setstate__ of exceptions.TypeError object>'
+p23
+sS'args'
+p24
+S'("unsupported operand type(s) for &: \'long\' and \'Field\'",)'
+p25
+sS'__reduce__'
+p26
+S'<built-in method __reduce__ of exceptions.TypeError object>'
+p27
+sS'__str__'
+p28
+S"<method-wrapper '__str__' of exceptions.TypeError object>"
+p29
+sS'__format__'
+p30
+S'<built-in method __format__ of exceptions.TypeError object>'
+p31
+sS'__getattribute__'
+p32
+S"<method-wrapper '__getattribute__' of exceptions.TypeError object>"
+p33
+sS'__class__'
+p34
+S"<type 'exceptions.TypeError'>"
+p35
+sS'__unicode__'
+p36
+S'<built-in method __unicode__ of exceptions.TypeError object>'
+p37
+sS'__delattr__'
+p38
+S"<method-wrapper '__delattr__' of exceptions.TypeError object>"
+p39
+sS'__subclasshook__'
+p40
+S'<built-in method __subclasshook__ of type object>'
+p41
+sS'__repr__'
+p42
+S"<method-wrapper '__repr__' of exceptions.TypeError object>"
+p43
+sS'__dict__'
+p44
+S'{}'
+p45
+sS'__sizeof__'
+p46
+S'<built-in method __sizeof__ of exceptions.TypeError object>'
+p47
+sS'__doc__'
+p48
+S"'Inappropriate argument type.'"
+p49
+sS'__init__'
+p50
+S"<method-wrapper '__init__' of exceptions.TypeError object>"
+p51
+sS'__new__'
+p52
+S'<built-in method __new__ of type object>'
+p53
+ssS'evalue'
+p54
+S"unsupported operand type(s) for &: 'long' and 'Field'"
+p55
+sS'request'
+p56
+cgluon.html
+XML_unpickle
+p57
+(S's\xfcF\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top">ajax</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">application</td><td valign="top">:</td><td><div>AnnotatIt</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">args</td><td valign="top">:</td><td><div><table><tr><td><div>23350186-820a-45c9-b872-4ec18e3763b4</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">body</td><td valign="top">:</td><td><div>&lt;cStringIO.StringO object at 0x2a36f10&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">cid</td><td valign="top">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">client</td><td valign="top">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">controller</td><td valign="top">:</td><td><div>default</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">cookies</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">session_id_admin</td><td valign="top">:</td><td><div>127.0.0.1-a967b7ed-7da0-44b4-8527-70ff9dd5cd38<table><tr><td style="font-weight:bold;vertical-align:top">comment</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">domain</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">expires</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">httponly</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">max-age</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">secure</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">version</td><td valign="top">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_id_annotatit</td><td valign="top">:</td><td><div>127.0.0.1-c4ab2f28-1350-4609-a630-6f2377d4e2b6<table><tr><td style="font-weight:bold;vertical-align:top">comment</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">domain</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">expires</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">httponly</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">max-age</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">secure</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">version</td><td valign="top">:</td><td><div></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">env</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">app_folders</td><td valign="top">:</td><td><div>set([&#x27;/home/leo/projects/heroku_projects/annotatit/applications/admin/&#x27;, &#x27;/home/leo/projects/heroku_projects/annotatit/applications/AnnotatIt/&#x27;])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">applications_parent</td><td valign="top">:</td><td><div>/home/leo/projects/heroku_projects/annotatit</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">db_sessions</td><td valign="top">:</td><td><div>set([])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">debugging</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">gluon_parent</td><td valign="top">:</td><td><div>/home/leo/projects/heroku_projects/annotatit</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">gunicorn_socket</td><td valign="top">:</td><td><div>&lt;socket._socketobject object at 0x2772440&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_accept</td><td valign="top">:</td><td><div>text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_accept_encoding</td><td valign="top">:</td><td><div>gzip,deflate,sdch</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_accept_language</td><td valign="top">:</td><td><div>en-US,en;q=0.8,fr;q=0.6,es;q=0.4</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_cache_control</td><td valign="top">:</td><td><div>max-age=0</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_connection</td><td valign="top">:</td><td><div>keep-alive</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_cookie</td><td valign="top">:</td><td><div>session_id_annotatit=127.0.0.1-c4ab2f28-1350-4609-a630-6f2377d4e2b6; session_id_admin=127.0.0.1-a967b7ed-7da0-44b4-8527-70ff9dd5cd38</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_host</td><td valign="top">:</td><td><div>localhost:5000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_user_agent</td><td valign="top">:</td><td><div>Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.52 Safari/537.36</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_jython</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_pypy</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">local_hosts</td><td valign="top">:</td><td><div><table><tr><td><div>cotita</div></td></tr><tr><td><div>::ffff:127.0.0.1</div></td></tr><tr><td><div>::1</div></td></tr><tr><td><div>localhost</div></td></tr><tr><td><div>127.0.1.1</div></td></tr><tr><td><div>127.0.0.1</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path_info</td><td valign="top">:</td><td><div>/embed_media/23350186-820a-45c9-b872-4ec18e3763b4</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">query_string</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">raw_uri</td><td valign="top">:</td><td><div>/embed_media/23350186-820a-45c9-b872-4ec18e3763b4</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">remote_addr</td><td valign="top">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">remote_port</td><td valign="top">:</td><td><div>50045</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">request_method</td><td valign="top">:</td><td><div>GET</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">request_uri</td><td valign="top">:</td><td><div>/AnnotatIt/default/embed_media/23350186-820a-45c9-b872-4ec18e3763b4</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">script_name</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">server_name</td><td valign="top">:</td><td><div>localhost</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">server_port</td><td valign="top">:</td><td><div>5000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">server_protocol</td><td valign="top">:</td><td><div>HTTP/1.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">server_software</td><td valign="top">:</td><td><div>gunicorn/0.17.2</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_crontype</td><td valign="top">:</td><td><div>soft</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_original_uri</td><td valign="top">:</td><td><div>/embed_media/23350186-820a-45c9-b872-4ec18e3763b4</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_path</td><td valign="top">:</td><td><div>/home/leo/projects/heroku_projects/annotatit</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_version</td><td valign="top">:</td><td><div>2.5.1-stable+timestamp.2013.06.06.15.39.19</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_errors</td><td valign="top">:</td><td><div>&lt;open file &#x27;&lt;stderr&gt;&#x27;, mode &#x27;w&#x27; at 0x7f935baad270&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_file_wrapper</td><td valign="top">:</td><td><div>&lt;class gunicorn.http.wsgi.FileWrapper at 0x22de808&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_input</td><td valign="top">:</td><td><div>&lt;gunicorn.http.body.Body object at 0x28dd9d0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_multiprocess</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_multithread</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_run_once</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_url_scheme</td><td valign="top">:</td><td><div>http</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_version</td><td valign="top">:</td><td><div><table><tr><td><div>1</div></td></tr><tr><td><div>0</div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">extension</td><td valign="top">:</td><td><div>html</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">folder</td><td valign="top">:</td><td><div>/home/leo/projects/heroku_projects/annotatit/applications/AnnotatIt/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">function</td><td valign="top">:</td><td><div>embed_media</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">get_vars</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">global_settings</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">app_folders</td><td valign="top">:</td><td><div>set([&#x27;/home/leo/projects/heroku_projects/annotatit/applications/admin/&#x27;, &#x27;/home/leo/projects/heroku_projects/annotatit/applications/AnnotatIt/&#x27;])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">applications_parent</td><td valign="top">:</td><td><div>/home/leo/projects/heroku_projects/annotatit</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">db_sessions</td><td valign="top">:</td><td><div>set([])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">debugging</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">gluon_parent</td><td valign="top">:</td><td><div>/home/leo/projects/heroku_projects/annotatit</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_jython</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_pypy</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">local_hosts</td><td valign="top">:</td><td><div><table><tr><td><div>cotita</div></td></tr><tr><td><div>::ffff:127.0.0.1</div></td></tr><tr><td><div>::1</div></td></tr><tr><td><div>localhost</div></td></tr><tr><td><div>127.0.1.1</div></td></tr><tr><td><div>127.0.0.1</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_crontype</td><td valign="top">:</td><td><div>soft</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_version</td><td valign="top">:</td><td><div>2.5.1-stable+timestamp.2013.06.06.15.39.19</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_https</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_local</td><td valign="top">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_restful</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">now</td><td valign="top">:</td><td><div>datetime.datetime(2013, 6, 27, 18, 33, 54, 349777)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">post_vars</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">url</td><td valign="top">:</td><td><div>/embed_media/23350186-820a-45c9-b872-4ec18e3763b4</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">utcnow</td><td valign="top">:</td><td><div>datetime.datetime(2013, 6, 27, 16, 33, 54, 349785)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">uuid</td><td valign="top">:</td><td><div>AnnotatIt/127.0.0.1.2013-06-27.18-33-54.d1c68b60-5a43-452a-9dba-3c6e1b1ffb32</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">vars</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">environ</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">HTTP_ACCEPT</td><td valign="top">:</td><td><div>text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_ACCEPT_ENCODING</td><td valign="top">:</td><td><div>gzip,deflate,sdch</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_ACCEPT_LANGUAGE</td><td valign="top">:</td><td><div>en-US,en;q=0.8,fr;q=0.6,es;q=0.4</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_CACHE_CONTROL</td><td valign="top">:</td><td><div>max-age=0</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_CONNECTION</td><td valign="top">:</td><td><div>keep-alive</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_COOKIE</td><td valign="top">:</td><td><div>session_id_annotatit=127.0.0.1-c4ab2f28-1350-4609-a630-6f2377d4e2b6; session_id_admin=127.0.0.1-a967b7ed-7da0-44b4-8527-70ff9dd5cd38</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_HOST</td><td valign="top">:</td><td><div>localhost:5000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_USER_AGENT</td><td valign="top">:</td><td><div>Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.52 Safari/537.36</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">PATH_INFO</td><td valign="top">:</td><td><div>/embed_media/23350186-820a-45c9-b872-4ec18e3763b4</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">QUERY_STRING</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">RAW_URI</td><td valign="top">:</td><td><div>/embed_media/23350186-820a-45c9-b872-4ec18e3763b4</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">REMOTE_ADDR</td><td valign="top">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">REMOTE_PORT</td><td valign="top">:</td><td><div>50045</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">REQUEST_METHOD</td><td valign="top">:</td><td><div>GET</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">REQUEST_URI</td><td valign="top">:</td><td><div>/AnnotatIt/default/embed_media/23350186-820a-45c9-b872-4ec18e3763b4</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SCRIPT_NAME</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SERVER_NAME</td><td valign="top">:</td><td><div>localhost</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SERVER_PORT</td><td valign="top">:</td><td><div>5000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SERVER_PROTOCOL</td><td valign="top">:</td><td><div>HTTP/1.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SERVER_SOFTWARE</td><td valign="top">:</td><td><div>gunicorn/0.17.2</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">WEB2PY_ORIGINAL_URI</td><td valign="top">:</td><td><div>/embed_media/23350186-820a-45c9-b872-4ec18e3763b4</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">gunicorn.socket</td><td valign="top">:</td><td><div>&lt;socket._socketobject object at 0x2772440&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.errors</td><td valign="top">:</td><td><div>&lt;open file &#x27;&lt;stderr&gt;&#x27;, mode &#x27;w&#x27; at 0x7f935baad270&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.file_wrapper</td><td valign="top">:</td><td><div>&lt;class gunicorn.http.wsgi.FileWrapper at 0x22de808&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.input</td><td valign="top">:</td><td><div>&lt;cStringIO.StringO object at 0x2a36f10&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.multiprocess</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.multithread</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.run_once</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.url_scheme</td><td valign="top">:</td><td><div>http</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.version</td><td valign="top">:</td><td><div>1</div></td></tr></table></div></td></tr></table></div></td></tr></table></div>'
+tRp58
+sS'frames'
+p59
+(lp60
+(dp61
+S'file'
+p62
+S'/home/leo/projects/heroku_projects/annotatit/gluon/restricted.py'
+p63
+sS'dump'
+p64
+(dp65
+S'environment'
+p66
+S"{'A': <class 'gluon.html.A'>, 'ANY_OF': <class 'gluon.validators.ANY_OF'>, 'APP_DOMAIN_NAME': 'AnnotatIt.com', 'APP_DOMAIN_NAME_2': 'Annotat.It', 'APP_NAME': 'AnnotatIt', 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, ...}"
+p67
+sS'ccode'
+p68
+S'<code object <module> at 0x2766f30, file "/home/...tions/AnnotatIt/controllers/default.py", line 10>'
+p69
+ssS'lnum'
+p70
+I212
+sS'lines'
+p71
+(dp72
+I207
+S'    try:'
+p73
+sI208
+S'        if isinstance(code, types.CodeType):'
+p74
+sI209
+S'            ccode = code'
+p75
+sI210
+S'        else:'
+p76
+sI211
+S'            ccode = compile2(code, layer)'
+p77
+sI212
+S'        exec ccode in environment'
+p78
+sI213
+S'    except HTTP:'
+p79
+sI214
+S'        raise'
+p80
+sI215
+S'    except RestrictedError:'
+p81
+sI216
+S'        # do not encapsulate (obfuscate) the original RestrictedError'
+p82
+ssS'call'
+p83
+S"(code='# -*- coding: utf-8 -*-\\n\\n#######################...))\\n\\nresponse._vars=response._caller(embed_media)\\n', environment={'A': <class 'gluon.html.A'>, 'ANY_OF': <class 'gluon.validators.ANY_OF'>, 'APP_DOMAIN_NAME': 'AnnotatIt.com', 'APP_DOMAIN_NAME_2': 'Annotat.It', 'APP_NAME': 'AnnotatIt', 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, ...}, layer='/home/leo/projects/heroku_projects/annotatit/applications/AnnotatIt/controllers/default.py')"
+p84
+sS'func'
+p85
+S'restricted'
+p86
+sa(dp87
+g62
+S'/home/leo/projects/heroku_projects/annotatit/applications/AnnotatIt/controllers/default.py'
+p88
+sg64
+(dp89
+sg70
+I846
+sg71
+(dp90
+I835
+S'    http://..../[app]/default/data/update/[table]/[id]'
+p91
+sI836
+S'    http://..../[app]/default/data/delete/[table]/[id]'
+p92
+sI837
+S'    http://..../[app]/default/data/select/[table]'
+p93
+sI838
+S'    http://..../[app]/default/data/search/[table]'
+p94
+sI839
+S'    but URLs must be signed, i.e. linked with'
+p95
+sI840
+S"      A('table',_href=URL('data/tables',user_signature=True))"
+p96
+sI841
+S'    or with the signed load operator'
+p97
+sI842
+S"      LOAD('default','data.load',args='tables',ajax=True,user_signature=True)"
+p98
+sI843
+S'    """'
+p99
+sI844
+S'    return dict(form=crud())'
+p100
+ssg83
+S'()'
+p101
+sg85
+S'<module>'
+p102
+sa(dp103
+g62
+S'/home/leo/projects/heroku_projects/annotatit/gluon/globals.py'
+p104
+sg64
+(dp105
+S'self'
+p106
+S'undefined'
+p107
+sS'f'
+S'<function embed_media>'
+p108
+ssg70
+I194
+sg71
+(dp109
+I192
+S"        self.delimiters = ('{{', '}}')"
+p110
+sI193
+S'        self._vars = None'
+p111
+sI194
+S'        self._caller = lambda f: f()'
+p112
+sI195
+S'        self._view_environment = None'
+p113
+sI196
+S'        self._custom_commit = None'
+p114
+sI197
+S'        self._custom_rollback = None'
+p115
+sI198
+S''
+sI189
+S'        self.menu = []             # used by the default view layout'
+p116
+sI190
+S'        self.files = []            # used by web2py_ajax.html'
+p117
+sI191
+S'        self.generic_patterns = []  # patterns to allow generic views'
+p118
+ssg83
+S'(f=<function embed_media>)'
+p119
+sg85
+S'<lambda>'
+p120
+sa(dp121
+g62
+S'/home/leo/projects/heroku_projects/annotatit/applications/AnnotatIt/controllers/default.py'
+p122
+sg64
+(dp123
+S'db.view_media_access_email'
+p124
+S'<Table view_media_access_email (id,email,media_id)>'
+p125
+sS'auth.user.email'
+p126
+S"'leo.m.rocha@gmail.com'"
+p127
+sS'builtinstr'
+p128
+S"<type 'str'>"
+p129
+sS'db.view_media_access_email.media_id'
+p130
+S'<gluon.dal.Field object>'
+p131
+sS').select'
+p132
+g107
+sS'global auth'
+p133
+S'<gluon.tools.Auth object>'
+p134
+sS'_media'
+p135
+S"<Row {'subtitle': '', 'media_id': 'Y1rtZRwrhL4',...': 'http://www.youtube.com/watch?v=Y1rtZRwrhL4'}>"
+p136
+sS'db.view_media_access_email.email'
+p137
+S'<gluon.dal.Field object>'
+p138
+sS'auth.user'
+p139
+S"<Row {'first_name': 'Leonardo', 'last_name': 'Ro...tion_key': '', 'email': 'leo.m.rocha@gmail.com'}>"
+p140
+sS'global db'
+p141
+S'<DAL uri="sqlite://heroku.test.sqlite">'
+p142
+sS'_media.id'
+p143
+S'31L'
+p144
+ssg70
+I77
+sg71
+(dp145
+I72
+S'                                                    ).first()'
+p146
+sI73
+S''
+sI74
+S'    print "_media ="'
+p147
+sI75
+S'    print str(_media)'
+p148
+sI76
+S'    print "query print test "'
+p149
+sI77
+S'    print str( db( db.view_media_access_email.media_id == _media.id  & db.view_media_access_email.email == auth.user.email  ).select() )'
+p150
+sI78
+S'    if not _media:'
+p151
+sI79
+S"        redirect(URL('media_not_found'))"
+p152
+sI80
+S'    #owner ?'
+p153
+sI81
+S'    if auth.user_id == _media.owner_id:'
+p154
+ssg83
+S'()'
+p155
+sg85
+S'embed_media'
+p156
+sasS'pyver'
+p157
+S'Python 2.7.3: /home/leo/projects/heroku_projects/annotatit/venv/bin/python (prefix: /home/leo/projects/heroku_projects/annotatit/venv)'
+p158
+sS'session'
+p159
+g57
+(S's\xec\x07\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top">auth</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">expiration</td><td valign="top">:</td><td><div>3600</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">hmac_key</td><td valign="top">:</td><td><div>9b1dd361-8809-49d7-8d33-0bcc15d15f3f</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">last_visit</td><td valign="top">:</td><td><div>datetime.datetime(2013, 6, 27, 18, 33, 54, 349777)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">remember</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">user</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">email</td><td valign="top">:</td><td><div>leo.m.rocha@gmail.com</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">first_name</td><td valign="top">:</td><td><div>Leonardo</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">id</td><td valign="top">:</td><td><div>1L</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">last_name</td><td valign="top">:</td><td><div>Rocha</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">registration_id</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">registration_key</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">reset_password_key</td><td valign="top">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">user_groups</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">1</td><td valign="top">:</td><td><div>user_1</div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">flash</td><td valign="top">:</td><td><div>None</div></td></tr></table></div>'
+tRp160
+sS'etype'
+p161
+S"<type 'exceptions.TypeError'>"
+p162
+sS'date'
+p163
+S'Thu Jun 27 18:33:54 2013'
+p164
+sS'response'
+p165
+g57
+(S'sp\x1a\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top">body</td><td valign="top">:</td><td><div>&lt;cStringIO.StringO object at 0x30652d0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">cookies</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">session_id_annotatit</td><td valign="top">:</td><td><div>127.0.0.1-c4ab2f28-1350-4609-a630-6f2377d4e2b6<table><tr><td style="font-weight:bold;vertical-align:top">comment</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">domain</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">expires</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">httponly</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">max-age</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path</td><td valign="top">:</td><td><div>/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">secure</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">version</td><td valign="top">:</td><td><div></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">delimiters</td><td valign="top">:</td><td><div><table><tr><td><div>{{</div></td></tr><tr><td><div>}}</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">files</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">flash</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">generic_patterns</td><td valign="top">:</td><td><div><table><tr><td><div>*</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">google_analytics_id</td><td valign="top">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">headers</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">X-Powered-By</td><td valign="top">:</td><td><div>web2py</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">logo</td><td valign="top">:</td><td><div><a class="brand" href="http://www.annotatit.com/"><b>AnnotatIt</b>&trade;&nbsp;</a></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">logo_img</td><td valign="top">:</td><td><div><img alt="AnnotatIt" src="/AnnotatIt/static/images/annotatit_pencil_200.png" /></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">menu</td><td valign="top">:</td><td><div><table><tr><td><div><table><tr><td><div>Media</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/videos</div></td></tr><tr><td><div><table><tr><td><div><table><tr><td><div>My media</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/my_media</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Add media</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/add_media</div></td></tr></table></div></td></tr></table></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">meta</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">author</td><td valign="top">:</td><td><div>Leonardo M. Rocha &lt;leo@annotatit.com&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">description</td><td valign="top">:</td><td><div>Synchronized Video Annotation</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">generator</td><td valign="top">:</td><td><div>Leonardo M. Rocha</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">keywords</td><td valign="top">:</td><td><div>personal development, leadership, spokesman, video, audio, annotation, social annotation, video annotation, video notes, music notes, media notes, music annotation, music education, online music education, online music video tagging, video analysis, music analysis, media analysis, sound analysis</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">models_to_run</td><td valign="top">:</td><td><div><table><tr><td><div>^\\w+\\.py$</div></td></tr><tr><td><div>^default/\\w+\\.py$</div></td></tr><tr><td><div>^default/embed_media/\\w+\\.py$</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">postprocessing</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_cookie_expires</td><td valign="top">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_data_name</td><td valign="top">:</td><td><div>session_data_annotatit</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_file</td><td valign="top">:</td><td><div>&lt;open file &#x27;/home/leo/projects/heroku_projects/annotatit/applications/AnnotatIt/sessions/127.0.0.1-c4ab2f28-1350-4609-a630-6f2377d4e2b6&#x27;, mode &#x27;rb+&#x27; at 0x307a0c0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_filename</td><td valign="top">:</td><td><div>/home/leo/projects/heroku_projects/annotatit/applications/AnnotatIt/sessions/127.0.0.1-c4ab2f28-1350-4609-a630-6f2377d4e2b6</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_id</td><td valign="top">:</td><td><div>127.0.0.1-c4ab2f28-1350-4609-a630-6f2377d4e2b6</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_id_name</td><td valign="top">:</td><td><div>session_id_annotatit</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_locked</td><td valign="top">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_new</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_storage_type</td><td valign="top">:</td><td><div>file</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">status</td><td valign="top">:</td><td><div>200</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">subtitle</td><td valign="top">:</td><td><div>Collaborative Synchronized Media Annotations made Easy</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">title</td><td valign="top">:</td><td><div>Annotatit</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">view</td><td valign="top">:</td><td><div>default/embed_media.html</div></td></tr></table></div>'
+tRp166
+sS'locals'
+p167
+(dp168
+S'_key'
+p169
+S"'23350186-820a-45c9-b872-4ec18e3763b4'"
+p170
+sS'_media'
+p171
+S"<Row {'subtitle': '', 'media_id': 'Y1rtZRwrhL4',...': 'http://www.youtube.com/watch?v=Y1rtZRwrhL4'}>"
+p172
+sssS'traceback'
+p173
+S'Traceback (most recent call last):\n  File "/home/leo/projects/heroku_projects/annotatit/gluon/restricted.py", line 212, in restricted\n    exec ccode in environment\n  File "/home/leo/projects/heroku_projects/annotatit/applications/AnnotatIt/controllers/default.py", line 846, in <module>\n  File "/home/leo/projects/heroku_projects/annotatit/gluon/globals.py", line 194, in <lambda>\n    self._caller = lambda f: f()\n  File "/home/leo/projects/heroku_projects/annotatit/applications/AnnotatIt/controllers/default.py", line 77, in embed_media\n    print str( db( db.view_media_access_email.media_id == _media.id  & db.view_media_access_email.email == auth.user.email  ).select() )\nTypeError: unsupported operand type(s) for &: \'long\' and \'Field\'\n'
+p174
+s.
