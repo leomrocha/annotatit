@@ -1,6 +1,20 @@
+var empty_response = [];
+var comments_list1 = [
+  {comment: "Lorem ipsum dolor sit amet,", responses: empty_response},
+  {comment: "Lorem ipsum dolor sit amet,", responses: empty_response},
+  {comment: "Lorem ipsum dolor sit amet,", responses: empty_response},
+  {comment: "Lorem ipsum dolor sit amet,", responses: empty_response}
+];
+var comments_list2 = [
+  {comment: "Zorem ipsum dolor sit amet,", responses: empty_response},
+  {comment: "Zorem ipsum dolor sit amet,", responses: empty_response},
+  {comment: "Zorem ipsum dolor sit amet,", responses: empty_response},
+  {comment: "Zorem ipsum dolor sit amet,", responses: empty_response}
+];
+
 describe("ViewModels", function() {
 
-  describe("Comment ViewModel: ", function() {
+  describe("Comment ViewModel", function() {
     var comment, new_comment, comment_view_model, new_content;
 
     beforeEach(function() {
@@ -30,34 +44,21 @@ describe("ViewModels", function() {
       expect(comment_view_model.model().get('comment')).toEqual(new_content);
     });
 
-    xit("should be able to add responses", function() {
-      
-      expect(comment_view_model.model().get('responses').add([
-        {comment: "Lorem ipsum dolor sit amet,", responses: []},
-        {comment: "Lorem ipsum dolor sit amet,", responses: []},
-        {comment: "Lorem ipsum dolor sit amet,", responses: []},
-        {comment: "Lorem ipsum dolor sit amet,", responses: []}
-      ])).not.toThrow();
+    xit("responses should be a Coments model", function() {
+      expect(comment_view_model.model().get('responses')).toEqual(jasmine.any(Comments));
     });
 
+    xit("should be able to add responses", function() { 
+      expect(comment_view_model.model().get('responses').add(comments_list1)).not.toThrow();
+    });
   });
 
-  describe("Comments ViewModel: ", function() {
+  describe("Comments ViewModel", function() {
     var comments_view_model, comments, new_comments, new_content;
 
     beforeEach(function() {
-      comments = new Comments([
-        {comment: "Lorem ipsum dolor sit amet,", responses: []},
-        {comment: "Lorem ipsum dolor sit amet,", responses: []},
-        {comment: "Lorem ipsum dolor sit amet,", responses: []},
-        {comment: "Lorem ipsum dolor sit amet,", responses: []}
-      ]);
-      new_comments = new Comments([
-        {comment: "Zorem ipsum dolor sit amet,", responses: []},
-        {comment: "Zorem ipsum dolor sit amet,", responses: []},
-        {comment: "Zorem ipsum dolor sit amet,", responses: []},
-        {comment: "Zorem ipsum dolor sit amet,", responses: []}
-      ]);
+      comments = new Comments(comments_list1);
+      new_comments = new Comments(comments_list2);
       new_content = "New Comment";
     });
     
@@ -91,21 +92,66 @@ describe("ViewModels", function() {
     });
   });
 
+  describe("SyncComment ViewModel", function() {
+    var sync_comment, sync_new_comment, sync_comment_view_model, new_content;
+
+    beforeEach(function() {
+      sync_comment = new SyncComment();
+      sync_new_comment = new SyncComment({sync_comment: "New Comment" });
+    });
+    
+    it("should be able to generate the ViewModel", function() {
+      expect(new SyncCommentViewModel(sync_comment)).toEqual(jasmine.any(SyncCommentViewModel));
+    });
+
+    it("should be able to get the model", function() {
+      sync_comment_view_model = new SyncCommentViewModel(sync_comment);
+      expect(sync_comment_view_model.model()).toEqual(sync_comment);
+    });
+
+    xit("should be able to set the model", function() {
+      sync_comment_view_model = new SyncCommentViewModel(sync_comment);
+      expect(function() {sync_comment_view_model.model(sync_new_comment);}).not.toThrow();
+      expect(sync_comment_view_model.model()).toEqual(new_comment);
+    });
+
+    xit("should be able to change the content of the comment", function() {
+      sync_comment_view_model = new SyncCommentViewModel(sync_comment);
+      new_content = "New Text";
+      expect(function() {sync_comment_view_model.model().set('comment', new_content);}).not.toThrow();
+      expect(sync_comment_view_model.model().get('comment')).toEqual(new_content);
+    });
+  });
+
 });
 
 describe("Models", function() {
+  describe("Comment", function() {
+    it("should be able to create a new one", function() {
+      expect(new Comment()).toEqual(jasmine.any(Comment));
+    });
+
+    it("should be able to create a new one using a JSON object as source", function() {
+      new_comment = {comment: "Lorem ipsum dolor sit amet," , responses: comments_list1};
+      expect(new Comment(new_comment)).toEqual(jasmine.any(Comment));
+    });
+
+    it("should be able to get the responses", function() {
+      comment = new Comment({comment: "Lorem ipsum dolor sit amet," , responses: comments_list1});
+      expect(comment.get("responses")).toEqual(new Comments(comments_list1).toJSON());
+    });
+
+    it("should be able to add a response", function() {
+      comment = new Comment({comment: "Lorem ipsum dolor sit amet," , responses: comments_list1});
+      expect(expect).to
+    });
+  });
+
   describe("SyncComment", function() {
     var new_sync_comment;
     it("should be able to create a new one", function() {
       expect(new SyncComment()).toEqual(jasmine.any(SyncComment));
     });
-
-    xit("should have the actual date as creation date when is created", function() {
-      new_sync_comment = new SyncComment();
-      expect(new_sync_comment.get("creation_datetime"))
-      .toEqual((new Date()).toJSON());
-    });
-
   });
 
   describe("Comments", function() {
@@ -115,12 +161,7 @@ describe("Models", function() {
     });
 
     it("should be able to create a new one using a JSON object as source", function() {
-      expect(new Comments([
-        {comment: "Lorem ipsum dolor sit amet,"},
-        {comment: "Lorem ipsum dolor sit amet,"},
-        {comment: "Lorem ipsum dolor sit amet,"},
-        {comment: "Lorem ipsum dolor sit amet,"}
-      ])).toEqual(jasmine.any(Comments));
+      expect(new Comments(comments_list1)).toEqual(jasmine.any(Comments));
     });
 
     it("should be able to get add a comment", function() {

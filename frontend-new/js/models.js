@@ -7,23 +7,22 @@ var Comment, Comments, SyncComment, SyncCommentFlags;
  * Comment : Contains one comment
  * @type {Backbone.Model}
  * @contains Comments
- * @keys [comment, responses]
+ * @keys [comment, Comment]
  */
 Comment = Backbone.Model.extend({
-	
+	model: {
+		responses: Backbone.Collection.extend({model : Comment}) 
+	},
 	defaults: {
 		comment: "",
 		responses: []
 	}
 });
 
-SyncCommentFlags = Backbone.Model.extend({
-	
+SyncComment = Backbone.Model.extend({
 });
 
-SyncComment = Backbone.Model.extend({
-	defaults: {
-	}
+Flag = Backbone.Model.extend({
 });
 
 /**
@@ -34,3 +33,4 @@ SyncComment = Backbone.Model.extend({
 Comments = Backbone.Collection.extend({
 	model: Comment
 });
+

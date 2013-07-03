@@ -12,16 +12,12 @@
  */
 var CommentViewModel = kb.ViewModel.extend({
   constructor: function(model) {
-
-    kb.ViewModel.prototype.constructor.call(this, model, {internals: ['comment']});   
-		var _this = this;	    
+    kb.ViewModel.prototype.constructor.call(this, model, {internals: ['comment']});         
     // Data
     this.comment = kb.defaultObservable(this._comment, '');
-    this.editing = ko.observable(false);
-  	
-  	// Operations
-  	this.onDestroyComment = function() {
-    	return model.destroy();
+    // Operations
+    this.onDestroyComment = function() {
+      return model.destroy();
     }
     return this;
   }
@@ -34,7 +30,7 @@ var CommentViewModel = kb.ViewModel.extend({
  * @return {CommentsViewModel}
  */
 var CommentsViewModel = function(comments) {
-	var _this = this;
+  var _this = this;
   this.comments = kb.collectionObservable(comments, {
     view_model: CommentViewModel,
     sort_attribute: 'comment'
