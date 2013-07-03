@@ -1,7 +1,7 @@
 ////////////
 // Models //
 ////////////
-var Comment, Comments, SyncComment, SyncCommentFlags;
+var Comment, Comments, SyncComment, FlaggedSyncComment;
 
 /**
  * Comment : Contains one comment
@@ -22,7 +22,7 @@ Comment = Backbone.Model.extend({
 SyncComment = Backbone.Model.extend({
 });
 
-Flag = Backbone.Model.extend({
+FlaggedSyncComment = Backbone.Model.extend({
 });
 
 /**

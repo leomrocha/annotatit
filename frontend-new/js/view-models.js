@@ -47,3 +47,5 @@ var CommentsViewModel = function(comments) {
     return _this.new_comment('');
   };
 };
+
+
