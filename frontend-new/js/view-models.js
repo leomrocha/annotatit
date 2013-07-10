@@ -6,7 +6,6 @@
  * CommentViewModel: ViewModel for Comment
  * @type {kb.ViewModel}
  * @attribute comment
- * @attribute editing
  * @param  {Comment} model
  * @return {CommentViewModel}   
  */
@@ -47,5 +46,26 @@ var CommentsViewModel = function(comments) {
     return _this.new_comment('');
   };
 };
+
+/**
+ * SyncCommentViewModel: ViewModel for SyncComment
+ * @type {kb.ViewModel}
+ * @attribute comment
+ * @param  {Comment} model
+ * @return {SyncCommentViewModel}   
+ */
+var SyncCommentViewModel = kb.ViewModel.extend({
+  constructor: function(model) {
+    kb.ViewModel.prototype.constructor.call(this, model, {internals: ['comment', 'media_time']});         
+    // Data
+    this.comment = kb.defaultObservable(this._comment, '');
+    this.media_time = kb.observable(this._media_time);
+    // Operations
+    this.onDestroyComment = function() {
+      return model.destroy();
+    }
+    return this;
+  }
+});
 
 

@@ -104,7 +104,7 @@ describe("ViewModels", function() {
       expect(new SyncCommentViewModel(sync_comment)).toEqual(jasmine.any(SyncCommentViewModel));
     });
 
-    it("should be able to get the model", function() {
+    xit("should be able to get the model", function() {
       sync_comment_view_model = new SyncCommentViewModel(sync_comment);
       expect(sync_comment_view_model.model()).toEqual(sync_comment);
     });
