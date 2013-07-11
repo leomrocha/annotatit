@@ -143,7 +143,6 @@ describe("Models", function() {
     it("should be able to add new responses", function() {
       comment = new Comment({comment: lorem , responses: comments_list1});
       new_comment = {comment: zorem , responses: comments_list2};
-      console.log(comment.get("responses").toJSON());
       expect(comment.get("responses").add(new_comment)).not.toThrow();
       expect(comment.get("responses").toJSON()).toContain(new_comment);
     });
