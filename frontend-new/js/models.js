@@ -11,8 +11,10 @@ var Comment, Comments, SyncComment, FlaggedSyncComment;
  */
 Comment = Backbone.Model.extend({
 	model: {
-		    responses: Backbone.Collection.extend({ model: Comment })
-    },
+		responses: Backbone.Collection.extend({
+			model: Comment
+		})
+	},
 	defaults: {
 		comment: "",
 		responses: []
@@ -29,20 +31,18 @@ Comments = Backbone.Collection.extend({
 });
 
 
-SyncComment = Backbone.Model.extend({
-	model: {
-		responses: Comments
+SyncComment = Comment.extend({
+	initialize: function() {
+		SyncComment.__super__.initialize.apply(this, arguments);
 	},
-	defaults: {
-		comment: "",
-		responses: []
-	}
 });
 
 SyncComments = Backbone.Collection.extend({
 	model: SyncComment
 });
 
-FlaggedSyncComment = Backbone.Model.extend({ 
-    model: SyncComment
-    });
+FlaggedSyncComment = SyncComment.extend({
+	initialize: function() {
+		FlaggedSyncComment.__super__.initialize.apply(this, arguments);
+	},
+});
