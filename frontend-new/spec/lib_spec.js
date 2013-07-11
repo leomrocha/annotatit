@@ -1,17 +1,16 @@
 var lorem = "Lorem ipsum dolor sit amet,";
 var zorem = "Zorem ipsum dolor sit amet,";
-var empty_response = [];
 var comments_list1 = [
-  {comment: lorem, responses: empty_response},
-  {comment: lorem, responses: empty_response},
-  {comment: lorem, responses: empty_response},
-  {comment: lorem, responses: empty_response}
+  {comment: lorem},
+  {comment: lorem},
+  {comment: lorem},
+  {comment: lorem}
 ];
 var comments_list2 = [
-  {comment: zorem, responses: empty_response},
-  {comment: zorem, responses: empty_response},
-  {comment: zorem, responses: empty_response},
-  {comment: zorem, responses: empty_response}
+  {comment: zorem},
+  {comment: zorem},
+  {comment: zorem},
+  {comment: zorem}
 ];
 
 describe("ViewModels", function() {
@@ -43,14 +42,6 @@ describe("ViewModels", function() {
       comment_view_model = new CommentViewModel(comment);
       expect(function() {comment_view_model.model().set('comment', zorem);}).not.toThrow();
       expect(comment_view_model.model().get('comment')).toEqual(zorem);
-    });
-
-    xit("responses should be a Coments model", function() {
-      expect(comment_view_model.model().get('responses')).toEqual(jasmine.any(Comments));
-    });
-
-    xit("should be able to add responses", function() { 
-      expect(comment_view_model.model().get('responses').add(comments_list1)).not.toThrow();
     });
   });
 
@@ -87,12 +78,13 @@ describe("ViewModels", function() {
       comments_view_model.new_comment(zorem);
       expect(function() {comments_view_model.onAddComment()}).not.toThrow();
       expect(
-        comments_view_model.comments.collection().findWhere({comment: zorem}).get("comment")
+        comments_view_model.comments.collection()
+        .findWhere({comment: zorem}).get("comment")
       ).toEqual(zorem);
     });
   });
 
-  describe("SyncComment ViewModel", function() {
+  xdescribe("SyncComment ViewModel", function() {
     var sync_comment, sync_new_comment, sync_comment_view_model;
 
     beforeEach(function() {
@@ -131,20 +123,8 @@ describe("Models", function() {
     });
 
     it("should be able to create a new one using a JSON object as source", function() {
-      new_comment = {comment: lorem , responses: comments_list1};
+      new_comment = {comment: lorem};
       expect(new Comment(new_comment)).toEqual(jasmine.any(Comment));
-    });
-
-    it("should be able to get the responses", function() {
-      comment = new Comment({comment: lorem , responses: comments_list1});
-      expect(comment.get("responses")).toEqual(new Comments(comments_list1).toJSON());
-    });
-
-    it("should be able to add new responses", function() {
-      comment = new Comment({comment: lorem , responses: comments_list1});
-      new_comment = {comment: zorem , responses: comments_list2};
-      expect(comment.get("responses").add(new_comment)).not.toThrow();
-      expect(comment.get("responses").toJSON()).toContain(new_comment);
     });
   });
 
@@ -160,7 +140,7 @@ describe("Models", function() {
 
     it("should be able to get add a comment", function() {
       comments = new Comments([]);
-      new_comment = {comment: lorem , responses: []};
+      new_comment = {comment: lorem};
       expect(function(){comments.add(new_comment);}).not.toThrow();
       expect(comments.toJSON()).toContain(new_comment);
     });
@@ -173,13 +153,8 @@ describe("Models", function() {
     });
     
     it("should be able to create a new one using a JSON object as source", function() {
-      new_sync_comment = {comment: lorem , responses: comments_list1};
+      new_sync_comment = {comment: lorem};
       expect(new SyncComment(new_comment)).toEqual(jasmine.any(Comment));
-    });
-
-    it("should be able to get the responses", function() {
-      new_sync_comment = new SyncComment({comment: lorem , responses: comments_list1});
-      expect(new_sync_comment.get("responses")).toEqual(new SyncComments(comments_list1).toJSON());
     });
   });
 });

@@ -6,18 +6,11 @@ var Comment, Comments, SyncComment, FlaggedSyncComment;
 /**
  * Comment : Contains one comment
  * @type {Backbone.Model}
- * @contains Comments
  * @keys [comment, Comment]
  */
 Comment = Backbone.Model.extend({
-	model: {
-		responses: Backbone.Collection.extend({
-			model: Comment
-		})
-	},
 	defaults: {
-		comment: "",
-		responses: []
+		comment: ""
 	}
 });
 
