@@ -2,6 +2,29 @@
 // ViewModels //
 ////////////////
 
+/*
+
+The signals that MUST be emmited 
+
+    //On updating a [Flag|Section|SyncComment|Comment]
+    //this is for connecting with GraphicDisplay
+    $.event.trigger("Annotatit:Event:[Flag|Section|SyncComment|Comment]:updated", DATA);
+    
+    //on mouse clicked over a [Flag|Section|SyncComment]
+    $.event.trigger("Annotatit:Event:time:set", MEDIA_TIME);
+    $.event.trigger("Annotatit:Event:[Flag|Section|SyncComment|Comment]:mouse:click", DATA);
+
+
+That MIGTH be implemented later:
+    //on mouse events over a [Flag|Section|SyncComment|Comment]
+    $.event.trigger("Annotatit:Event:[Flag|Section|SyncComment|Comment]:mouse:over", DATA);
+    $.event.trigger("Annotatit:Event:[Flag|Section|SyncComment|Comment]:mouse:out", DATA);
+    $.event.trigger("Annotatit:Event:[Flag|Section|SyncComment|Comment]:mouse:press", DATA);
+    $.event.trigger("Annotatit:Event:[Flag|Section|SyncComment|Comment]:mouse:release", DATA);
+
+
+*/
+
 /**
  * CommentViewModel: ViewModel for Comment
  * @type {kb.ViewModel}
@@ -75,22 +98,33 @@ var SyncCommentViewModel = kb.ViewModel.extend({
  * @param {JQueryDOM Element} player_slider DOM Element with JQuery-UI slider attached
  * @return {SyncCommentsViewModel}
  */
-var SyncCommentsViewModel = function(sync_comments, player_slider) {
+var SyncCommentsViewModel = function(sync_comments) {
   var _this = this;
   this.sync_comments = kb.collectionObservable(sync_comments, {
     view_model: SyncCommentViewModel,
     sort_attribute: 'media_time'
   });
   this.new_sync_comment = ko.observable('');
+  //is this the time tracker 
   this.current_media_time = ko.observable(0);
-  this.updateMediaTime = function() {
-    _this.current_media_time(player_slider.slider("value"))
+  
+  //TODO add event handler
+  //the second argument (this) is passed in event.data by jQuery, that way the 
+  //reference to the current object is not lost due to event handling
+  $(document).on("Annotatit:Event:MediaPlayerFacade:time:update",this, callback);
+
+  this.updateMediaTime = function(event, time) {
+    //validate that time is a number, or transform it to
+    //_this.current_media_time(time); 
+    event.data.current_media_time(time); //event.data is the SyncCommentsViewModel object
   };
-  this.playVideo = function() {
-    setInterval(function(){
-      player_slider.slider("value", player_slider.slider("value") + 1);
-    },1000);
+  
+  this.seekTime = function(time){
+    //emit time signal
+    //MUST be a number
+    $.event.trigger("Annotatit:Event:time:set",media_time);
   };
+  
   this.onAddComment = function(view_model, event) {
     if (!$.trim(_this.new_sync_comment()) || (event.keyCode !== ENTER_KEY)) {
       return true;
