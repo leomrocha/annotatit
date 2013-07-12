@@ -29,8 +29,12 @@
 			data-bind="value: new_comment, valueUpdate: 'afterkeydown', event: {keyup: onAddComment}">
 		</section>
 		<section data-name="SyncComments">
+			
+			<!--TODO Erase, use MediaPlayerFacade API-->
 			<div data-name="player-slider" data-bind="event: { slidechange: updateMediaTime }"></div>
 			<button data-name="play" data-bind="click: playVideo">Play</button>
+			<!--end TODO-->
+			
 			<ul data-name="SyncCommentsDisplayer" data-bind="foreach: sync_comments">
 				<li>
 					<p data-bind="text: comment"></p>
