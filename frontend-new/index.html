@@ -28,20 +28,32 @@
 			<input data-name="NewComments" type="text" placeholder="New Comment" autofocus
 			data-bind="value: new_comment, valueUpdate: 'afterkeydown', event: {keyup: onAddComment}">
 		</section>
-		<section data-name="SyncComments">
-			<div data-name="player-slider" data-bind="event: { slidechange: updateMediaTime }"></div>
+		<section data-name="FlaggedSyncComments">
+			<div data-name="flagged-player-slider" data-bind="event: { slidechange: updateMediaTime }"></div>
 			<button data-name="play" data-bind="click: playVideo">Play</button>
 			<ul data-name="SyncCommentsDisplayer" data-bind="foreach: sync_comments">
 				<li>
 					<p data-bind="text: comment"></p>
 					<p data-bind="text: media_time"></p>
+					<p data-bind="text: flag"></p>
+
 					<input type="text" data-bind="value: comment">
 					<input type="text" data-bind="value: media_time">
+					<input type="text" data-bind="value: flag">
 					<button data-bind="click: onDestroyComment">X</button>
 				</li>
 			</ul>
-			<input data-name="NewSyncComments" type="text" placeholder="New Comment" autofocus
-			data-bind="value: new_sync_comment, valueUpdate: 'afterkeydown', event: {keyup: onAddComment}">
+			<form data-bind="submit: onAddComment">
+				<input data-name="NewSyncComments" type="text" placeholder="Comment" autofocus
+				data-bind="value: new_sync_comment, valueUpdate: 'afterkeydown'">
+		    <input data-name="NewSyncComments" type="text" placeholder="Comment" autofocus
+				data-bind="value: new_sync_comment, valueUpdate: 'afterkeydown'">
+		    <button type="submit">Add Comment</button>
+			</form>
+			<form action="index_submit" method="get" accept-charset="utf-8">
+				index_submit
+				get
+			</form>
 		</section>
 	</body>
 </html>

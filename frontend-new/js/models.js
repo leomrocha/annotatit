@@ -1,7 +1,7 @@
 ////////////
 // Models //
 ////////////
-var Comment, Comments, SyncComment, FlaggedSyncComment;
+var Comment, Comments, SyncComment, FlaggedSyncComment, FlaggedSyncComments;
 
 /**
  * Comment : Contains one comment
@@ -28,6 +28,7 @@ SyncComment = Comment.extend({
 		SyncComment.__super__.initialize.apply(this, arguments);
 	},
 	defaults: {
+		comment: "",
 		media_time: 0
 	}
 });
@@ -40,4 +41,8 @@ FlaggedSyncComment = SyncComment.extend({
 	initialize: function() {
 		FlaggedSyncComment.__super__.initialize.apply(this, arguments);
 	},
+});
+
+FlaggedSyncComments = Backbone.Collection.extend({
+	model: FlaggedSyncComment
 });
