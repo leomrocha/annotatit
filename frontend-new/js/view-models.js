@@ -59,7 +59,7 @@ var SyncCommentViewModel = kb.ViewModel.extend({
     kb.ViewModel.prototype.constructor.call(this, model, {internals: ['comment', 'media_time']});         
     // Data
     this.comment = kb.defaultObservable(this._comment, '');
-    this.media_time = kb.observable(this._media_time);
+    this.media_time = kb.defaultObservable(this._media_time, 0);
     // Operations
     this.onDestroyComment = function() {
       return model.destroy();
@@ -68,4 +68,37 @@ var SyncCommentViewModel = kb.ViewModel.extend({
   }
 });
 
+/**
+ * SyncCommentsViewModel: ViewModel for Comments
+ * @attribute comments
+ * @param  {Comments} comments 
+ * @return {SyncCommentsViewModel}
+ */
+var SyncCommentsViewModel = function(sync_comments, player_slider) {
+  var _this = this;
+  this.sync_comments = kb.collectionObservable(sync_comments, {
+    view_model: SyncCommentViewModel,
+    sort_attribute: 'media_time'
+  });
+  this.new_sync_comment = ko.observable('');
+  this.current_media_time = ko.observable(0);
+  this.updateMediaTime = function() {
+    _this.current_media_time(player_slider.slider("value"))
+  };
+  this.playVideo = function() {
+    setInterval(function(){
+      player_slider.slider("value", player_slider.slider("value") + 1);
+    },1000);
+  };
+  this.onAddComment = function(view_model, event) {
+    if (!$.trim(_this.new_sync_comment()) || (event.keyCode !== ENTER_KEY)) {
+      return true;
+    }
+    _this.sync_comments.collection().create({
+      comment: _this.new_sync_comment(),
+      media_time: _this.current_media_time()
+    });
+    return _this.new_sync_comment('');
+  };
+};
 

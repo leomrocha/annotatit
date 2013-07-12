@@ -23,11 +23,13 @@ Comments = Backbone.Collection.extend({
 	model: Comment
 });
 
-
 SyncComment = Comment.extend({
 	initialize: function() {
 		SyncComment.__super__.initialize.apply(this, arguments);
 	},
+	defaults: {
+		media_time: 0
+	}
 });
 
 SyncComments = Backbone.Collection.extend({

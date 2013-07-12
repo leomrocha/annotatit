@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<!-- Stylesheets -->
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 		<!-- Javascript Libraries -->
 		<script type="text/javascript" src="js/jquery.js"></script>
 		<script type="text/javascript" src="js/knockback.js"></script>
-		<script type="text/javascript" src="js/backbone-relational.js"></script>
-		
+  	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 		<script type="text/javascript" src="js/shared.js"></script>
 		<script type="text/javascript" src="js/models.js"></script>
 		<script type="text/javascript" src="js/view-models.js"></script>
@@ -28,15 +29,19 @@
 			data-bind="value: new_comment, valueUpdate: 'afterkeydown', event: {keyup: onAddComment}">
 		</section>
 		<section data-name="SyncComments">
+			<div data-name="player-slider" data-bind="event: { slidechange: updateMediaTime }"></div>
+			<button data-name="play" data-bind="click: playVideo">Play</button>
 			<ul data-name="SyncCommentsDisplayer" data-bind="foreach: sync_comments">
 				<li>
 					<p data-bind="text: comment"></p>
+					<p data-bind="text: media_time"></p>
 					<input type="text" data-bind="value: comment">
+					<input type="text" data-bind="value: media_time">
 					<button data-bind="click: onDestroyComment">X</button>
 				</li>
 			</ul>
 			<input data-name="NewSyncComments" type="text" placeholder="New Comment" autofocus
-			data-bind="value: new_comment, valueUpdate: 'afterkeydown', event: {keyup: onAddComment}">
+			data-bind="value: new_sync_comment, valueUpdate: 'afterkeydown', event: {keyup: onAddComment}">
 		</section>
 	</body>
 </html>
