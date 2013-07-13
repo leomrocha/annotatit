@@ -6166,15 +6166,15 @@ a.badge:focus {
   position: fixed;
 }
 
-.form-signin {
-  max-width: 520px;
-  padding: 19px 29px 29px;
-  margin: 15px auto 20px;
-  background-color: #FFFFFF;
-  border: 1px solid #e5e5e5;
-  -webkit-border-radius:5px;
-  border-radius: 5px;
-  -webkit-box-shadow:0 1px 2px rgba(0,0,0,.05);
-  box-shadow: 0 1px 2px rgba(0,0,0,.05);
-  }
-  
+.login{
+  background-color: #FCFCFC;  
+  padding:20px;
+  margin: 20px auto;  
+  width: 330px;
+  -webkit-border-radius: 10px 10px 10px 10px; 
+  -moz-border-radius: 10px 10px 10px 10px; 
+  border-radius: 10px 10px 10px 10px; 
+  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15); 
+  -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15); 
+  box-shadow: 0 1px 2px rgba(0,0,0,.15);
+}

@@ -8,35 +8,32 @@
 	</head>
 	
 	<body>
-		<div class="container">
-			<div id="login-wraper">
-	            <form class="form-signin">
-	                <h2 class="form-signin-heading">Login</h2>
-	                	<div class="container-fluid">
-	                		<div class="row-fluid">
-	                			<div class="span6">
-		                				<!--Login entering data-->
-					                    <input type="text" class="input-block-level" placeholder="Email address">
-					                    <input type="password" class="input-block-level" placeholder="Password">
-					                	<label class="checkbox">
-					                		<input type="checkbox" value="remember-me">Remember me
-					                	</label>
-					                	<button class="btn btn-large btn-primary" type="submit">Sign in</button>
-					            </div>
-					            <div class="span4 offset2">
-					            	<!--Loging with facebook, google, etc...-->
-				            			<a href="#"><img class="logimg" src="images/FBlogin.png"></a>
-				            			<a href="#"><img class="logimg" src="images/Twitterlogin.png"></a>
-				            			<a href="#"><img class="logimg" src="images/Googlelogin.png"></a>
-				            			<a href="#"><img class="logimg" src="images/Yahoologin.png"></a>
-				            	</div>
-				            </div>
 
-			            </div>
-	            </form>
-	        </div>
+		<!--Start Login Form -->
+		<div class="login">
+			<div class="container">
+				<div class="span3">
+					<legend>Please Sign In</legend>
+					<div class="row-fluid">
+	            		<!--Login with email-->
+		            		<form method="POST" action="" accept-charset="UTF-8">
+								<input type="text" id="username" class="span12" name="username" placeholder="Username">
+								<span class="help-block"></span>
+								<input type="password" id="password" class="span12" name="password" placeholder="Password">
+				            	<label class="checkbox">
+				            		<input type="checkbox" name="remember" value="1"> Remember Me
+				            	</label>
+								<button type="submit" name="submit" class="btn btn-info btn-block">Sign in</button>
+							</form> 
+							<label>New to Annotatit? <button class="btn btn-danger" type="button">Register</button></label>
+					</div>
+				</div>
+			</div>
 		</div>
-		<script src="js/jquery.js"></script>
-		<script src="js/bootstrap.min.js"></script>
+		<!-- End Login-->
+
+
+		<script src="js/jquery.min.js"></script>
+		<script src="js/bootstrap.js"></script>
 	</body>
 </html>
