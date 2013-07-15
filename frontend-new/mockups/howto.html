@@ -2,9 +2,9 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<title>My Media -- AnnotatIt </title>
+		<title>How to ? -- AnnotatIt</title>
 
-		<meta name="description" content="responsive photo gallery using colorbox" />
+		<meta name="description" content="" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 		<!--basic styles-->
@@ -12,15 +12,12 @@
 		<link href="assets/css/bootstrap.min.css" rel="stylesheet" />
 		<link href="assets/css/bootstrap-responsive.min.css" rel="stylesheet" />
 		<link rel="stylesheet" href="assets/css/font-awesome.min.css" />
-		<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
 
 		<!--[if IE 7]>
 		  <link rel="stylesheet" href="assets/css/font-awesome-ie7.min.css" />
 		<![endif]-->
 
 		<!--page specific plugin styles-->
-
-		<link rel="stylesheet" href="assets/css/colorbox.css" />
 
 		<!--fonts-->
 
@@ -314,9 +311,14 @@
 				<div class="breadcrumbs" id="breadcrumbs">
 					<ul class="breadcrumb">
 						<li>
-							<i class="icon-desktop"></i>
-							<a href="#">Media</a>
+							<i class="icon-question-sign"></i>
+							<a href="#">How to ?</a>
+
+							<span class="divider">
+								<i class="icon-angle-right arrow-icon"></i>
+							</span>
 						</li>
+
 					</ul><!--.breadcrumb-->
 
 					<div class="nav-search" id="nav-search">
@@ -330,63 +332,72 @@
 				</div>
 
 				<div class="page-content">
-					<div class="page-header position-relative">
-						<h1>
-							Media
-							<small>
-								<i class="icon-double-angle-right"></i>
-								my media
-							</small>
-						</h1>
-					</div><!--/.page-header-->
-
 					<div class="row-fluid">
 						<div class="span12">
 							<!--PAGE CONTENT BEGINS-->
+							
+							<div class="span12">
+									<h3 class="header smaller lighter blue">How to</h3>
 
-							<div class="row-fluid">
-								<ul class="ace-thumbnails">
-
-									<li>
-										<a href="assets/images/gallery/image-1.jpg" >
-											<img alt="150x150" src="assets/images/gallery/thumb-1.jpg" />
-											<div class="text">
-												<div class="inner">File's title</div>
+									<div id="accordion2" class="accordion">
+										<div class="accordion-group">
+											<div class="accordion-heading">
+												<a href="#collapseOne" data-parent="#accordion2" data-toggle="collapse" class="accordion-toggle collapsed">
+													How to #1
+												</a>
 											</div>
-											<div class="tags">
-												<span class="label label-info arrowed">Tag1</span>
-												<span class="label label-important">Tag2</span>
+
+											<div class="accordion-body collapse" id="collapseOne" style="height: 0px;">
+												<div class="accordion-inner">
+													Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+												</div>
 											</div>
-										</a>
-
-										<div class="tools">
-											<a href="#">
-												<i class="icon-eye-open"></i>
-											</a>
-
-											<a href="#">
-												<i class="icon-pencil"></i>
-											</a>
-
-											<a href="#">
-												<i class="icon-share-alt"></i>
-											</a>
 										</div>
-									</li>
-								</ul>
-							</div><!--PAGE CONTENT ENDS-->
+
+										<div class="accordion-group">
+											<div class="accordion-heading">
+												<a href="#collapseTwo" data-parent="#accordion2" data-toggle="collapse" class="accordion-toggle collapsed">
+													How to #2
+												</a>
+											</div>
+
+											<div class="accordion-body collapse" id="collapseTwo">
+												<div class="accordion-inner">
+													Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+												</div>
+											</div>
+										</div>
+
+										<div class="accordion-group">
+											<div class="accordion-heading">
+												<a href="#collapseThree" data-parent="#accordion2" data-toggle="collapse" class="accordion-toggle collapsed">
+													How to #3
+												</a>
+											</div>
+
+											<div class="accordion-body collapse" id="collapseThree">
+												<div class="accordion-inner">
+													Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+
+
+							<!--PAGE CONTENT ENDS-->
 						</div><!--/.span-->
 					</div><!--/.row-fluid-->
 				</div><!--/.page-content-->
-				<!--Add media-->
-					<div class="ace-settings-container" id="ace-settings-container">
-						<button class="btn btn-app btn-purple btn-small">
-							<i class="icon-cloud-upload bigger-200"></i>
-											Upload
-						</button>
-					</div><!--End Add media-->
+
+				
 			</div><!--/.main-content-->
 		</div><!--/.main-container-->
+
+		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-small btn-inverse">
+			<i class="icon-double-angle-up icon-only bigger-110"></i>
+		</a>
 
 		<!--basic scripts-->
 
@@ -411,48 +422,11 @@
 
 		<!--page specific plugin scripts-->
 
-		<script src="assets/js/jquery.colorbox-min.js"></script>
-
 		<!--ace scripts-->
 
 		<script src="assets/js/ace-elements.min.js"></script>
 		<script src="assets/js/ace.min.js"></script>
 
 		<!--inline scripts related to this page-->
-
-		<script type="text/javascript">
-			$(function() {
-	var colorbox_params = {
-		reposition:true,
-		scalePhotos:true,
-		scrolling:false,
-		previous:'<i class="icon-arrow-left"></i>',
-		next:'<i class="icon-arrow-right"></i>',
-		close:'&times;',
-		current:'{current} of {total}',
-		maxWidth:'100%',
-		maxHeight:'100%',
-		onOpen:function(){
-			document.body.style.overflow = 'hidden';
-		},
-		onClosed:function(){
-			document.body.style.overflow = 'auto';
-		},
-		onComplete:function(){
-			$.colorbox.resize();
-		}
-	};
-
-	$('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
-	$("#cboxLoadingGraphic").append("<i class='icon-spinner orange'></i>");//let's add a custom loading icon
-
-	/**$(window).on('resize.colorbox', function() {
-		try {
-			//this function has been changed in recent versions of colorbox, so it won't work
-			$.fn.colorbox.load();//to redraw the current frame
-		} catch(e){}
-	});*/
-})
-		</script>
 	</body>
 </html>
