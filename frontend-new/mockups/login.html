@@ -1,49 +1,36 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>AnnotatIt</title>
-		<link href="css/bootstrap.css" rel="stylesheet">
-		<link href="css/bootstrap-responsive.css" rel="stylesheet">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	</head>
-	
-	<body>
-		<!-- Modal -->
-	<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  		<div class="modal-header">
-		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		    <h3 id="myModalLabel">Login</h3>
- 		</div>
-  		<div class="modal-body">
-    		<div class="login">
-				<div class="container">
-					<div class="span3">
-						<legend>Please Sign In</legend>
-						<div class="row-fluid">
-		            		<!--Login with email-->
-			            		<form method="POST" action="" accept-charset="UTF-8">
-									<input type="text" id="username" class="span12" name="username" placeholder="Username">
-									<span class="help-block"></span>
-									<input type="password" id="password" class="span12" name="password" placeholder="Password">
-					            	<label class="checkbox">
-					            		<input type="checkbox" name="remember" value="1"> Remember Me
-					            	</label>
-									
-								</form> 
-								<p>New to Annotatit? </p>
-						</div>
-					</div>
-				</div>
-			</div>
- 		</div>
-  		<div class="modal-footer">
-    		<button type="submit" data-dismiss="modal" name="submit" class="btn btn-info btn-block">Sign in</button>
-       		<button class="btn btn-danger" type="button">Register</button>
-  		</div>
-	</div>
-
-
-		<script src="js/jquery.min.js"></script>
-		<script src="js/bootstrap.js"></script>
-	</body>
-</html>
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	    <div class="myformy bred">
+            <h3>Login to your Account</h3>
+                <div class="form">
+                    <form class="form-horizontal">
+                        
+                        <div class="control-group">
+                        	<label class="control-label" for="username">Username</label>
+                            	<div class="controls">
+                                	<input type="text" class="input-large" id="username">
+                                </div>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label class="control-label" for="email">Password</label>
+                            <div class="controls">
+                                <input type="password" class="input-large" id="password">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls">
+                                <label class="checkbox">
+                                <input type="checkbox"> Remember me
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            
+                            <button type="submit" class="btn">Login</button>&nbsp; &nbsp; | &nbsp &nbsp;
+                            <button type="reset" class="btn">Reset</button>
+                        </div>
+                	</form>
+                </div>
+            </div>
+        </div>
