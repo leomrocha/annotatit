@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+		<title>User Profile Page - Ace Admin</title>
+
+		<meta name="description" content="3 styles with inline editable feature" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<!--basic styles-->
+
+		<link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="assets/css/bootstrap-responsive.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="assets/css/font-awesome.min.css" />
+
+		<!--[if IE 7]>
+		  <link rel="stylesheet" href="assets/css/font-awesome-ie7.min.css" />
+		<![endif]-->
+
+		<!--page specific plugin styles-->
+
+		<link rel="stylesheet" href="assets/css/jquery-ui-1.10.3.custom.min.css" />
+		<link rel="stylesheet" href="assets/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="assets/css/select2.css" />
+		<link rel="stylesheet" href="assets/css/bootstrap-editable.css" />
+
+		<!--fonts-->
+
+		<link rel="stylesheet" href="assets/css/ace-fonts.css" />
+
+		<!--ace styles-->
+
+		<link rel="stylesheet" href="assets/css/ace.min.css" />
+		<link rel="stylesheet" href="assets/css/ace-responsive.min.css" />
+		<link rel="stylesheet" href="assets/css/ace-skins.min.css" />
+
+		<!--[if lte IE 8]>
+		  <link rel="stylesheet" href="assets/css/ace-ie.min.css" />
+		<![endif]-->
+
+		<!--inline styles related to this page-->
+
+
+</head>
+
+<body>
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<a href="#" class="brand">
+					<small> <i class="icon-pencil"></i>
+						AnnotatIt
+					</small>
+				</a>
+				<!--/.brand-->
+
+				<!--Alarms -->
+				<ul class="nav ace-nav pull-right">
+					<li class="purple">
+						<a data-toggle="dropdown" class="dropdown-toggle" href="#"> <i class="icon-bell-alt icon-animated-bell"></i>
+							<span class="badge badge-important">8</span>
+						</a>
+
+						<ul class="pull-right dropdown-navbar navbar-pink dropdown-menu dropdown-caret dropdown-closer">
+							<li class="nav-header">
+								<i class="icon-warning-sign"></i>
+								8 Notifications
+							</li>
+
+							<li>
+								<a href="#">
+									<div class="clearfix">
+										<span class="pull-left">
+											<i class="btn btn-mini no-hover btn-pink icon-comment"></i>
+											New Comments
+										</span>
+										<span class="pull-right badge badge-info">+12</span>
+									</div>
+								</a>
+							</li>
+
+							<li>
+								<a href="#">
+									<i class="btn btn-mini btn-primary icon-user"></i>
+									Bob just signed up as an editor ...
+								</a>
+							</li>
+
+							<li>
+								<a href="#">
+									<div class="clearfix">
+										<span class="pull-left">
+											<i class="btn btn-mini no-hover btn-success icon-shopping-cart"></i>
+											New Orders
+										</span>
+										<span class="pull-right badge badge-success">+8</span>
+									</div>
+								</a>
+							</li>
+
+							<li>
+								<a href="#">
+									<div class="clearfix">
+										<span class="pull-left">
+											<i class="btn btn-mini no-hover btn-info icon-twitter"></i>
+											Followers
+										</span>
+										<span class="pull-right badge badge-info">+11</span>
+									</div>
+								</a>
+							</li>
+
+							<li>
+								<a href="#">
+									See all notifications
+									<i class="icon-arrow-right"></i>
+								</a>
+							</li>
+						</ul>
+					</li>
+
+					<li class="green">
+						<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+							<i class="icon-envelope icon-animated-vertical"></i>
+							<span class="badge badge-success">5</span>
+						</a>
+
+						<ul class="pull-right dropdown-navbar dropdown-menu dropdown-caret dropdown-closer">
+							<li class="nav-header">
+								<i class="icon-envelope-alt"></i>
+								5 Messages
+							</li>
+
+							<li>
+								<a href="#">
+									<img src="assets/avatars/avatar.png" class="msg-photo" alt="Alex's Avatar" />
+									<span class="msg-body">
+										<span class="msg-title">
+											<span class="blue">Alex:</span>
+											Ciao sociis natoque penatibus et auctor ...
+										</span>
+
+										<span class="msg-time">
+											<i class="icon-time"></i>
+											<span>a moment ago</span>
+										</span>
+									</span>
+								</a>
+							</li>
+
+							<li>
+								<a href="#">
+									<img src="assets/avatars/avatar3.png" class="msg-photo" alt="Susan's Avatar" />
+									<span class="msg-body">
+										<span class="msg-title">
+											<span class="blue">Susan:</span>
+											Vestibulum id ligula porta felis euismod ...
+										</span>
+
+										<span class="msg-time">
+											<i class="icon-time"></i>
+											<span>20 minutes ago</span>
+										</span>
+									</span>
+								</a>
+							</li>
+
+							<li>
+								<a href="#">
+									<img src="assets/avatars/avatar4.png" class="msg-photo" alt="Bob's Avatar" />
+									<span class="msg-body">
+										<span class="msg-title">
+											<span class="blue">Bob:</span>
+											Nullam quis risus eget urna mollis ornare ...
+										</span>
+
+										<span class="msg-time">
+											<i class="icon-time"></i>
+											<span>3:15 pm</span>
+										</span>
+									</span>
+								</a>
+							</li>
+
+							<li>
+								<a href="#">
+									See all messages
+									<i class="icon-arrow-right"></i>
+								</a>
+							</li>
+						</ul>
+					</li>
+
+					<li class="light-blue">
+						<a data-toggle="dropdown" href="#" class="dropdown-toggle">
+							<img class="nav-user-photo" src="assets/avatars/user.jpg" alt="Jason's Photo" />
+							<span class="user-info">
+								<small>Welcome,</small>
+								Jason
+							</span>
+
+							<i class="icon-caret-down"></i>
+						</a>
+
+						<ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-closer">
+							<li>
+								<a href="#">
+									<i class="icon-cog"></i>
+									Settings
+								</a>
+							</li>
+
+							<li>
+								<a href="#">
+									<i class="icon-user"></i>
+									Profile
+								</a>
+							</li>
+
+							<li class="divider"></li>
+
+							<li>
+								<a href="index.html">
+									<i class="icon-off"></i>
+									Logout
+								</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<!--/.ace-nav-->
+			</div>
+			<!--/.container-fluid-->
+		</div>
+		<!--/.navbar-inner-->
+	</div>
+
+	<div class="main-container container-fluid">
+		<a class="menu-toggler" id="menu-toggler" href="#">
+			<span class="menu-text"></span>
+		</a>
+
+		<div class="sidebar" id="sidebar">
+			<div class="sidebar-shortcuts" id="sidebar-shortcuts">
+				<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+					<button class="btn btn-small btn-success">
+						<i class="icon-signal"></i>
+					</button>
+
+					<button class="btn btn-small btn-info">
+						<i class="icon-pencil"></i>
+					</button>
+
+					<button class="btn btn-small btn-warning">
+						<i class="icon-group"></i>
+					</button>
+
+					<button class="btn btn-small btn-danger">
+						<i class="icon-cogs"></i>
+					</button>
+				</div>
+
+				<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+					<span class="btn btn-success"></span>
+
+					<span class="btn btn-info"></span>
+
+					<span class="btn btn-warning"></span>
+
+					<span class="btn btn-danger"></span>
+				</div>
+			</div>
+			<!--#sidebar-shortcuts-->
+
+			<ul class="nav nav-list">
+				<li>
+					<a href="#" class="dropdown-toggle">
+						<i class="icon-desktop"></i>
+						<span class="menu-text">Media</span> <b class="arrow icon-angle-down"></b>
+					</a>
+
+					<ul class="submenu">
+						<li>
+							<a href="mymedia.html">
+								<i class="icon-double-angle-right"></i>
+								My media
+							</a>
+						</li>
+
+						<li>
+							<a href="myannotations.html">
+								<i class="icon-double-angle-right"></i>
+								My annotations
+							</a>
+						</li>
+
+						<li>
+							<a href="sharedwithme.html">
+								<i class="icon-double-angle-right"></i>
+								Shared with me
+							</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="howto.html">
+						<i class="icon-question-sign"></i>
+						<span class="menu-text">How to?</span>
+					</a>
+				</li>
+			</ul>
+			<!--/.nav-list-->
+
+			<div class="sidebar-collapse" id="sidebar-collapse">
+				<i class="icon-double-angle-left"></i>
+			</div>
+		</div>
+
+		<div class="main-content">
+			<div class="breadcrumbs" id="breadcrumbs">
+				<ul class="breadcrumb">
+					<li>
+						<i class="icon-desktop"></i>
+						<a href="#">Media</a>
+					</li>
+				</ul>
+				<!--.breadcrumb-->
+
+				<div class="nav-search" id="nav-search">
+					<form class="form-search">
+						<span class="input-icon">
+							<input type="text" placeholder="Search ..." class="input-small nav-search-input" id="nav-search-input" autocomplete="off" />
+							<i class="icon-search nav-search-icon"></i>
+						</span>
+					</form>
+				</div>
+				<!--#nav-search-->
+			</div>
+
+			<div class="page-content">
+				<div class="page-header position-relative">
+					<h1>
+						Media
+						<small>
+							<i class="icon-double-angle-right"></i>
+							my media
+						</small>
+					</h1>
+				</div>
+				<!--/.page-header-->
+
+				<div class="row-fluid">
+					<div class="span12">
+						<!--PAGE CONTENT BEGINS-->
+						<div>
+								<div id="user-profile-1" class="user-profile row-fluid">
+									<div class="span3 center">
+										<div>
+											<span class="profile-picture">
+												<img id="avatar" class="editable" alt="Alex's Avatar" src="assets/avatars/profile-pic.jpg" />
+											</span>
+
+											<div class="space-4"></div>
+
+											<div class="width-80 label label-info label-large arrowed-in arrowed-in-right">
+												<div class="inline position-relative">
+													<a href="#" class="user-title-label dropdown-toggle" data-toggle="dropdown">
+														<i class="icon-circle light-green middle"></i>
+														&nbsp;
+														<span class="white middle bigger-120">Alex M. Doe</span>
+													</a>
+
+													<ul class="align-left dropdown-menu dropdown-caret dropdown-lighter">
+												
+													</ul>
+												</div>
+											</div>
+										</div>
+
+										<div class="space-6"></div>
+
+										<div class="profile-contact-info">
+											
+
+											
+										</div>
+
+										
+
+										<div class="clearfix">
+										
+										</div>
+
+									
+									</div>
+
+									<div class="span9">
+										<div class="center">
+						
+										</div>
+
+										<div class="space-12"></div>
+
+										<div class="profile-user-info profile-user-info-striped">
+											<div class="profile-info-row">
+												<div class="profile-info-name"> Username </div>
+
+												<div class="profile-info-value">
+													<span class="editable" id="username">alexdoe</span>
+												</div>
+											</div>
+
+											<div class="profile-info-row">
+												<div class="profile-info-name"> Location </div>
+
+												<div class="profile-info-value">
+													<i class="icon-map-marker light-orange bigger-110"></i>
+													<span class="editable" id="country">Netherlands</span>
+													<span class="editable" id="city">Amsterdam</span>
+												</div>
+											</div>
+
+											<div class="profile-info-row">
+												<div class="profile-info-name"> Age </div>
+
+												<div class="profile-info-value">
+													<span class="editable" id="age">38</span>
+												</div>
+											</div>
+
+											<div class="profile-info-row">
+												<div class="profile-info-name"> Joined </div>
+
+												<div class="profile-info-value">
+													<span class="editable" id="signup">20/06/2010</span>
+												</div>
+											</div>
+
+											<div class="profile-info-row">
+												<div class="profile-info-name"> Last Online </div>
+
+												<div class="profile-info-value">
+													<span class="editable" id="login">3 hours ago</span>
+												</div>
+											</div>
+
+											
+										</div>
+
+										
+
+									
+									</div>
+								</div>
+							</div>
+					</div>
+				</div>
+			</div>
+			<!--/.main-content-->
+		</div>
+	</div>
+	<!--/.main-container-->
+	<footer class="footer"></footer>
+
+	<!--basic scripts-->
+
+
+
+</body>
+</html>
