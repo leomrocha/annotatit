@@ -50,38 +50,6 @@
 	text-decoration: none;
 }
 
-
- /* Parallax Slider */
-
-
-.da-slidermod{
-	margin-bottom: 0px;
-	border-top: 5px solid #eee;
-	border-bottom: 5px solid #eee;
-}
-
-.da-slidemod p{
- 	top: 60px;
- 	background: rgba(0,0,0,0.8);
- 	color: #fff;
- 	font-style: normal;
- 	font-size: 13px;
- 	line-height: 23px;
- 	padding: 10px 15px;
- 	height: 57%;
- 	width: 40%;
- }
-
-.da-slidermod {
-	font-size: 30px;
-	line-height: 50px;
-}
-
-.da-slidermod {
-	margin-top: 10px;
-	color: #666;
-}
-
 .plist{
       color:black;
      }
@@ -90,3 +58,5 @@
 	color:lightblue;
 
 }
+
+.myaccordion-inner{padding:9px 15px;border-top:1px solid #FFFFFF}.
