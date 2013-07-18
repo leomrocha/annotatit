@@ -38,6 +38,7 @@
 			<script src="assets/js/flot/jquery.flot.min.js"></script>
 			<script src="assets/js/flot/jquery.flot.pie.min.js"></script>
 			<script src="assets/js/flot/jquery.flot.resize.min.js"></script>
+		<!--End Scripts for graphic-->
 
 		<!--basic styles-->
 
@@ -72,7 +73,6 @@
 									height: '300px'
 							    });
 		</script>
-
 		
 	</head>
 
@@ -350,7 +350,7 @@
 				</div>
 			<!--End SideBar-->
 
-	<!--Main Content-->	
+		<!--Main Content-->	
 			<div class="main-content">
 				<div class="breadcrumbs" id="breadcrumbs">
 					<ul class="breadcrumb">
@@ -380,458 +380,211 @@
 							</small>
 						</h1>
 					</div><!--/.page-header-->
-
-					<div class="row-fluid">
-						<div class="span12">
-
-
-							<!--PAGE CONTENT BEGINS-->
-							<div class="row-fluid">
-
-								<!--Video-->
-									<div class="span7">
+						
+				<!--PAGE CONTENT BEGINS-->
+					<div class="container-fluid">
+						<div class="row-fluid">
+							<div class="span7">
+								<!--Video and graph-->
+								<div class="row-fluid">
+									<div class="span12">
+										<!--Video-->
 										<div class="video-container">
 											<object type="application/x-shockwave-flash" id="ytplayer" data="http://www.youtube.com/v/S33tWZqXhnk?version=3&amp;enablejsapi=1&amp;playerapiid=player1&amp;disablekb=1&amp;iv_load_policy=3&amp;modestbranding=1&amp;rel=0" width="520" height="350"><param name="allowScriptAccess" value="always"></object>
 										</div>
+										<!--End video-->
 									</div>
-								<!--End Video-->
-
-								<!--Comments Section-->
-									<div class="span5">
-										<div class="widget-box transparent" id="recent-box">
-											<!--Widget header-->
-											<div class="widget-header">
-												<h4 class="lighter smaller">
-													<i class="icon-pencil orange"></i>
-													Comments
-												</h4>
-												
+									<div class="row-fluid">
+										<div class="span12">
+											<!--Graph-->
+											<div id="sales-charts" style="width: 100%; height: 220px; padding: 0px; position: relative;"><canvas class="flot-base" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 814px; height: 220px;" width="814" height="220"></canvas><div class="flot-text" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; font-size: smaller; color: rgb(84, 84, 84);"><div class="flot-x-axis flot-x1-axis xAxis x1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;"><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 58px; top: 199px; left: 30px; text-align: center;">0.0</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 58px; top: 199px; left: 92px; text-align: center;">0.5</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 58px; top: 199px; left: 154px; text-align: center;">1.0</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 58px; top: 199px; left: 216px; text-align: center;">1.5</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 58px; top: 199px; left: 278px; text-align: center;">2.0</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 58px; top: 199px; left: 340px; text-align: center;">2.5</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 58px; top: 199px; left: 402px; text-align: center;">3.0</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 58px; top: 199px; left: 464px; text-align: center;">3.5</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 58px; top: 199px; left: 526px; text-align: center;">4.0</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 58px; top: 199px; left: 588px; text-align: center;">4.5</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 58px; top: 199px; left: 650px; text-align: center;">5.0</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 58px; top: 199px; left: 712px; text-align: center;">5.5</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 58px; top: 199px; left: 774px; text-align: center;">6.0</div></div><div class="flot-y-axis flot-y1-axis yAxis y1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;"><div class="flot-tick-label tickLabel" style="position: absolute; top: 184px; left: 1px; text-align: right;">-2.000</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 161px; left: 1px; text-align: right;">-1.500</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 138px; left: 1px; text-align: right;">-1.000</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 115px; left: 1px; text-align: right;">-0.500</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 92px; left: 5px; text-align: right;">0.000</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 69px; left: 5px; text-align: right;">0.500</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 46px; left: 5px; text-align: right;">1.000</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 23px; left: 5px; text-align: right;">1.500</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 0px; left: 5px; text-align: right;">2.000</div></div></div><canvas class="flot-overlay" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 814px; height: 220px;" width="814" height="220"></canvas><div class="legend"><div style="position: absolute; width: 68px; height: 66px; top: 15px; right: 13px; background-color: rgb(255, 255, 255); opacity: 0.85;"> </div><table style="position:absolute;top:15px;right:13px;;font-size:smaller;color:#545454"><tbody><tr><td class="legendColorBox"><div style="border:1px solid #ccc;padding:1px"><div style="width:4px;height:0;border:5px solid rgb(237,194,64);overflow:hidden"></div></div></td><td class="legendLabel">Domains</td></tr><tr><td class="legendColorBox"><div style="border:1px solid #ccc;padding:1px"><div style="width:4px;height:0;border:5px solid rgb(175,216,248);overflow:hidden"></div></div></td><td class="legendLabel">Hosting</td></tr><tr><td class="legendColorBox"><div style="border:1px solid #ccc;padding:1px"><div style="width:4px;height:0;border:5px solid rgb(203,75,75);overflow:hidden"></div></div></td><td class="legendLabel">Services</td></tr></tbody></table></div></div>
+											<!--End graph-->
+										</div>
+									</div>	
+								</div>
+								<!--End video and graph-->
+							</div>
+							<!--Comment section -->
+							<div class="span5">
+								<div class="widget-box ">
+									<!--Widget header -->
+									<div class="widget-header">
+										<h4 class="lighter smaller"> <i class="icon-pencil orange"></i>
+											Notes
+										</h4>
+										<div class="widget-toolbar no-border">
+											<a class="btn btn-info btn-small dropdown-toggle" data-toggle="dropdown" href="#">
+												<label>Sorty by</label>
+												<span class="caret"></span>
+											</a>
+											<div class="dropdown-menu pull-right">
+												<form class="form-horizontal" style="padding-right:20px; padding-top:10px; margin-left:-50px">
+													<div class="control-group">
+														<label class="control-label" style="padding-top:10px">Name</label>
+														<div class="controls">
+															<input type="text" placeholder="" id="usersearch" autocomplete="off">
+														</div>
+													</div>
+													<div class="control-group">
+														<label class="control-label" style="padding-top:10px">Color stamp</label>
+														<div class="controls">
+															<input type="text" placeholder="" id="colorsearch">
+														</div>
+													</div>
+												</form>
 											</div>
-											<!--End Widget Header -->	
+										</div>
+									</div>
+									<!--End widget header-->
+									<!--Widget body-->
+									<div class="widget-body">
+										<div class="widget-main no-padding">
+											<div class="slimScrollDiv" style="position: relative; overflow: auto; width: auto; height: 670px;">
+												<div class="dialogs" style="overflow: auto; width: auto; height: 670px;">
+													<div class="itemdiv dialogdiv">
+														<div class="user">
+															<img alt="Alexa's Avatar" src="assets/avatars/avatar1.png"></div>
 
-											<!--Widget body -->
-											<div class="widget-body">
-
-												<!--Sort by-->
-											<div class="accordion-group">
-												<div class="accordion-heading">
-													<a href="#collapseOne" data-parent="#accordion2" data-toggle="collapse" class="accordion-toggle collapsed">
-													Filter by
-													</a>
-												</div>
-
-												<div class="accordion-body collapse" id="collapseOne" style="height: 0px;">
-													<!--
-													<div style="padding:10px">
-														<div class="control-group">
-															<div class="row-fluid">
-																<div class="span4">
-																	<span>Name</span>
-																</div>
-																<div class="span8">
-																	<input type="text">		
-																</div>
+														<div class="body">
+															<div class="time"> <i class="icon-time"></i>
+																<span class="green">4 sec</span>
 															</div>
-														</div>										
-														
-														<div class="control-group">
-															<div class="row-fluid">
-																<div class="span4">
-																	<span>Tags</span>
-																</div>
-																<div class="span8">
-																	<input type="text">		
-																</div>
+
+															<div class="name">
+																<a href="#">Alexa</a>
+																<a href="#"><span class="label label-success arrowed arrowed-in-right">stamp</span></a>
+															</div>
+															<div class="text">
+																Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis.
+															</div>
+
+															<div class="tools">
+																<a href="#" class="btn btn-minier btn-info">
+																	<i class="icon-only icon-share-alt"></i>
+																</a>
 															</div>
 														</div>
-													</div>-->
+													</div>
 
-													<form style="margin-top:10px; margin-left:-100px" class="form-horizontal">
-								<div class="control-group">
-									<label class="control-label" for="form-field-1">Name</label>
+													<div class="itemdiv dialogdiv">
+														<div class="user">
+															<img alt="John's Avatar" src="assets/avatars/avatar.png"></div>
 
-									<div class="controls">
-										<input type="text" id="form-field-1" placeholder="Username">
-									</div>
-								</div>
+														<div class="body">
+															<div class="time">
+																<i class="icon-time"></i>
+																<span class="blue">38 sec</span>
+															</div>
 
-								<div class="control-group">
-									<label class="control-label" for="form-field-2">Tags</label>
+															<div class="name">
+																<a href="#">John</a>
+																<a href="#"><span class="label label-warning arrowed arrowed-in-right">stamp</span></a>
+															</div>
+															<div class="text">
+																Raw denim you probably haven't heard of them jean shorts Austin.
+															</div>
 
-									<div class="controls">
-										<input type="password" id="form-field-2" placeholder="Password">										
-									</div>
-								</div>
+															<div class="tools">
+																<a href="#" class="btn btn-minier btn-info">
+																	<i class="icon-only icon-share-alt"></i>
+																</a>
+															</div>
+														</div>
+													</div>
 
-								
-							</form>
-											</div>
-														
-												<!--End Sort by -->
+													<div class="itemdiv dialogdiv">
+														<div class="user">
+															<img alt="Bob's Avatar" src="assets/avatars/user.jpg"></div>
 
-												<div class="widget-main padding-4">
-													<div class="tab-content padding-8 overflow-visible">
-														<!--Comments tab -->
-														<div id="comment-tab" class="tab-pane active">
-															<div class="slimScrollDiv" style="position:relative; overflow:auto; width:auto; heigth:300px;">
-																<div class="comments" style="overflow: auto; width:auto; height:300px">
-																	<div class="itemdiv commentdiv">
-																		<!--User's comment 1-->
-																		<div class="itemdiv commentdiv">
-																			<div class="user">
-																				<img alt="Bob Doe's Avatar" src="assets/avatars/avatar.png">
-																			</div>
-																			<div class="body">
-																				<div class="name">
-																					<a href="#">Bob Dylan</a>
-																					<div class="pull-right action-buttons">
-																						<a href="#" class="blue">
-																							<i class="icon-flag bigger-130"></i>
-																						</a>
-																						<a href="#" class="violet">
-																							<i class="icon-flag bigger-130"></i>
-																						</a>
-																						<a href="#" class="red">
-																							<i class="icon-flag bigger-130"></i>
-																						</a>
-																					</div>
-																				</div>
-																				<div class="text">
-																					<i class="icon-quote-left"></i>
-																					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis
-																				</div>
-																			</div>
-																		</div>
-																		<!--End comment 1-->
-																		<div class="itemdiv commentdiv">
-																			<div class="user">
-																				<img alt="Jennifer's Avatar" src="assets/avatars/avatar1.png">
-																			</div>
-																			<div class="body">
-																				<div class="name">
-																					<a href="#">Dylan Bob</a>
-																					<div class="pull-right action-buttons">
-																						<a href="#" class="green">
-																							<i class="icon-flag bigger-130"></i>
-																						</a>
-																						<a href="#" class="yellow">
-																							<i class="icon-flag bigger-130"></i>
-																						</a>
-																						<a href="#" class="orange">
-																							<i class="icon-flag bigger-130"></i>
-																						</a>
-																					</div>
-																				</div>
-																				<div class="text">
-																					<i class="icon-quote-left"></i>
-																					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis
-																				</div>
-																				<hr style="margin-top:-5px;">
-																			</div>
-																		</div>
-																		<div class="itemdiv commentdiv">
-																			<div class="user">
-																				<img alt="Jennifer's Avatar" src="assets/avatars/avatar1.png">
-																			</div>
-																			<div class="body">
-																				<div class="name">
-																					<a href="#">Dylan Bob</a>
-																					<div class="pull-right action-buttons">
-																						<a href="#" class="green">
-																							<i class="icon-flag bigger-130"></i>
-																						</a>
-																						<a href="#" class="yellow">
-																							<i class="icon-flag bigger-130"></i>
-																						</a>
-																						<a href="#" class="orange">
-																							<i class="icon-flag bigger-130"></i>
-																						</a>
-																					</div>
-																				</div>
-																				<div class="text">
-																					<i class="icon-quote-left"></i>
-																					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis
-																				</div>
-																				<hr style="margin-top:-5px;">
-																			</div>
-																		</div>
-																		<div class="itemdiv commentdiv">
-																			<div class="user">
-																				<img alt="Jennifer's Avatar" src="assets/avatars/avatar1.png">
-																			</div>
-																			<div class="body">
-																				<div class="name">
-																					<a href="#">Dylan Bob</a>
-																					<div class="pull-right action-buttons">
-																						<a href="#" class="green">
-																							<i class="icon-flag bigger-130"></i>
-																						</a>
-																						<a href="#" class="yellow">
-																							<i class="icon-flag bigger-130"></i>
-																						</a>
-																						<a href="#" class="orange">
-																							<i class="icon-flag bigger-130"></i>
-																						</a>
-																					</div>
-																				</div>
-																				<div class="text">
-																					<i class="icon-quote-left"></i>
-																					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis
-																				</div>
-																				<hr style="margin-top:-5px;">
-																			</div>
-																		</div>
-																		<div class="itemdiv commentdiv">
-																			<div class="user">
-																				<img alt="Jennifer's Avatar" src="assets/avatars/avatar1.png">
-																			</div>
-																			<div class="body">
-																				<div class="name">
-																					<a href="#">Dylan Bob</a>
-																					<div class="pull-right action-buttons">
-																						<a href="#" class="green">
-																							<i class="icon-flag bigger-130"></i>
-																						</a>
-																						<a href="#" class="yellow">
-																							<i class="icon-flag bigger-130"></i>
-																						</a>
-																						<a href="#" class="orange">
-																							<i class="icon-flag bigger-130"></i>
-																						</a>
-																					</div>
-																				</div>
-																				<div class="text">
-																					<i class="icon-quote-left"></i>
-																					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis
-																				</div>
-																				<hr style="margin-top:-5px;">
-																			</div>
-																		</div>
-																		<div class="itemdiv commentdiv">
-																			<div class="user">
-																				<img alt="Jennifer's Avatar" src="assets/avatars/avatar1.png">
-																			</div>
-																			<div class="body">
-																				<div class="name">
-																					<a href="#">Dylan Bob</a>
-																					<div class="pull-right action-buttons">
-																						<a href="#" class="green">
-																							<i class="icon-flag bigger-130"></i>
-																						</a>
-																						<a href="#" class="yellow">
-																							<i class="icon-flag bigger-130"></i>
-																						</a>
-																						<a href="#" class="orange">
-																							<i class="icon-flag bigger-130"></i>
-																						</a>
-																					</div>
-																				</div>
-																				<div class="text">
-																					<i class="icon-quote-left"></i>
-																					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis
-																				</div>
-																				<hr style="margin-top:-5px;">
-																			</div>
-																		</div>
-																		<div class="itemdiv commentdiv">
-																			<div class="user">
-																				<img alt="Jennifer's Avatar" src="assets/avatars/avatar1.png">
-																			</div>
-																			<div class="body">
-																				<div class="name">
-																					<a href="#">Dylan Bob</a>
-																					<div class="pull-right action-buttons">
-																						<a href="#" class="green">
-																							<i class="icon-flag bigger-130"></i>
-																						</a>
-																						<a href="#" class="yellow">
-																							<i class="icon-flag bigger-130"></i>
-																						</a>
-																						<a href="#" class="orange">
-																							<i class="icon-flag bigger-130"></i>
-																						</a>
-																					</div>
-																				</div>
-																				<div class="text">
-																					<i class="icon-quote-left"></i>
-																					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis
-																				</div>
-																				<hr style="margin-top:-5px;">
-																			</div>
-																		</div>
-																		<div class="itemdiv commentdiv">
-																			<div class="user">
-																				<img alt="Jennifer's Avatar" src="assets/avatars/avatar1.png">
-																			</div>
-																			<div class="body">
-																				<div class="name">
-																					<a href="#">Dylan Bob</a>
-																					<div class="pull-right action-buttons">
-																						<a href="#" class="green">
-																							<i class="icon-flag bigger-130"></i>
-																						</a>
-																						<a href="#" class="yellow">
-																							<i class="icon-flag bigger-130"></i>
-																						</a>
-																						<a href="#" class="orange">
-																							<i class="icon-flag bigger-130"></i>
-																						</a>
-																					</div>
-																				</div>
-																				<div class="text">
-																					<i class="icon-quote-left"></i>
-																					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis
-																				</div>
-																				<hr style="margin-top:-5px;">
-																			</div>
-																		</div>
-																		<div class="itemdiv commentdiv">
-																			<div class="user">
-																				<img alt="Jennifer's Avatar" src="assets/avatars/avatar1.png">
-																			</div>
-																			<div class="body">
-																				<div class="name">
-																					<a href="#">Dylan Bob</a>
-																					<div class="pull-right action-buttons">
-																						<a href="#" class="green">
-																							<i class="icon-flag bigger-130"></i>
-																						</a>
-																						<a href="#" class="yellow">
-																							<i class="icon-flag bigger-130"></i>
-																						</a>
-																						<a href="#" class="orange">
-																							<i class="icon-flag bigger-130"></i>
-																						</a>
-																					</div>
-																				</div>
-																				<div class="text">
-																					<i class="icon-quote-left"></i>
-																					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis
-																				</div>
-																				<hr style="margin-top:-5px;">
-																			</div>
-																		</div>
-																		<div class="itemdiv commentdiv">
-																			<div class="user">
-																				<img alt="Jennifer's Avatar" src="assets/avatars/avatar1.png">
-																			</div>
-																			<div class="body">
-																				<div class="name">
-																					<a href="#">Dylan Bob</a>
-																					<div class="pull-right action-buttons">
-																						<a href="#" class="green">
-																							<i class="icon-flag bigger-130"></i>
-																						</a>
-																						<a href="#" class="yellow">
-																							<i class="icon-flag bigger-130"></i>
-																						</a>
-																						<a href="#" class="orange">
-																							<i class="icon-flag bigger-130"></i>
-																						</a>
-																					</div>
-																				</div>
-																				<div class="text">
-																					<i class="icon-quote-left"></i>
-																					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis
-																				</div>
-																				<hr style="margin-top:-5px;">
-																			</div>
-																		</div>
-																		<!--Comment 2 -->
-																	</div>
-																</div>
+														<div class="body">
+															<div class="time">
+																<i class="icon-time"></i>
+																<span class="orange">2 min</span>
+															</div>
+
+															<div class="name">
+																<a href="#">Bob</a>
+																<a href="#"><span class="label label-important arrowed arrowed-in-right">stamp</span></a>
+															</div>
+															<div class="text">
+																Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis.
+															</div>
+
+															<div class="tools">
+																<a href="#" class="btn btn-minier btn-info">
+																	<i class="icon-only icon-share-alt"></i>
+																</a>
+															</div>
+														</div>
+													</div>
+
+													<div class="itemdiv dialogdiv">
+														<div class="user">
+															<img alt="Jim's Avatar" src="assets/avatars/avatar4.png"></div>
+
+														<div class="body">
+															<div class="time">
+																<i class="icon-time"></i>
+																<span class="grey">3 min</span>
+															</div>
+
+															<div class="name">
+																<a href="#">Jim</a>
+																<a href="#"><span class="label label-info arrowed arrowed-in-right">stamp</span></a>
+															</div>
+															<div class="text">
+																Raw denim you probably haven't heard of them jean shorts Austin.
+															</div>
+
+															<div class="tools">
+																<a href="#" class="btn btn-minier btn-info">
+																	<i class="icon-only icon-share-alt"></i>
+																</a>
+															</div>
+														</div>
+													</div>
+
+													<div class="itemdiv dialogdiv">
+														<div class="user">
+															<img alt="Alexa's Avatar" src="assets/avatars/avatar1.png"></div>
+
+														<div class="body">
+															<div class="time">
+																<i class="icon-time"></i>
+																<span class="green">4 min</span>
+															</div>
+
+															<div class="name">
+																<a href="#">Alexa</a>
+																<a href="#"><span class="label arrowed arrowed-in-right">stamp</span></a>
+															</div>
+															<div class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
+
+															<div class="tools">
+																<a href="#" class="btn btn-minier btn-info">
+																	<i class="icon-only icon-share-alt"></i>
+																</a>
 															</div>
 														</div>
 													</div>
 												</div>
-											</div>
-
-
-										</div>
-									</div>
-								</div>
-
-								<!--End Comments Section-->
-
-							<!--Time-->
-								<div class="row-fluid">
-									<div class="span7">
-										<div id="sales-charts" style="width: 100%; height: 220px; padding: 0px; position: relative;">
-											<canvas class="flot-base" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 634px; height: 220px;" width="634" height="220">
-											</canvas>
-											<div class="flot-text" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; font-size: smaller; color: rgb(84, 84, 84);">
-												<div class="flot-x-axis flot-x1-axis xAxis x1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;">
-													<div class="flot-tick-label tickLabel" style="position: absolute; max-width: 79px; top: 199px; left: 30px; text-align: center;">
-
-														0.0
-													</div>
-													<div class="flot-tick-label tickLabel" style="position: absolute; max-width: 79px; top: 199px; left: 124px; text-align: center;">
-														1.0
-													</div>
-
-													<div class="flot-tick-label tickLabel" style="position: absolute; max-width: 79px; top: 199px; left: 219px; text-align: center;">
-														2.0
-													</div>
-													<div class="flot-tick-label tickLabel" style="position: absolute; max-width: 79px; top: 199px; left: 314px; text-align: center;">
-														3.0
-													</div>
-													<div class="flot-tick-label tickLabel" style="position: absolute; max-width: 79px; top: 199px; left: 409px; text-align: center;">
-														4.0
-													</div>
-													<div class="flot-tick-label tickLabel" style="position: absolute; max-width: 79px; top: 199px; left: 504px; text-align: center;">
-														5.0
-													</div>
-													<div class="flot-tick-label tickLabel" style="position: absolute; max-width: 79px; top: 199px; left: 599px; text-align: center;">
-														6.0
-													</div>
-												</div>
-											</div>
-											<canvas class="flot-overlay" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 634px; height: 220px;" width="634" height="220"></canvas>
-											<div class="legend">
-												<div style="position: absolute; width: 68px; height: 66px; top: 15px; right: 13px; background-color: rgb(255, 255, 255); opacity: 0.85;"> 
-												</div>
-												<table style="position:absolute;top:15px;right:13px;;font-size:smaller;color:#545454">
-													<tbody>
-														<tr>
-															<td class="legendColorBox">
-																<div style="border:1px solid #ccc;padding:1px">
-																	<div style="width:4px;height:0;border:5px solid rgb(237,194,64);overflow:hidden">
-																	</div>
-																</div>
-															</td>
-															<td class="legendLabel">Domains</td>
-														</tr>
-														<tr>
-															<td class="legendColorBox">
-																<div style="border:1px solid #ccc;padding:1px">
-																	<div style="width:4px;height:0;border:5px solid rgb(175,216,248);overflow:hidden">
-																	</div>
-																</div>
-															</td>
-															<td class="legendLabel">Hosting</td>
-														</tr>
-														<tr>
-															<td class="legendColorBox">
-																<div style="border:1px solid #ccc;padding:1px">
-																	<div style="width:4px;height:0;border:5px solid rgb(203,75,75);overflow:hidden"></div>
-																</div>
-															</td>
-															<td class="legendLabel">Services</td>
-														</tr>
-													</tbody>
-												</table>
+												<div class="slimScrollBar ui-draggable" style="background-color: rgb(0, 0, 0); width: 7px; position: absolute; top: 0px; opacity: 0.4; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; z-index: 99; right: 1px; height: 227.3357142857143px; background-position: initial initial; background-repeat: initial initial;"></div>
+												<div class="slimScrollRail" style="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; background-color: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px; background-position: initial initial; background-repeat: initial initial;"></div>
 											</div>
 										</div>
+										<!--/widget-main-->							
 									</div>
+									<!--/widget-body-->							
 								</div>
-							<!--Ends Time-->
-	<!--PAGE CONTENT ENDS-->
-						</div><!--/.span-->
-					</div><!--/.row-fluid-->
-				</div><!--/.page-content-->
-			</div><!--/.main-content-->
-		</div><!--/.main-container-->
-
+							</div>
+						</div>
+					</div>
+				<!--Page content ends-->
+			</div>
+		</div>
+	</div>
+	<footer class="footer">
+    </footer>
 		<!--basic scripts-->
 
 		<!--[if !IE]>-->
@@ -843,10 +596,10 @@
 		<!--<![endif]-->
 
 		<!--[if IE]>
-<script type="text/javascript">
- window.jQuery || document.write("<script src='assets/js/jquery-1.10.2.min.js'>"+"<"+"/script>");
-</script>
-<![endif]-->
+		<script type="text/javascript">
+		 window.jQuery || document.write("<script src='assets/js/jquery-1.10.2.min.js'>"+"<"+"/script>");
+		</script>
+		<![endif]-->
 
 		<script type="text/javascript">
 			if("ontouchend" in document) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
@@ -906,6 +659,16 @@
 			
 		</script>
 
+		<!--TypeAhead Names and colors-->
+			<script>
+				var names = ["Linda", "Bob Dylan", "Dylan Bob", "Lila", "Akka", "Vika", "Belen"];
+				var colors = ["Yellow", "Blue", "Red", "Green", "Brown"]
+ 
+				$('#usersearch').typeahead({source: names});
+				$('#colorsearch').typeahead({source: colors});
+			</script>
+		<!--End typeahead-->
+
 		<!--inline scripts related to this page-->
 
 		<script type="text/javascript">
@@ -914,14 +677,18 @@
 
 		<!--<![endif]-->
 
+		<!--Avoid closing dropdown-->
+		<script>
+			$('.dropdown-menu').click(function(event){
+     			event.stopPropagation();
+ 				});
+		</script
+
 		<!--[if IE]>
-<script type="text/javascript">
- window.jQuery || document.write("<script src='assets/js/jquery-1.10.2.min.js'>"+"<"+"/script>");
-</script>
-<![endif]-->
-
-	
-
+			<script type="text/javascript">
+			 window.jQuery || document.write("<script src='assets/js/jquery-1.10.2.min.js'>"+"<"+"/script>");
+			</script>
+		<!--[endif]-->
 
 	</body>
 </html>
