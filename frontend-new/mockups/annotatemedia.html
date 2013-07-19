@@ -352,14 +352,19 @@
 
 		<!--Main Content-->	
 			<div class="main-content">
+            <!--			    
 				<div class="breadcrumbs" id="breadcrumbs">
 					<ul class="breadcrumb">
 						<li>
 							<i class="icon-desktop"></i>
 							<a href="#">Media</a>
+							<small>
+								<i class="icon-double-angle-right"></i>
+								annotate media
+							</small>
 						</li>
-					</ul><!--.breadcrumb-->
-
+					</ul>
+                    
 					<div class="nav-search" id="nav-search">
 						<form class="form-search">
 							<span class="input-icon">
@@ -367,11 +372,11 @@
 								<i class="icon-search nav-search-icon"></i>
 							</span>
 						</form>
-					</div><!--#nav-search-->
-				</div>
+					</div>
+				</div>-->
 
 				<div class="page-content">
-					<div class="page-header position-relative">
+				<!-- L ??? <div class="page-header position-relative">
 						<h1>
 							Media
 							<small>
@@ -379,8 +384,8 @@
 								annotate media
 							</small>
 						</h1>
-					</div><!--/.page-header-->
-						
+					</div>--><!--/.page-header-->
+			    	
 				<!--PAGE CONTENT BEGINS-->
 					<div class="container-fluid">
 						<div class="row-fluid">
@@ -414,7 +419,7 @@
 										</h4>
 										<div class="widget-toolbar no-border">
 											<a class="btn btn-info btn-small dropdown-toggle" data-toggle="dropdown" href="#">
-												<label>Sorty by</label>
+												<label>Filters</label>
 												<span class="caret"></span>
 											</a>
 											<div class="dropdown-menu pull-right">
@@ -444,14 +449,16 @@
 													<div class="itemdiv dialogdiv">
 														<div class="user">
 															<img alt="Alexa's Avatar" src="assets/avatars/avatar1.png"></div>
+															
 														<div class="body">
 															<div class="time"> <i class="icon-time"></i>
 																<span class="green">4 sec</span>
+																<a href="#"><span class="label label-success arrowed arrowed-in-right">stamp</span></a>
 															</div>
 
 															<div class="name">
 																<a href="#">Alexa</a>
-																<a href="#"><span class="label label-success arrowed arrowed-in-right">stamp</span></a>
+																
 															</div>
 															<div class="text">
 																Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis.
@@ -467,11 +474,11 @@
 															<div class="time">
 																<i class="icon-time"></i>
 																<span class="blue">38 sec</span>
+																<a href="#"><span class="label label-warning arrowed arrowed-in-right">stamp</span></a>
 															</div>
 
 															<div class="name">
 																<a href="#">John</a>
-																<a href="#"><span class="label label-warning arrowed arrowed-in-right">stamp</span></a>
 															</div>
 															<div class="text">
 																Raw denim you probably haven't heard of them jean shorts Austin.
@@ -487,11 +494,12 @@
 															<div class="time">
 																<i class="icon-time"></i>
 																<span class="orange">2 min</span>
+																<a href="#"><span class="label label-important arrowed arrowed-in-right">stamp</span></a>
 															</div>
 
 															<div class="name">
 																<a href="#">Bob</a>
-																<a href="#"><span class="label label-important arrowed arrowed-in-right">stamp</span></a>
+																
 															</div>
 															<div class="text">
 																Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor facilisis.
@@ -507,11 +515,12 @@
 															<div class="time">
 																<i class="icon-time"></i>
 																<span class="grey">3 min</span>
+																<a href="#"><span class="label label-info arrowed arrowed-in-right">stamp</span></a>
 															</div>
 
 															<div class="name">
 																<a href="#">Jim</a>
-																<a href="#"><span class="label label-info arrowed arrowed-in-right">stamp</span></a>
+																
 															</div>
 															<div class="text">
 																Raw denim you probably haven't heard of them jean shorts Austin.
@@ -527,11 +536,12 @@
 															<div class="time">
 																<i class="icon-time"></i>
 																<span class="green">4 min</span>
+																<a href="#"><span class="label arrowed arrowed-in-right">stamp</span></a>
 															</div>
 
 															<div class="name">
 																<a href="#">Alexa</a>
-																<a href="#"><span class="label arrowed arrowed-in-right">stamp</span></a>
+																
 															</div>
 															<div class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
 														</div>
@@ -546,9 +556,32 @@
 									<hr>
 									<div class="block">
 										<div class="row-fluid">
+										<!-- ADDED LEO -->
+										
 											<div class="span9" style="padding-left:10px;">
+											    <div class="btn-group">
+                                                  <a class="btn btn-primary" href="#"> p </a>
+                                                  <a class="btn btn-warning" href="#">w</a>
+                                                  <a class="btn btn-info" href="#"> i</a>
+                                                  <a class="btn btn-primary" href="#"> p </a>
+                                                  <a class="btn btn-warning" href="#">w</a>
+                                                  <a class="btn btn-info" href="#"> i</a>
+                                                  <a class="btn btn-primary" href="#"> p </a>
+                                                  <a class="btn btn-warning" href="#">w</a>
+                                                  <a class="btn btn-info" href="#"> i</a>
+                                                  <a class="btn  dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+                                                  <ul class="dropdown-menu">
+                                                    <li><a href="#"></i> COLOR1 </a></li>
+                                                    <li><a href="#"></i> COLOR2 </a></li>
+                                                    <li><a href="#"></i> COLOR3 </a></li>
+                                                    <li class="divider"></li>
+                                                    <li><a href="#"><i class="i"></i> Make admin</a></li>
+                                                  </ul>
+                                                </div>
+											<!-- END added Leo-->
 												<textarea class="span12" id="form-field-8" placeholder="Enter your comment:"></textarea>
 											</div>
+											<!-- commented LEO 
 											<div class="span3">
 												<p>Select stamp color:</p>
 												<div class="btn-group">
@@ -661,7 +694,7 @@
 															</li>
 														</ul>
 													</div>
-													<input style="display:none;" disabled="" class="hide" type="text" data-edit="foreColor"></div>
+													<input style="display:none;" disabled="" class="hide" type="text" data-edit="foreColor"></div> end commented LEO -->
 											</div>
 										</div>							
 									</div>
