@@ -1,0 +1,21 @@
+{{extend 'layout_base.html'}}
+
+{{block head}}
+<!--  
+    Here goes:
+        All the things that should go on the <head> </head> tag
+        Specific CSS and some JS files (js files should go at the end) for guest views 
+-->
+{{end}}
+
+{{block body}}
+<!-- All that goes on the <body> tag -->
+{{end}}
+
+{{block end_scripts}}
+ 
+<!-- All the scripts should load here for faster rendering to the user -->
+    {{block extra_scripts}}
+    <!-- Allow child templates to add (instead of replace) scripts (example carrousel)-->
+    {{end}}
+{{end}}

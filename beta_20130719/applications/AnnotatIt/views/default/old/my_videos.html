@@ -1,0 +1,35 @@
+{{left_sidebar_enabled= False}}
+{{right_sidebar_enabled=False}}
+
+{{extend 'layout.html'}}
+
+{{block center}}
+    {{try:}}
+        <ul>
+            {{for v in youtube_videos:}}
+                <li> 
+                    <a href="{{=URL('view_video',args=v.video_id)}}" > 
+                        <img src='http://img.youtube.com/vi/{{=v.video_id}}/default.jpg' /> 
+                    </a>
+                    {{=A(v.title, _href=URL('view_video',args=v.video_id))}}
+                    {{=T('On ')}} {{=v.datetime}} 
+                    {{=T('By ')}} {{=v.person_id}} <!-- TODO add link and view of person videos-->
+                </li>
+            {{pass}}
+            {{for v in vimeo_videos:}}
+                <li> 
+                    <!--
+                    <a href="#" > 
+                        <img src='http://vimeo.com/{{=v.video_id}}/default.jpg' /> 
+                    </a>
+                    -->
+                    {{=A(v.title, _href=URL('view_vimeo_video',args=v.video_id))}}
+                    {{=T('On ')}} {{=v.datetime}} 
+                    {{=T('By ')}} {{=v.person_id}} <!-- TODO add link and view of person videos-->
+                </li>
+            {{pass}}
+        </ul>
+    {{except:}}
+    {{pass}}
+
+{{end}}

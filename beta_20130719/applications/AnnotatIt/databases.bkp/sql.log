@@ -1,0 +1,235 @@
+timestamp: 2013-04-16T17:55:32.568196
+CREATE TABLE auth_user(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    first_name CHAR(128),
+    last_name CHAR(128),
+    email CHAR(512),
+    password CHAR(512),
+    registration_key CHAR(512),
+    reset_password_key CHAR(512),
+    registration_id CHAR(512)
+);
+success!
+timestamp: 2013-04-16T17:55:32.715370
+CREATE TABLE auth_group(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    role CHAR(512),
+    description TEXT
+);
+success!
+timestamp: 2013-04-16T17:55:32.847013
+CREATE TABLE auth_membership(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE
+);
+success!
+timestamp: 2013-04-16T17:55:32.981697
+CREATE TABLE auth_permission(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE,
+    name CHAR(512),
+    table_name CHAR(512),
+    record_id INTEGER
+);
+success!
+timestamp: 2013-04-16T17:55:33.093869
+CREATE TABLE auth_event(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    time_stamp TIMESTAMP,
+    client_ip CHAR(512),
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    origin CHAR(512),
+    description TEXT
+);
+success!
+timestamp: 2013-04-16T17:55:33.226966
+CREATE TABLE auth_cas(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    created_on TIMESTAMP,
+    service CHAR(512),
+    ticket CHAR(512),
+    renew CHAR(1)
+);
+success!
+timestamp: 2013-04-16T18:32:22.230518
+CREATE TABLE auth_user(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    first_name CHAR(128),
+    last_name CHAR(128),
+    email CHAR(512),
+    password CHAR(512),
+    registration_key CHAR(512),
+    reset_password_key CHAR(512),
+    registration_id CHAR(512)
+);
+success!
+timestamp: 2013-04-16T18:32:22.434461
+CREATE TABLE auth_group(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    role CHAR(512),
+    description TEXT
+);
+success!
+timestamp: 2013-04-16T18:32:22.591148
+CREATE TABLE auth_membership(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE
+);
+success!
+timestamp: 2013-04-16T18:32:22.759609
+CREATE TABLE auth_permission(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE,
+    name CHAR(512),
+    table_name CHAR(512),
+    record_id INTEGER
+);
+success!
+timestamp: 2013-04-16T18:32:22.927278
+CREATE TABLE auth_event(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    time_stamp TIMESTAMP,
+    client_ip CHAR(512),
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    origin CHAR(512),
+    description TEXT
+);
+success!
+timestamp: 2013-04-16T18:32:23.094411
+CREATE TABLE auth_cas(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    created_on TIMESTAMP,
+    service CHAR(512),
+    ticket CHAR(512),
+    renew CHAR(1)
+);
+success!
+timestamp: 2013-04-16T18:32:23.251118
+CREATE TABLE youtube_videos(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    person_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    title CHAR(256),
+    subtitle CHAR(256),
+    Script TEXT,
+    youtube_video_id CHAR(512),
+    datetime TIMESTAMP
+);
+success!
+timestamp: 2013-04-16T18:32:23.462787
+CREATE TABLE annotation(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    video_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    annotator_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    comment CHAR(128),
+    video_time TIME
+);
+success!
+timestamp: 2013-04-19T11:12:38.838077
+CREATE TABLE annotations(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    video_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    annotator_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    comment CHAR(128),
+    video_time TIME
+);
+success!
+timestamp: 2013-05-09T17:15:27.787673
+CREATE TABLE fast_annotations(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    video_id INTEGER REFERENCES youtube_videos (id) ON DELETE CASCADE,
+    annotator_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    annotation_type CHAR(512),
+    annotation_subtype CHAR(512),
+    evaluation CHAR(512),
+    video_time TIME
+);
+success!
+timestamp: 2013-05-10T19:56:45.548346
+CREATE TABLE possible_tag_categories(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    video_id INTEGER REFERENCES youtube_videos (id) ON DELETE CASCADE,
+    tag_category_id INTEGER REFERENCES tag_category (id) ON DELETE CASCADE
+);
+success!
+timestamp: 2013-05-10T19:56:45.788524
+CREATE TABLE possible_tags(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    video_id INTEGER REFERENCES youtube_videos (id) ON DELETE CASCADE,
+    tag_type_id INTEGER REFERENCES tag_type (id) ON DELETE CASCADE
+);
+success!
+timestamp: 2013-05-10T19:56:45.953541
+CREATE TABLE tag_category(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    tag_category_name CHAR(512),
+    tag_category_description CHAR(512)
+);
+success!
+timestamp: 2013-05-10T19:56:46.212330
+CREATE TABLE tag_type(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    tag_type_name CHAR(512),
+    ok_field CHAR(1),
+    warning_field CHAR(1),
+    bad_field CHAR(1)
+);
+success!
+timestamp: 2013-05-10T19:56:46.368802
+CREATE TABLE tag(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    tag_type_name CHAR(512),
+    video_id INTEGER REFERENCES youtube_videos (id) ON DELETE CASCADE,
+    annotator_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    evaluation CHAR(512),
+    video_time TIME
+);
+success!
+timestamp: 2013-05-10T22:11:15.103634
+CREATE TABLE advice(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    video_id INTEGER REFERENCES youtube_videos (id) ON DELETE CASCADE,
+    annotator_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    advice_text TEXT,
+    video_time TIME
+);
+success!
+timestamp: 2013-05-15T14:47:19.975365
+ALTER TABLE youtube_videos ADD privacy CHAR(512);
+timestamp: 2013-05-16T10:59:42.627714
+ALTER TABLE youtube_videos ADD comment_permissions CHAR(512);
+timestamp: 2013-05-16T10:59:42.936807
+CREATE TABLE vimeo_videos(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    person_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    title CHAR(256),
+    subtitle CHAR(256),
+    vimeo_video_id CHAR(512),
+    privacy CHAR(512),
+    comment_permissions CHAR(512),
+    script TEXT,
+    datetime TIMESTAMP
+);
+success!
+timestamp: 2013-05-16T18:32:43.031010
+ALTER TABLE youtube_videos ADD full_url CHAR(512);
+timestamp: 2013-05-16T18:32:43.335453
+ALTER TABLE vimeo_videos ADD full_url CHAR(512);
+timestamp: 2013-05-17T17:13:45.692743
+CREATE TABLE video(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    person_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    title CHAR(256),
+    subtitle CHAR(256),
+    video_id CHAR(512),
+    video_network CHAR(512),
+    full_url CHAR(512),
+    privacy CHAR(512),
+    comment_permissions CHAR(512),
+    script TEXT,
+    datetime TIMESTAMP
+);
+success!

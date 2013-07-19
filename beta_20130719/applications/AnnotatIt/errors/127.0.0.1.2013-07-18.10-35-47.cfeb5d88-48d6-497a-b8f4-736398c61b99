@@ -1,0 +1,494 @@
+(dp1
+S'output'
+p2
+S"<type 'exceptions.UnicodeDecodeError'> 'utf8' codec can't decode byte 0x89 in position 0: invalid start byte"
+p3
+sS'layer'
+p4
+S'/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/applications/AnnotatIt/views/generic.json'
+p5
+sS'code'
+p6
+S"from gluon.serializers import json\nresponse.write(XML(json(response._vars)))\nresponse.write('\\n', escape=False)"
+p7
+sS'snapshot'
+p8
+(dp9
+S'exception'
+p10
+(dp11
+S'__getslice__'
+p12
+S"<method-wrapper '__getslice__' of exceptions.UnicodeDecodeError object>"
+p13
+sS'encoding'
+p14
+S"'utf8'"
+p15
+sS'__str__'
+p16
+S"<method-wrapper '__str__' of exceptions.UnicodeDecodeError object>"
+p17
+sS'__reduce__'
+p18
+S'<built-in method __reduce__ of exceptions.UnicodeDecodeError object>'
+p19
+sS'__dict__'
+p20
+S'{}'
+p21
+sS'__sizeof__'
+p22
+S'<built-in method __sizeof__ of exceptions.UnicodeDecodeError object>'
+p23
+sS'__init__'
+p24
+S"<method-wrapper '__init__' of exceptions.UnicodeDecodeError object>"
+p25
+sS'__setattr__'
+p26
+S"<method-wrapper '__setattr__' of exceptions.UnicodeDecodeError object>"
+p27
+sS'__reduce_ex__'
+p28
+S'<built-in method __reduce_ex__ of exceptions.UnicodeDecodeError object>'
+p29
+sS'end'
+p30
+S'1'
+sS'__new__'
+p31
+S'<built-in method __new__ of type object>'
+p32
+sS'__format__'
+p33
+S'<built-in method __format__ of exceptions.UnicodeDecodeError object>'
+p34
+sS'__class__'
+p35
+S"<type 'exceptions.UnicodeDecodeError'>"
+p36
+sS'start'
+p37
+S'0'
+sS'__doc__'
+p38
+S"'Unicode decoding error.'"
+p39
+sS'object'
+p40
+S'"\\x89PNG\\r\\n\\x1a\\n\\x00\\x00\\x00\\rIHDR\\x00\\x00\\x00d\\x00\\x00\\x00d\\x08\\x02\\x00\\x00\\x00\\xff\\x80\\x02\\x03\\x00\\x00\\x00\\tpHYs\\x00\\x00\\x0b\\x13\\x00\\x00\\x0b...n/\\x14.\\x06U\\xc7\\x00\\x898E\\xbf:\\x9d\\x0e\\x1d\\x97\\x81\\xbf\\x8dg\\xa2\\xf3\\x0f\\xbe4>\\xf3\\xbf.\\x97q\\xdbi\\x08\\xe6\'\\x00\\x00\\x00\\x00IEND\\xaeB`\\x82"'
+p41
+sS'__getitem__'
+p42
+S"<method-wrapper '__getitem__' of exceptions.UnicodeDecodeError object>"
+p43
+sS'__setstate__'
+p44
+S'<built-in method __setstate__ of exceptions.UnicodeDecodeError object>'
+p45
+sS'__getattribute__'
+p46
+S"<method-wrapper '__getattribute__' of exceptions.UnicodeDecodeError object>"
+p47
+sS'args'
+p48
+S'(\'utf8\', "\\x89PNG\\r\\n\\x1a\\n\\x00\\x00\\x00\\rIHDR\\x00\\x00\\x00d\\x00\\x00\\x00d\\x08\\x02\\x00\\x00\\x00\\xff\\x80\\x02\\x03\\x00\\x00\\x00\\tpHYs\\x00\\x00\\x0b\\x13\\x00\\x00\\x0b...n/\\x14.\\x06U\\xc7\\x00\\x898E\\xbf:\\x9d\\x0e\\x1d\\x97\\x81\\xbf\\x8dg\\xa2\\xf3\\x0f\\xbe4>\\xf3\\xbf.\\x97q\\xdbi\\x08\\xe6\'\\x00\\x00\\x00\\x00IEND\\xaeB`\\x82", 0, 1, \'invalid start byte\')'
+p49
+sS'reason'
+p50
+S"'invalid start byte'"
+p51
+sS'__subclasshook__'
+p52
+S'<built-in method __subclasshook__ of type object>'
+p53
+sS'__unicode__'
+p54
+S'<built-in method __unicode__ of exceptions.UnicodeDecodeError object>'
+p55
+sS'__delattr__'
+p56
+S"<method-wrapper '__delattr__' of exceptions.UnicodeDecodeError object>"
+p57
+sS'__repr__'
+p58
+S"<method-wrapper '__repr__' of exceptions.UnicodeDecodeError object>"
+p59
+sS'__hash__'
+p60
+S"<method-wrapper '__hash__' of exceptions.UnicodeDecodeError object>"
+p61
+ssS'evalue'
+p62
+S"'utf8' codec can't decode byte 0x89 in position 0: invalid start byte"
+p63
+sS'request'
+p64
+cgluon.html
+XML_unpickle
+p65
+(S's\x11E\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top">ajax</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">application</td><td valign="top">:</td><td><div>AnnotatIt</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">args</td><td valign="top">:</td><td><div><table><tr><td><div>1</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">body</td><td valign="top">:</td><td><div>&lt;cStringIO.StringO object at 0x32094c8&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">cid</td><td valign="top">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">client</td><td valign="top">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">controller</td><td valign="top">:</td><td><div>api</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">cookies</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">session_id_admin</td><td valign="top">:</td><td><div>127.0.0.1-6e5c7518-eb45-464f-861e-8db7718a71fa<table><tr><td style="font-weight:bold;vertical-align:top">comment</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">domain</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">expires</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">httponly</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">max-age</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">secure</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">version</td><td valign="top">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_id_annotatit</td><td valign="top">:</td><td><div>127.0.0.1-27dfc840-f8a0-43d1-a4a0-57dfcca45aed<table><tr><td style="font-weight:bold;vertical-align:top">comment</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">domain</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">expires</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">httponly</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">max-age</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">secure</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">version</td><td valign="top">:</td><td><div></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">env</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">app_folders</td><td valign="top">:</td><td><div>set([&#x27;/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/applications/AnnotatIt/&#x27;, &#x27;/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/applications/admin/&#x27;])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">applications_parent</td><td valign="top">:</td><td><div>/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">db_sessions</td><td valign="top">:</td><td><div>set([])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">debugging</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">gluon_parent</td><td valign="top">:</td><td><div>/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">gunicorn_socket</td><td valign="top">:</td><td><div>&lt;socket._socketobject object at 0x3290750&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_accept</td><td valign="top">:</td><td><div>text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_accept_encoding</td><td valign="top">:</td><td><div>gzip,deflate,sdch</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_accept_language</td><td valign="top">:</td><td><div>en-US,en;q=0.8,fr;q=0.6,es;q=0.4</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_connection</td><td valign="top">:</td><td><div>keep-alive</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_cookie</td><td valign="top">:</td><td><div>session_id_admin=127.0.0.1-6e5c7518-eb45-464f-861e-8db7718a71fa; session_id_annotatit=127.0.0.1-27dfc840-f8a0-43d1-a4a0-57dfcca45aed</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_host</td><td valign="top">:</td><td><div>127.0.0.1:5000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_user_agent</td><td valign="top">:</td><td><div>Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.63 Safari/537.36</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_jython</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_pypy</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">local_hosts</td><td valign="top">:</td><td><div><table><tr><td><div>cotita</div></td></tr><tr><td><div>::1</div></td></tr><tr><td><div>127.0.1.1</div></td></tr><tr><td><div>::ffff:127.0.0.1</div></td></tr><tr><td><div>127.0.0.1</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path_info</td><td valign="top">:</td><td><div>/api/user/1.json</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">query_string</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">raw_uri</td><td valign="top">:</td><td><div>/api/user/1.json</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">remote_addr</td><td valign="top">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">remote_port</td><td valign="top">:</td><td><div>44522</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">request_method</td><td valign="top">:</td><td><div>GET</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">request_uri</td><td valign="top">:</td><td><div>/AnnotatIt/api/user/1.json</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">script_name</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">server_name</td><td valign="top">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">server_port</td><td valign="top">:</td><td><div>5000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">server_protocol</td><td valign="top">:</td><td><div>HTTP/1.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">server_software</td><td valign="top">:</td><td><div>gunicorn/0.17.2</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_crontype</td><td valign="top">:</td><td><div>soft</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_original_uri</td><td valign="top">:</td><td><div>/api/user/1.json</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_path</td><td valign="top">:</td><td><div>/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_version</td><td valign="top">:</td><td><div>2.5.1-stable+timestamp.2013.06.06.15.39.19</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_errors</td><td valign="top">:</td><td><div>&lt;open file &#x27;&lt;stderr&gt;&#x27;, mode &#x27;w&#x27; at 0x7f77fcaf5270&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_file_wrapper</td><td valign="top">:</td><td><div>&lt;class gunicorn.http.wsgi.FileWrapper at 0x2ba1808&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_input</td><td valign="top">:</td><td><div>&lt;gunicorn.http.body.Body object at 0x320db10&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_multiprocess</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_multithread</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_run_once</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_url_scheme</td><td valign="top">:</td><td><div>http</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_version</td><td valign="top">:</td><td><div><table><tr><td><div>1</div></td></tr><tr><td><div>0</div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">extension</td><td valign="top">:</td><td><div>json</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">folder</td><td valign="top">:</td><td><div>/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/applications/AnnotatIt/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">function</td><td valign="top">:</td><td><div>user</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">get_vars</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">global_settings</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">app_folders</td><td valign="top">:</td><td><div>set([&#x27;/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/applications/AnnotatIt/&#x27;, &#x27;/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/applications/admin/&#x27;])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">applications_parent</td><td valign="top">:</td><td><div>/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">db_sessions</td><td valign="top">:</td><td><div>set([])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">debugging</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">gluon_parent</td><td valign="top">:</td><td><div>/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_jython</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_pypy</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">local_hosts</td><td valign="top">:</td><td><div><table><tr><td><div>cotita</div></td></tr><tr><td><div>::1</div></td></tr><tr><td><div>127.0.1.1</div></td></tr><tr><td><div>::ffff:127.0.0.1</div></td></tr><tr><td><div>127.0.0.1</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_crontype</td><td valign="top">:</td><td><div>soft</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_version</td><td valign="top">:</td><td><div>2.5.1-stable+timestamp.2013.06.06.15.39.19</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_https</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_local</td><td valign="top">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_restful</td><td valign="top">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">now</td><td valign="top">:</td><td><div>datetime.datetime(2013, 7, 18, 10, 35, 47, 606658)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">post_vars</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">url</td><td valign="top">:</td><td><div>/api/user/1.json</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">utcnow</td><td valign="top">:</td><td><div>datetime.datetime(2013, 7, 18, 8, 35, 47, 606672)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">uuid</td><td valign="top">:</td><td><div>AnnotatIt/127.0.0.1.2013-07-18.10-35-47.cfeb5d88-48d6-497a-b8f4-736398c61b99</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">vars</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">environ</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">HTTP_ACCEPT</td><td valign="top">:</td><td><div>text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_ACCEPT_ENCODING</td><td valign="top">:</td><td><div>gzip,deflate,sdch</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_ACCEPT_LANGUAGE</td><td valign="top">:</td><td><div>en-US,en;q=0.8,fr;q=0.6,es;q=0.4</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_CONNECTION</td><td valign="top">:</td><td><div>keep-alive</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_COOKIE</td><td valign="top">:</td><td><div>session_id_admin=127.0.0.1-6e5c7518-eb45-464f-861e-8db7718a71fa; session_id_annotatit=127.0.0.1-27dfc840-f8a0-43d1-a4a0-57dfcca45aed</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_HOST</td><td valign="top">:</td><td><div>127.0.0.1:5000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_USER_AGENT</td><td valign="top">:</td><td><div>Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.63 Safari/537.36</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">PATH_INFO</td><td valign="top">:</td><td><div>/api/user/1.json</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">QUERY_STRING</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">RAW_URI</td><td valign="top">:</td><td><div>/api/user/1.json</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">REMOTE_ADDR</td><td valign="top">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">REMOTE_PORT</td><td valign="top">:</td><td><div>44522</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">REQUEST_METHOD</td><td valign="top">:</td><td><div>GET</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">REQUEST_URI</td><td valign="top">:</td><td><div>/AnnotatIt/api/user/1.json</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SCRIPT_NAME</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SERVER_NAME</td><td valign="top">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SERVER_PORT</td><td valign="top">:</td><td><div>5000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SERVER_PROTOCOL</td><td valign="top">:</td><td><div>HTTP/1.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SERVER_SOFTWARE</td><td valign="top">:</td><td><div>gunicorn/0.17.2</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">WEB2PY_ORIGINAL_URI</td><td valign="top">:</td><td><div>/api/user/1.json</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">gunicorn.socket</td><td valign="top">:</td><td><div>&lt;socket._socketobject object at 0x3290750&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.errors</td><td valign="top">:</td><td><div>&lt;open file &#x27;&lt;stderr&gt;&#x27;, mode &#x27;w&#x27; at 0x7f77fcaf5270&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.file_wrapper</td><td valign="top">:</td><td><div>&lt;class gunicorn.http.wsgi.FileWrapper at 0x2ba1808&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.input</td><td valign="top">:</td><td><div>&lt;cStringIO.StringO object at 0x32094c8&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.multiprocess</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.multithread</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.run_once</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.url_scheme</td><td valign="top">:</td><td><div>http</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.version</td><td valign="top">:</td><td><div>1</div></td></tr></table></div></td></tr></table></div></td></tr></table></div>'
+tRp66
+sS'frames'
+p67
+(lp68
+(dp69
+S'file'
+p70
+S'/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/gluon/restricted.py'
+p71
+sS'dump'
+p72
+(dp73
+S'environment'
+p74
+S"{'A': <class 'gluon.html.A'>, 'ANY_OF': <class 'gluon.validators.ANY_OF'>, 'APP_DOMAIN_NAME': 'AnnotatIt.com', 'APP_DOMAIN_NAME_2': 'Annotat.It', 'APP_NAME': 'AnnotatIt', 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, ...}"
+p75
+sS'ccode'
+p76
+S'<code object <module> at 0x32081b0, file "/home/...plications/AnnotatIt/views/generic.json", line 1>'
+p77
+ssS'lnum'
+p78
+I212
+sS'lines'
+p79
+(dp80
+I207
+S'    try:'
+p81
+sI208
+S'        if isinstance(code, types.CodeType):'
+p82
+sI209
+S'            ccode = code'
+p83
+sI210
+S'        else:'
+p84
+sI211
+S'            ccode = compile2(code, layer)'
+p85
+sI212
+S'        exec ccode in environment'
+p86
+sI213
+S'    except HTTP:'
+p87
+sI214
+S'        raise'
+p88
+sI215
+S'    except RestrictedError:'
+p89
+sI216
+S'        # do not encapsulate (obfuscate) the original RestrictedError'
+p90
+ssS'call'
+p91
+S'(code="from gluon.serializers import json\\nresponse.writ...ponse._vars)))\\nresponse.write(\'\\\\n\', escape=False)", environment={\'A\': <class \'gluon.html.A\'>, \'ANY_OF\': <class \'gluon.validators.ANY_OF\'>, \'APP_DOMAIN_NAME\': \'AnnotatIt.com\', \'APP_DOMAIN_NAME_2\': \'Annotat.It\', \'APP_NAME\': \'AnnotatIt\', \'Auth\': <class \'gluon.tools.Auth\'>, \'B\': <class \'gluon.html.B\'>, \'BEAUTIFY\': <class \'gluon.html.BEAUTIFY\'>, \'BODY\': <class \'gluon.html.BODY\'>, \'BR\': <class \'gluon.html.BR\'>, ...}, layer=\'/home/leo/projects/AnnotatIt/annotatit-beta/hero...it-beta/applications/AnnotatIt/views/generic.json\')'
+p92
+sS'func'
+p93
+S'restricted'
+p94
+sa(dp95
+g70
+S'/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/applications/AnnotatIt/views/generic.json'
+p96
+sg72
+(dp97
+sg78
+I2
+sg79
+(dp98
+I1
+S'{{from gluon.serializers import json}}{{=XML(json(response._vars))}}'
+p99
+ssg91
+S'()'
+p100
+sg93
+S'<module>'
+p101
+sa(dp102
+g70
+S'/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/gluon/serializers.py'
+p103
+sg72
+(dp104
+S'default'
+p105
+S'<function custom_json>'
+p106
+sS').replace'
+p107
+S'undefined'
+p108
+ssg78
+I122
+sg79
+(dp109
+I117
+S''
+sI118
+S'def json(value, default=custom_json):'
+p110
+sI119
+S'    # replace JavaScript incompatible spacing'
+p111
+sI120
+S'    # http://timelessrepo.com/json-isnt-a-javascript-subset'
+p112
+sI121
+S'    return json_parser.dumps(value,'
+p113
+sI122
+S"        default=default).replace(ur'\\u2028',"
+p114
+sI123
+S"                                 '\\\\u2028').replace(ur'\\2029',"
+p115
+sI124
+S"                                                    '\\\\u2029')"
+p116
+sI125
+S''
+sI126
+S'def csv(value):'
+p117
+ssg91
+S'(value={\'id\': 1L, \'image\': \'user_info.image.8e06500563464b79.6c656f5f3130302e706e67.png\', \'image_file\': "\\x89PNG\\r\\n\\x1a\\n\\x00\\x00\\x00\\rIHDR\\x00\\x00\\x00d\\x00\\x00\\x00d\\x08\\x02\\x00\\x00\\x00\\xff\\x80\\x02\\x03\\x00\\x00\\x00\\tpHYs\\x00\\x00\\x0b\\x13\\x00\\x00\\x0b...n/\\x14.\\x06U\\xc7\\x00\\x898E\\xbf:\\x9d\\x0e\\x1d\\x97\\x81\\xbf\\x8dg\\xa2\\xf3\\x0f\\xbe4>\\xf3\\xbf.\\x97q\\xdbi\\x08\\xe6\'\\x00\\x00\\x00\\x00IEND\\xaeB`\\x82", \'nickname\': \'leo\', \'user_id\': 1L}, default=<function custom_json>)'
+p118
+sg93
+S'json'
+p119
+sa(dp120
+g70
+S'/usr/lib/python2.7/json/__init__.py'
+p121
+sg72
+(dp122
+S'obj'
+p123
+S'{\'id\': 1L, \'image\': \'user_info.image.8e06500563464b79.6c656f5f3130302e706e67.png\', \'image_file\': "\\x89PNG\\r\\n\\x1a\\n\\x00\\x00\\x00\\rIHDR\\x00\\x00\\x00d\\x00\\x00\\x00d\\x08\\x02\\x00\\x00\\x00\\xff\\x80\\x02\\x03\\x00\\x00\\x00\\tpHYs\\x00\\x00\\x0b\\x13\\x00\\x00\\x0b...n/\\x14.\\x06U\\xc7\\x00\\x898E\\xbf:\\x9d\\x0e\\x1d\\x97\\x81\\xbf\\x8dg\\xa2\\xf3\\x0f\\xbe4>\\xf3\\xbf.\\x97q\\xdbi\\x08\\xe6\'\\x00\\x00\\x00\\x00IEND\\xaeB`\\x82", \'nickname\': \'leo\', \'user_id\': 1L}'
+p124
+sS'kw'
+p125
+g21
+sS').encode'
+p126
+g108
+ssg78
+I240
+sg79
+(dp127
+I235
+S'        cls = JSONEncoder'
+p128
+sI236
+S'    return cls('
+p129
+sI237
+S'        skipkeys=skipkeys, ensure_ascii=ensure_ascii,'
+p130
+sI238
+S'        check_circular=check_circular, allow_nan=allow_nan, indent=indent,'
+p131
+sI239
+S'        separators=separators, encoding=encoding, default=default,'
+p132
+sI240
+S'        **kw).encode(obj)'
+p133
+sI241
+S''
+sI242
+S''
+sI243
+S'_default_decoder = JSONDecoder(encoding=None, object_hook=None,'
+p134
+sI244
+S'                               object_pairs_hook=None)'
+p135
+ssg91
+S'(obj={\'id\': 1L, \'image\': \'user_info.image.8e06500563464b79.6c656f5f3130302e706e67.png\', \'image_file\': "\\x89PNG\\r\\n\\x1a\\n\\x00\\x00\\x00\\rIHDR\\x00\\x00\\x00d\\x00\\x00\\x00d\\x08\\x02\\x00\\x00\\x00\\xff\\x80\\x02\\x03\\x00\\x00\\x00\\tpHYs\\x00\\x00\\x0b\\x13\\x00\\x00\\x0b...n/\\x14.\\x06U\\xc7\\x00\\x898E\\xbf:\\x9d\\x0e\\x1d\\x97\\x81\\xbf\\x8dg\\xa2\\xf3\\x0f\\xbe4>\\xf3\\xbf.\\x97q\\xdbi\\x08\\xe6\'\\x00\\x00\\x00\\x00IEND\\xaeB`\\x82", \'nickname\': \'leo\', \'user_id\': 1L}, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=<class \'json.encoder.JSONEncoder\'>, indent=None, separators=None, encoding=\'utf-8\', default=<function custom_json>, **kw={})'
+p136
+sg93
+S'dumps'
+p137
+sa(dp138
+g70
+S'/usr/lib/python2.7/json/encoder.py'
+p139
+sg72
+(dp140
+S'self'
+p141
+S'<json.encoder.JSONEncoder object>'
+p142
+sS'o'
+S'{\'id\': 1L, \'image\': \'user_info.image.8e06500563464b79.6c656f5f3130302e706e67.png\', \'image_file\': "\\x89PNG\\r\\n\\x1a\\n\\x00\\x00\\x00\\rIHDR\\x00\\x00\\x00d\\x00\\x00\\x00d\\x08\\x02\\x00\\x00\\x00\\xff\\x80\\x02\\x03\\x00\\x00\\x00\\tpHYs\\x00\\x00\\x0b\\x13\\x00\\x00\\x0b...n/\\x14.\\x06U\\xc7\\x00\\x898E\\xbf:\\x9d\\x0e\\x1d\\x97\\x81\\xbf\\x8dg\\xa2\\xf3\\x0f\\xbe4>\\xf3\\xbf.\\x97q\\xdbi\\x08\\xe6\'\\x00\\x00\\x00\\x00IEND\\xaeB`\\x82", \'nickname\': \'leo\', \'user_id\': 1L}'
+p143
+sS'self.iterencode'
+p144
+S'<bound method JSONEncoder.iterencode of <json.encoder.JSONEncoder object>>'
+p145
+sS'_one_shot'
+p146
+g108
+sS'chunks'
+p147
+g108
+sS'builtinTrue'
+p148
+S'True'
+p149
+ssg78
+I203
+sg79
+(dp150
+I198
+S'            else:'
+p151
+sI199
+S'                return encode_basestring(o)'
+p152
+sI200
+S"        # This doesn't pass the iterator directly to ''.join() because the"
+p153
+sI201
+S"        # exceptions aren't as detailed.  The list call should be roughly"
+p154
+sI202
+S"        # equivalent to the PySequence_Fast that ''.join() would do."
+p155
+sI203
+S'        chunks = self.iterencode(o, _one_shot=True)'
+p156
+sI204
+S'        if not isinstance(chunks, (list, tuple)):'
+p157
+sI205
+S'            chunks = list(chunks)'
+p158
+sI206
+S"        return ''.join(chunks)"
+p159
+sI207
+S''
+ssg91
+S'(self=<json.encoder.JSONEncoder object>, o={\'id\': 1L, \'image\': \'user_info.image.8e06500563464b79.6c656f5f3130302e706e67.png\', \'image_file\': "\\x89PNG\\r\\n\\x1a\\n\\x00\\x00\\x00\\rIHDR\\x00\\x00\\x00d\\x00\\x00\\x00d\\x08\\x02\\x00\\x00\\x00\\xff\\x80\\x02\\x03\\x00\\x00\\x00\\tpHYs\\x00\\x00\\x0b\\x13\\x00\\x00\\x0b...n/\\x14.\\x06U\\xc7\\x00\\x898E\\xbf:\\x9d\\x0e\\x1d\\x97\\x81\\xbf\\x8dg\\xa2\\xf3\\x0f\\xbe4>\\xf3\\xbf.\\x97q\\xdbi\\x08\\xe6\'\\x00\\x00\\x00\\x00IEND\\xaeB`\\x82", \'nickname\': \'leo\', \'user_id\': 1L})'
+p160
+sg93
+S'encode'
+p161
+sa(dp162
+g70
+S'/usr/lib/python2.7/json/encoder.py'
+p163
+sg72
+(dp164
+S'_iterencode'
+p165
+S'<_json.Encoder object>'
+p166
+sS'o'
+S'{\'id\': 1L, \'image\': \'user_info.image.8e06500563464b79.6c656f5f3130302e706e67.png\', \'image_file\': "\\x89PNG\\r\\n\\x1a\\n\\x00\\x00\\x00\\rIHDR\\x00\\x00\\x00d\\x00\\x00\\x00d\\x08\\x02\\x00\\x00\\x00\\xff\\x80\\x02\\x03\\x00\\x00\\x00\\tpHYs\\x00\\x00\\x0b\\x13\\x00\\x00\\x0b...n/\\x14.\\x06U\\xc7\\x00\\x898E\\xbf:\\x9d\\x0e\\x1d\\x97\\x81\\xbf\\x8dg\\xa2\\xf3\\x0f\\xbe4>\\xf3\\xbf.\\x97q\\xdbi\\x08\\xe6\'\\x00\\x00\\x00\\x00IEND\\xaeB`\\x82", \'nickname\': \'leo\', \'user_id\': 1L}'
+p167
+ssg78
+I266
+sg79
+(dp168
+I261
+S'        else:'
+p169
+sI262
+S'            _iterencode = _make_iterencode('
+p170
+sI263
+S'                markers, self.default, _encoder, self.indent, floatstr,'
+p171
+sI264
+S'                self.key_separator, self.item_separator, self.sort_keys,'
+p172
+sI265
+S'                self.skipkeys, _one_shot)'
+p173
+sI266
+S'        return _iterencode(o, 0)'
+p174
+sI267
+S''
+sI268
+S'def _make_iterencode(markers, _default, _encoder, _indent, _floatstr,'
+p175
+sI269
+S'        _key_separator, _item_separator, _sort_keys, _skipkeys, _one_shot,'
+p176
+sI270
+S'        ## HACK: hand-optimized bytecode; turn globals into locals'
+p177
+ssg91
+S'(self=<json.encoder.JSONEncoder object>, o={\'id\': 1L, \'image\': \'user_info.image.8e06500563464b79.6c656f5f3130302e706e67.png\', \'image_file\': "\\x89PNG\\r\\n\\x1a\\n\\x00\\x00\\x00\\rIHDR\\x00\\x00\\x00d\\x00\\x00\\x00d\\x08\\x02\\x00\\x00\\x00\\xff\\x80\\x02\\x03\\x00\\x00\\x00\\tpHYs\\x00\\x00\\x0b\\x13\\x00\\x00\\x0b...n/\\x14.\\x06U\\xc7\\x00\\x898E\\xbf:\\x9d\\x0e\\x1d\\x97\\x81\\xbf\\x8dg\\xa2\\xf3\\x0f\\xbe4>\\xf3\\xbf.\\x97q\\xdbi\\x08\\xe6\'\\x00\\x00\\x00\\x00IEND\\xaeB`\\x82", \'nickname\': \'leo\', \'user_id\': 1L}, _one_shot=True)'
+p178
+sg93
+S'iterencode'
+p179
+sasS'pyver'
+p180
+S'Python 2.7.3: /home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/venv/bin/python (prefix: /home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/venv)'
+p181
+sS'session'
+p182
+g65
+(S's\x1a\x00\x00\x00<div><table></table></div>'
+tRp183
+sS'etype'
+p184
+S"<type 'exceptions.UnicodeDecodeError'>"
+p185
+sS'date'
+p186
+S'Thu Jul 18 10:35:47 2013'
+p187
+sS'response'
+p188
+g65
+(S's\x18\x19\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top">body</td><td valign="top">:</td><td><div>&lt;cStringIO.StringO object at 0x3209bc8&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">cookies</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">session_id_annotatit</td><td valign="top">:</td><td><div>127.0.0.1-27dfc840-f8a0-43d1-a4a0-57dfcca45aed<table><tr><td style="font-weight:bold;vertical-align:top">comment</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">domain</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">expires</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">httponly</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">max-age</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path</td><td valign="top">:</td><td><div>/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">secure</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">version</td><td valign="top">:</td><td><div></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">delimiters</td><td valign="top">:</td><td><div><table><tr><td><div>{{</div></td></tr><tr><td><div>}}</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">files</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">flash</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">generic_patterns</td><td valign="top">:</td><td><div><table><tr><td><div>*</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">google_analytics_id</td><td valign="top">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">headers</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">Content-Type</td><td valign="top">:</td><td><div>text/plain; charset=utf-8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">X-Powered-By</td><td valign="top">:</td><td><div>web2py</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">logo</td><td valign="top">:</td><td><div><a class="brand" href="http://www.annotatit.com/"><b>AnnotatIt</b>&trade;&nbsp;</a></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">logo_img</td><td valign="top">:</td><td><div><img alt="AnnotatIt" src="/AnnotatIt/static/images/annotatit_pencil_200.png" /></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">menu</td><td valign="top">:</td><td><div><table><tr><td><div><table><tr><td><div>Register</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/default/user/register</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Login</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/default/user/login</div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">meta</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">author</td><td valign="top">:</td><td><div>Leonardo M. Rocha &lt;leo@annotatit.com&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">description</td><td valign="top">:</td><td><div>Synchronized Video Annotation</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">generator</td><td valign="top">:</td><td><div>Leonardo M. Rocha</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">keywords</td><td valign="top">:</td><td><div>personal development, leadership, spokesman, video, audio, annotation, social annotation, video annotation, video notes, music notes, media notes, music annotation, music education, online music education, online music video tagging, video analysis, music analysis, media analysis, sound analysis</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">models_to_run</td><td valign="top">:</td><td><div><table><tr><td><div>^\\w+\\.py$</div></td></tr><tr><td><div>^api/\\w+\\.py$</div></td></tr><tr><td><div>^api/user/\\w+\\.py$</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">postprocessing</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_cookie_expires</td><td valign="top">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_data_name</td><td valign="top">:</td><td><div>session_data_annotatit</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_file</td><td valign="top">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_filename</td><td valign="top">:</td><td><div>/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/applications/AnnotatIt/sessions/127.0.0.1-27dfc840-f8a0-43d1-a4a0-57dfcca45aed</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_id</td><td valign="top">:</td><td><div>127.0.0.1-27dfc840-f8a0-43d1-a4a0-57dfcca45aed</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_id_name</td><td valign="top">:</td><td><div>session_id_annotatit</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_new</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_storage_type</td><td valign="top">:</td><td><div>file</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">status</td><td valign="top">:</td><td><div>200</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">subtitle</td><td valign="top">:</td><td><div>Collaborative Synchronized Media Annotations made Easy</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">title</td><td valign="top">:</td><td><div>Annotatit</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">view</td><td valign="top">:</td><td><div>api/user.html</div></td></tr></table></div>'
+tRp189
+sS'locals'
+p190
+(dp191
+S'_encoder'
+p192
+S'<built-in function encode_basestring_ascii>'
+p193
+sS'floatstr'
+p194
+S'<function floatstr>'
+p195
+sS'self'
+p196
+S'<json.encoder.JSONEncoder object>'
+p197
+sS'markers'
+p198
+S'{49944432: {\'id\': 1L, \'image\': \'user_info.image.8e06500563464b79.6c656f5f3130302e706e67.png\', \'image_file\': "\\x89PNG\\r\\n\\x1a\\n\\x00\\x00\\x00\\rIHDR\\x00\\x00\\x00d\\x00\\x00\\x00d\\x08\\x02\\x00\\x00\\x00\\xff\\x80\\x02\\x03\\x00\\x00\\x00\\tpHYs\\x00\\x00\\x0b\\x13\\x00\\x00\\x0b...n/\\x14.\\x06U\\xc7\\x00\\x898E\\xbf:\\x9d\\x0e\\x1d\\x97\\x81\\xbf\\x8dg\\xa2\\xf3\\x0f\\xbe4>\\xf3\\xbf.\\x97q\\xdbi\\x08\\xe6\'\\x00\\x00\\x00\\x00IEND\\xaeB`\\x82", \'nickname\': \'leo\', \'user_id\': 1L}}'
+p199
+sS'_one_shot'
+p200
+g149
+sS'o'
+S'{\'id\': 1L, \'image\': \'user_info.image.8e06500563464b79.6c656f5f3130302e706e67.png\', \'image_file\': "\\x89PNG\\r\\n\\x1a\\n\\x00\\x00\\x00\\rIHDR\\x00\\x00\\x00d\\x00\\x00\\x00d\\x08\\x02\\x00\\x00\\x00\\xff\\x80\\x02\\x03\\x00\\x00\\x00\\tpHYs\\x00\\x00\\x0b\\x13\\x00\\x00\\x0b...n/\\x14.\\x06U\\xc7\\x00\\x898E\\xbf:\\x9d\\x0e\\x1d\\x97\\x81\\xbf\\x8dg\\xa2\\xf3\\x0f\\xbe4>\\xf3\\xbf.\\x97q\\xdbi\\x08\\xe6\'\\x00\\x00\\x00\\x00IEND\\xaeB`\\x82", \'nickname\': \'leo\', \'user_id\': 1L}'
+p201
+sS'_iterencode'
+p202
+S'<_json.Encoder object>'
+p203
+sssS'traceback'
+p204
+S'Traceback (most recent call last):\n  File "/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/gluon/restricted.py", line 212, in restricted\n    exec ccode in environment\n  File "/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/applications/AnnotatIt/views/generic.json", line 2, in <module>\n  File "/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/gluon/serializers.py", line 122, in json\n    default=default).replace(ur\'\\u2028\',\n  File "/usr/lib/python2.7/json/__init__.py", line 240, in dumps\n    **kw).encode(obj)\n  File "/usr/lib/python2.7/json/encoder.py", line 203, in encode\n    chunks = self.iterencode(o, _one_shot=True)\n  File "/usr/lib/python2.7/json/encoder.py", line 266, in iterencode\n    return _iterencode(o, 0)\nUnicodeDecodeError: \'utf8\' codec can\'t decode byte 0x89 in position 0: invalid start byte\n'
+p205
+s.

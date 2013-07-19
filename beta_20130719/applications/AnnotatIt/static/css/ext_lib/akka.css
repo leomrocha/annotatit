@@ -1,0 +1,61 @@
+.mycontainer{
+	padding: 0px 0px;
+	border-radius: 0px;
+	box-shadow: inset 0px 0px 1px #aaa;
+	height: 40px;
+}
+
+.myrow{
+	height: 40px;
+	margin: 0px 
+}
+
+.myrow2{
+	height: 20px;
+	margin: 0px 
+}
+
+/* Page heading */
+
+.mypage-heading{
+	background: url("../img/heading-back.jpg") !important;
+	padding: 0px 0px;
+	border-top: 5px solid #ddd !important;
+	border-bottom: 3px solid #ddd !important;
+}
+
+.mypage-heading h2 i{
+	border: 3px solid #52b9e9;
+}
+
+/* Reg & Login Form */
+
+.myformy{
+	padding: 15px 25px;
+	display: block;
+	color: #fff;
+}
+
+.myformy h5{
+	color: #fff;
+}
+
+.myformy a, .myformy a:visited{
+	color: #eee;
+	text-decoration: underline;
+}
+
+.myformy a:hover{
+	color: #fff;
+	text-decoration: none;
+}
+
+.plist{
+      color:black;
+     }
+
+.headerprivacy{
+	color:lightblue;
+
+}
+

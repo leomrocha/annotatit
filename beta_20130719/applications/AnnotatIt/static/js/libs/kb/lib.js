@@ -1,0 +1,11 @@
+var flaggedSyncCommentsViewModel = new FlaggedSyncCommentsViewModel(
+	new FlaggedSyncComments([
+    { "type":"FlaggedSyncComment" ,"id":2, "owner_id": 2, "can_edit":false, "can_delete": false,  "owner_name": "Leo", "owner_thumbnail_url": "http://localhost:5000/AnnotatIt/static/images/portrait_placeholder_90.png", "media_id":"a1", "parent_id":"", "media_time":57.3, "flag_name":"Good", "keyboard_shortcut":"g", "flag_color":"#00ff00", "text":"Good punch! ATGATHA ATHA TA AERF AR ARG AG AEFG AEG AR A ARG AG AG AREGAERGERGATHZTHYNBDH DGBSRTB BSGB SRTNBS BSYYNS RTB STBSRT SYNS RTB SNSRT SGNSGTN ", "creation_datetime":"Wed Jul 3 14:17", "update_datetime":"Wed Jul 3 14:19" },
+    { "type":"FlaggedSyncComment" ,"id":4, "owner_id": 3, "can_edit":false, "can_delete": true,  "owner_name": "Leo", "owner_thumbnail_url": "http://localhost:5000/AnnotatIt/static/images/portrait_placeholder_90.png", "media_id":"a1", "parent_id":"", "media_time":57.5, "flag_name":"Warning", "keyboard_shortcut":"!", "flag_color":"#ffff00", "text":"Good punch!", "creation_datetime":"Wed Jul 3 14:17", "update_datetime":"Wed Jul 3 14:19" },
+    { "type":"FlaggedSyncComment" ,"id":3, "owner_id": 4, "can_edit":true, "can_delete": false,  "owner_name": "Leo", "owner_thumbnail_url": "http://localhost:5000/AnnotatIt/static/images/portrait_placeholder_90.png", "media_id":"a1", "parent_id":"", "media_time":23.2, "flag_name":"Bad", "keyboard_shortcut":"b", "flag_color":"#ff0000", "text":"Good punch! ATGATHA ATHA TA AERF AR ARG AG AEFG AEG AR A ARG AG AG AREGAERGERGATHZTHYNBDH DGBSRTB BSGB SRTNBS BSYYNS RTB STBSRT SYNS RTB SNSRT SGNSGTN ", "creation_datetime":"Wed Jul 3 14:17", "update_datetime":"Wed Jul 3 14:19" },
+    { "type":"FlaggedSyncComment" ,"id":1, "owner_id": 4, "can_edit":true, "can_delete": true,  "owner_name": "Leo", "owner_thumbnail_url": "http://localhost:5000/AnnotatIt/static/images/portrait_placeholder_90.png", "media_id":"a1", "parent_id":"", "media_time":83.2, "flag_name":"Warning", "keyboard_shortcut":"!", "flag_color":"#ffff00", "text":" ARG AG AEFG AEG AR A ARG AG AG AREGAERGERGATHZTHYNBDH DGBSRTB BSGB SRTNBS BSYYNS RTB STBSRT SYNS RTB SNSRT SGNSGTN ", "creation_datetime":"Wed Jul 3 14:17", "update_datetime":"Wed Jul 3 14:19" }
+
+	])
+);
+
+

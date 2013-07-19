@@ -1,0 +1,833 @@
+(dp1
+S'output'
+p2
+S"<type 'exceptions.AttributeError'> 'NoneType' object has no attribute 'first_name'"
+p3
+sS'layer'
+p4
+S'/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/applications/AnnotatIt/models/db.py'
+p5
+sS'code'
+p6
+S'# -*- coding: utf-8 -*-\n\n#########################################################################\n## This scaffolding model makes your app work on Google App Engine too\n## File is released under public domain and you can use without limitations\n#########################################################################\n\n## if SSL/HTTPS is properly configured and you want all HTTP requests to\n## be redirected to HTTPS, uncomment the line below:\n# request.requires_https()\n\nfrom datetime import datetime\nimport uuid\nimport time\n#import urllib2\nfrom gluon.contrib.heroku import get_db                                         \ndb = get_db() \n\n\nAPP_NAME = "AnnotatIt"\nAPP_DOMAIN_NAME = "AnnotatIt.com"\nAPP_DOMAIN_NAME_2 = "Annotat.It" #TODO register if available\n############################################\n##Contact email ... this should NEVER be public\n##########################################\nWEBMASTERS_EMAIL_NAME = "leo"\nWEBMASTERS_EMAIL_DOMAIN = "annotatit.com"\nWEBMASTERS_EMAIL_DOMAIN_2 = "annotat.it"\nWEBMASTERS_EMAIL = "leo@annotatit.com"\nWEBMASTERS_EMAIL_2 = "leo@annotat.it"\n\n## by default give a view/generic.extension to all actions from localhost\n## none otherwise. a pattern can be \'controller/function.extension\'\nresponse.generic_patterns = [\'*\'] if request.is_local else []\n## (optional) optimize handling of static files\n# response.optimize_css = \'concat,minify,inline\'\n# response.optimize_js = \'concat,minify,inline\'\n\nfrom gluon.tools import Auth, Crud, Service, PluginManager, prettydate\nauth = Auth(db)\ncrud, service, plugins = Crud(db), Service(), PluginManager()\n\n## create all tables needed by auth if not custom tables\nauth.define_tables(username=False, signature=False)\n\n## configure email\nmail = auth.settings.mailer\nmail.settings.server = \'logging\' or \'smtp.gmail.com:587\'\nmail.settings.sender = \'you@gmail.com\'\nmail.settings.login = \'username:password\'\n\n## configure auth policy\nauth.settings.registration_requires_verification = False\nauth.settings.registration_requires_approval = False\nauth.settings.reset_password_requires_verification = True\n\n## after defining tables, uncomment below to enable auditing\n# auth.enable_record_versioning(db)\n\n#for user information\ndb.define_table(\'user_info\',\n    Field(\'user_id\', \'reference auth_user\', default=auth.user_id, requires=IS_NOT_EMPTY()),\n    Field(\'nickname\', length=50, default=auth.user.first_name),\n    Field(\'image\', \'upload\', uploadfield=\'image_file\'),\n    Field(\'image_file\', \'blob\'))\n\n################\n# Media linking\n################\n#media refers to any type of media either video or audio\ndb.define_table(\'media\', \n    Field(\'owner_id\', \'reference auth_user\', default=auth.user_id, requires=IS_NOT_EMPTY()),\n    Field(\'title\', length=256, default="No title"),\n    #Field(\'subtitle\', length=256, default=""),\n    Field(\'media_annotate_key\', length=64, default=lambda: uuid.uuid4(), notnull=True,writable=False, unique=True), \n    Field(\'media_view_results_key\', length=64, default=lambda: uuid.uuid4(), notnull=True,writable=False, unique=True),\n    Field(\'media_embed_key\', length=64, default=lambda: uuid.uuid4(), notnull=True,writable=False, unique=True),\n    Field(\'media_id\', requires=IS_NOT_EMPTY()),\n    Field(\'media_network\', requires=IS_IN_SET(("youtube", "vimeo", "annotatit"))), #maybe facebook will be nice to add, but later!!\n    Field(\'media_url\', requires=IS_URL()),\n    Field(\'privacy\', default=\'private\', requires=IS_IN_SET(("unlisted", "public", "private"))),\n    Field(\'annotation_permissions\', default=\'only_me\', requires=IS_IN_SET(("only_me", "authorized_groups", "authorized_people", "all"))), #TODO add a field that is "only people with the link"\n    Field(\'view_permissions\', default=\'only_me\', requires=IS_IN_SET(("only_me", "authorized_groups", "authorized_people", "all"))),#TODO add a field that is "only people with the link"\n    Field(\'creation_datetime\', \'datetime\',  default=datetime.now(), requires=IS_DATETIME()),\n    Field(\'update_datetime\', \'datetime\',  default=datetime.now(), requires=IS_DATETIME()),\n    )\n    \n##################\n####Annotations\n##################\n\n#######\n#Generic non synchronized nested comments, normal comments system\n#######\n#a comment that will be time tagged\ndb.define_table(\'comment\', \n    Field(\'owner_id\', \'reference auth_user\', default=auth.user_id, requires=IS_NOT_EMPTY()),\n    Field(\'media_id\', \'reference media\', requires=IS_NOT_EMPTY()),\n    Field(\'parent_id\', \'reference comment\'), #nested comments\n    Field(\'text\', \'text\', length=1024, requires=IS_NOT_EMPTY()),\n    Field(\'creation_datetime\', \'datetime\',  default=datetime.now(), requires=IS_DATETIME()),\n    Field(\'update_datetime\', \'datetime\',  default=datetime.now(), requires=IS_DATETIME()),\n    )\n\n########\n# Marked Synchronized Comments \n#\n# Allows to quickly mark a point in time to later come back and make a more thorough comment\n# Marks are shown as icons for easy interpretation\n########\ndb.define_table(\'flagged_comment\', \n    Field(\'owner_id\', \'reference auth_user\', default=auth.user_id, requires=IS_NOT_EMPTY()),\n    Field(\'media_id\', \'reference media\', requires=IS_NOT_EMPTY()),\n    Field(\'parent_id\', \'reference comment\', default=None), #nested comments\n    Field(\'media_time\', \'time\', requires=IS_TIME()), #automatically filled\n    #Field(\'mark\', requires=IS_IN_SET(("OK", "WARNING", "QUESTION"))),\n    Field(\'keyboard_shortcut\', \'string\', length=1),\n    Field(\'flag_name\',\'string\', length=30),\n    Field(\'flag_color\', \'string\', length=7 ), # \'#RRGGBB\'\n    Field(\'text\', \'text\', length=512, requires=IS_NOT_EMPTY()),\n    Field(\'creation_datetime\', \'datetime\',  default=datetime.now(), requires=IS_DATETIME()),\n    Field(\'update_datetime\', \'datetime\',  default=datetime.now(), requires=IS_DATETIME()),\n    )\n\n## Independent marks, as for giving a possibility to users\n# is what before was called TAG, but now I changed the name\ndb.define_table(\'flag\', \n    Field(\'owner_id\', \'reference auth_user\', default=auth.user_id, requires=IS_NOT_EMPTY()),\n    Field(\'media_id\', \'reference media\', requires=IS_NOT_EMPTY()),\n    Field(\'name\', \'string\'), #, requires=IS_IN_SET(("QUESTION", "OK", "WARNING","BAD")) ),\n    Field(\'media_time\', \'time\', requires=IS_TIME()), #this field should be automatically generated and filled\n    Field(\'creation_datetime\', \'datetime\',  default=datetime.now(), requires=IS_DATETIME()),\n    Field(\'update_datetime\', \'datetime\',  default=datetime.now(), requires=IS_DATETIME()),\n    )\n\n    \n##########\n#Tags:\n#\n# Tags are small words or sentences that refer to a comment, for suggesting\n# possible evaluation outcomes\n##########\n\ndb.define_table(\'text_tag\', \n    Field(\'owner_id\', \'reference auth_user\', default=auth.user_id, requires=IS_NOT_EMPTY()),\n    Field(\'parent_id\', \'reference comment\'), #nested comments\n    Field(\'text\', \'text\', length=50, requires=IS_NOT_EMPTY()),\n    Field(\'creation_datetime\', \'datetime\',  default=datetime.now(), requires=IS_DATETIME()),\n    Field(\'update_datetime\', \'datetime\',  default=datetime.now(), requires=IS_DATETIME()),\n    )\n\n#owner of media can suggest what tags to put\ndb.define_table(\'suggested_tag\', \n    Field(\'owner_id\', \'reference auth_user\', default=auth.user_id, requires=IS_NOT_EMPTY()),\n    Field(\'media_id\', \'reference media\'), #nested comments\n    Field(\'name\', \'text\', length=50, requires=IS_NOT_EMPTY()),\n    #Field(\'icon\',  ), #optional\n    Field(\'creation_datetime\', \'datetime\',  default=datetime.now(), requires=IS_DATETIME()),\n    Field(\'update_datetime\', \'datetime\',  default=datetime.now(), requires=IS_DATETIME()),\n    )\n\n\n######################\n# Sections \n# mark media sections\n######################\n\ndb.define_table(\'section\', \n    Field(\'owner_id\', \'reference auth_user\', default=auth.user_id, requires=IS_NOT_EMPTY()),\n    Field(\'media_id\', \'reference media\', requires=IS_NOT_EMPTY()),\n    Field(\'parent_id\', \'reference section\', default=None),\n    Field(\'name\', \'string\' ),\n    #Field(\'text\', \'string\' ),\n    Field(\'color\', \'string\', length=7 ), # \'#RRGGBB\'\n    Field(\'begin_time\', \'time\', requires=IS_TIME()), #auto filled\n    Field(\'end_time\', \'time\', requires=IS_TIME()), #auto filled\n    Field(\'creation_datetime\', \'datetime\',  default=datetime.now(), requires=IS_DATETIME()),\n    Field(\'update_datetime\', \'datetime\',  default=datetime.now(), requires=IS_DATETIME()),\n    )\n\n######################################################\n#### Contacts\n######################################################\n\n#########################################################################\n#Invites, modified from a post by massimo di piero in a post here:\n# http://www.mail-archive.com/web2py@googlegroups.com/msg78529.html\n\ndb.define_table(\'invite\',\n    Field(\'inviter_id\', \'reference auth_user\', default=auth.user_id, requires=IS_NOT_EMPTY()),\n    Field(\'email\', requires=IS_EMAIL() ),\n    Field(\'uuid\',default=str(uuid.uuid4())),\n    Field(\'accepted\', \'boolean\', default=False)\n    )\n#in case I want something more complicated\n#auth.settings.extra_fields[\'auth_user\']=Field(\'uuid\',requires=IS_IN_DB(db,db.invite.uuid)))\n#auth.settings.register_onaccept: lambda form: db(db.invite.uuid==form.vars.uuid).delete()\n#auth.define_tables()\n\ndb.define_table(\'contact\',\n    Field(\'source_id\', \'reference auth_user\', default=auth.user_id, requires=IS_NOT_EMPTY()),\n    Field(\'target_id\', \'reference auth_user\', requires=IS_NOT_EMPTY()),\n    )\n'
+p7
+sS'snapshot'
+p8
+(dp9
+S'exception'
+p10
+(dp11
+S'__hash__'
+p12
+S"<method-wrapper '__hash__' of exceptions.AttributeError object>"
+p13
+sS'__setattr__'
+p14
+S"<method-wrapper '__setattr__' of exceptions.AttributeError object>"
+p15
+sS'__reduce_ex__'
+p16
+S'<built-in method __reduce_ex__ of exceptions.AttributeError object>'
+p17
+sS'__getslice__'
+p18
+S"<method-wrapper '__getslice__' of exceptions.AttributeError object>"
+p19
+sS'__getitem__'
+p20
+S"<method-wrapper '__getitem__' of exceptions.AttributeError object>"
+p21
+sS'__setstate__'
+p22
+S'<built-in method __setstate__ of exceptions.AttributeError object>'
+p23
+sS'args'
+p24
+S'("\'NoneType\' object has no attribute \'first_name\'",)'
+p25
+sS'__reduce__'
+p26
+S'<built-in method __reduce__ of exceptions.AttributeError object>'
+p27
+sS'__str__'
+p28
+S"<method-wrapper '__str__' of exceptions.AttributeError object>"
+p29
+sS'__format__'
+p30
+S'<built-in method __format__ of exceptions.AttributeError object>'
+p31
+sS'__getattribute__'
+p32
+S"<method-wrapper '__getattribute__' of exceptions.AttributeError object>"
+p33
+sS'__class__'
+p34
+S"<type 'exceptions.AttributeError'>"
+p35
+sS'__unicode__'
+p36
+S'<built-in method __unicode__ of exceptions.AttributeError object>'
+p37
+sS'__delattr__'
+p38
+S"<method-wrapper '__delattr__' of exceptions.AttributeError object>"
+p39
+sS'__subclasshook__'
+p40
+S'<built-in method __subclasshook__ of type object>'
+p41
+sS'__repr__'
+p42
+S"<method-wrapper '__repr__' of exceptions.AttributeError object>"
+p43
+sS'__dict__'
+p44
+S'{}'
+p45
+sS'__sizeof__'
+p46
+S'<built-in method __sizeof__ of exceptions.AttributeError object>'
+p47
+sS'__doc__'
+p48
+S"'Attribute not found.'"
+p49
+sS'__init__'
+p50
+S"<method-wrapper '__init__' of exceptions.AttributeError object>"
+p51
+sS'__new__'
+p52
+S'<built-in method __new__ of type object>'
+p53
+ssS'evalue'
+p54
+S"'NoneType' object has no attribute 'first_name'"
+p55
+sS'request'
+p56
+cgluon.html
+XML_unpickle
+p57
+(S's\x80:\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top">ajax</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">application</td><td valign="top">:</td><td><div>AnnotatIt</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">args</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">body</td><td valign="top">:</td><td><div>&lt;cStringIO.StringO object at 0x249cae8&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">cid</td><td valign="top">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">client</td><td valign="top">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">controller</td><td valign="top">:</td><td><div>default</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">cookies</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">env</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">app_folders</td><td valign="top">:</td><td><div>set([&#x27;/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/applications/AnnotatIt/&#x27;, &#x27;/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/applications/admin/&#x27;])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">applications_parent</td><td valign="top">:</td><td><div>/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">db_sessions</td><td valign="top">:</td><td><div>set([])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">debugging</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">gluon_parent</td><td valign="top">:</td><td><div>/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">gunicorn_socket</td><td valign="top">:</td><td><div>&lt;socket._socketobject object at 0x1d49980&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_accept</td><td valign="top">:</td><td><div>text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_accept_encoding</td><td valign="top">:</td><td><div>gzip,deflate,sdch</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_accept_language</td><td valign="top">:</td><td><div>en-US,en;q=0.8,fr;q=0.6,es;q=0.4</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_connection</td><td valign="top">:</td><td><div>keep-alive</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_host</td><td valign="top">:</td><td><div>127.0.0.1:5000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_user_agent</td><td valign="top">:</td><td><div>Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.63 Safari/537.36</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_jython</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_pypy</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">local_hosts</td><td valign="top">:</td><td><div><table><tr><td><div>cotita</div></td></tr><tr><td><div>::ffff:127.0.0.1</div></td></tr><tr><td><div>::1</div></td></tr><tr><td><div>localhost</div></td></tr><tr><td><div>127.0.1.1</div></td></tr><tr><td><div>127.0.0.1</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path_info</td><td valign="top">:</td><td><div>/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">query_string</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">raw_uri</td><td valign="top">:</td><td><div>/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">remote_addr</td><td valign="top">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">remote_port</td><td valign="top">:</td><td><div>44348</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">request_method</td><td valign="top">:</td><td><div>GET</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">request_uri</td><td valign="top">:</td><td><div>/AnnotatIt/default/index</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">script_name</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">server_name</td><td valign="top">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">server_port</td><td valign="top">:</td><td><div>5000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">server_protocol</td><td valign="top">:</td><td><div>HTTP/1.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">server_software</td><td valign="top">:</td><td><div>gunicorn/0.17.2</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_crontype</td><td valign="top">:</td><td><div>soft</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_original_uri</td><td valign="top">:</td><td><div>/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_path</td><td valign="top">:</td><td><div>/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_version</td><td valign="top">:</td><td><div>2.5.1-stable+timestamp.2013.06.06.15.39.19</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_errors</td><td valign="top">:</td><td><div>&lt;open file &#x27;&lt;stderr&gt;&#x27;, mode &#x27;w&#x27; at 0x7f1d46c56270&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_file_wrapper</td><td valign="top">:</td><td><div>&lt;class gunicorn.http.wsgi.FileWrapper at 0x1b07808&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_input</td><td valign="top">:</td><td><div>&lt;gunicorn.http.body.Body object at 0x2494f10&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_multiprocess</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_multithread</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_run_once</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_url_scheme</td><td valign="top">:</td><td><div>http</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_version</td><td valign="top">:</td><td><div><table><tr><td><div>1</div></td></tr><tr><td><div>0</div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">extension</td><td valign="top">:</td><td><div>html</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">folder</td><td valign="top">:</td><td><div>/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/applications/AnnotatIt/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">function</td><td valign="top">:</td><td><div>index</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">get_vars</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">global_settings</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">app_folders</td><td valign="top">:</td><td><div>set([&#x27;/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/applications/AnnotatIt/&#x27;, &#x27;/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/applications/admin/&#x27;])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">applications_parent</td><td valign="top">:</td><td><div>/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">db_sessions</td><td valign="top">:</td><td><div>set([])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">debugging</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">gluon_parent</td><td valign="top">:</td><td><div>/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_jython</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_pypy</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">local_hosts</td><td valign="top">:</td><td><div><table><tr><td><div>cotita</div></td></tr><tr><td><div>::ffff:127.0.0.1</div></td></tr><tr><td><div>::1</div></td></tr><tr><td><div>localhost</div></td></tr><tr><td><div>127.0.1.1</div></td></tr><tr><td><div>127.0.0.1</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_crontype</td><td valign="top">:</td><td><div>soft</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_version</td><td valign="top">:</td><td><div>2.5.1-stable+timestamp.2013.06.06.15.39.19</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_https</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_local</td><td valign="top">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_restful</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">now</td><td valign="top">:</td><td><div>datetime.datetime(2013, 7, 18, 10, 30, 29, 526008)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">post_vars</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">url</td><td valign="top">:</td><td><div>/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">utcnow</td><td valign="top">:</td><td><div>datetime.datetime(2013, 7, 18, 8, 30, 29, 526015)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">uuid</td><td valign="top">:</td><td><div>AnnotatIt/127.0.0.1.2013-07-18.10-30-29.087d2f30-396a-46d8-84a5-1dba58185829</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">vars</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">environ</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">HTTP_ACCEPT</td><td valign="top">:</td><td><div>text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_ACCEPT_ENCODING</td><td valign="top">:</td><td><div>gzip,deflate,sdch</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_ACCEPT_LANGUAGE</td><td valign="top">:</td><td><div>en-US,en;q=0.8,fr;q=0.6,es;q=0.4</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_CONNECTION</td><td valign="top">:</td><td><div>keep-alive</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_HOST</td><td valign="top">:</td><td><div>127.0.0.1:5000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_USER_AGENT</td><td valign="top">:</td><td><div>Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.63 Safari/537.36</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">PATH_INFO</td><td valign="top">:</td><td><div>/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">QUERY_STRING</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">RAW_URI</td><td valign="top">:</td><td><div>/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">REMOTE_ADDR</td><td valign="top">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">REMOTE_PORT</td><td valign="top">:</td><td><div>44348</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">REQUEST_METHOD</td><td valign="top">:</td><td><div>GET</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">REQUEST_URI</td><td valign="top">:</td><td><div>/AnnotatIt/default/index</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SCRIPT_NAME</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SERVER_NAME</td><td valign="top">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SERVER_PORT</td><td valign="top">:</td><td><div>5000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SERVER_PROTOCOL</td><td valign="top">:</td><td><div>HTTP/1.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SERVER_SOFTWARE</td><td valign="top">:</td><td><div>gunicorn/0.17.2</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">WEB2PY_ORIGINAL_URI</td><td valign="top">:</td><td><div>/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">gunicorn.socket</td><td valign="top">:</td><td><div>&lt;socket._socketobject object at 0x1d49980&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.errors</td><td valign="top">:</td><td><div>&lt;open file &#x27;&lt;stderr&gt;&#x27;, mode &#x27;w&#x27; at 0x7f1d46c56270&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.file_wrapper</td><td valign="top">:</td><td><div>&lt;class gunicorn.http.wsgi.FileWrapper at 0x1b07808&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.input</td><td valign="top">:</td><td><div>&lt;cStringIO.StringO object at 0x249cae8&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.multiprocess</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.multithread</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.run_once</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.url_scheme</td><td valign="top">:</td><td><div>http</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.version</td><td valign="top">:</td><td><div>1</div></td></tr></table></div></td></tr></table></div></td></tr></table></div>'
+tRp58
+sS'frames'
+p59
+(lp60
+(dp61
+S'file'
+p62
+S'/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/gluon/restricted.py'
+p63
+sS'dump'
+p64
+(dp65
+S'environment'
+p66
+S"{'A': <class 'gluon.html.A'>, 'ANY_OF': <class 'gluon.validators.ANY_OF'>, 'APP_DOMAIN_NAME': 'AnnotatIt.com', 'APP_DOMAIN_NAME_2': 'Annotat.It', 'APP_NAME': 'AnnotatIt', 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, ...}"
+p67
+sS'ccode'
+p68
+S'<code object <module> at 0x1da4030, file "/home/...ta/applications/AnnotatIt/models/db.py", line 12>'
+p69
+ssS'lnum'
+p70
+I212
+sS'lines'
+p71
+(dp72
+I207
+S'    try:'
+p73
+sI208
+S'        if isinstance(code, types.CodeType):'
+p74
+sI209
+S'            ccode = code'
+p75
+sI210
+S'        else:'
+p76
+sI211
+S'            ccode = compile2(code, layer)'
+p77
+sI212
+S'        exec ccode in environment'
+p78
+sI213
+S'    except HTTP:'
+p79
+sI214
+S'        raise'
+p80
+sI215
+S'    except RestrictedError:'
+p81
+sI216
+S'        # do not encapsulate (obfuscate) the original RestrictedError'
+p82
+ssS'call'
+p83
+S'(code="# -*- coding: utf-8 -*-\\n\\n#######################...ence auth_user\', requires=IS_NOT_EMPTY()),\\n    )\\n", environment={\'A\': <class \'gluon.html.A\'>, \'ANY_OF\': <class \'gluon.validators.ANY_OF\'>, \'APP_DOMAIN_NAME\': \'AnnotatIt.com\', \'APP_DOMAIN_NAME_2\': \'Annotat.It\', \'APP_NAME\': \'AnnotatIt\', \'Auth\': <class \'gluon.tools.Auth\'>, \'B\': <class \'gluon.html.B\'>, \'BEAUTIFY\': <class \'gluon.html.BEAUTIFY\'>, \'BODY\': <class \'gluon.html.BODY\'>, \'BR\': <class \'gluon.html.BR\'>, ...}, layer=\'/home/leo/projects/AnnotatIt/annotatit-beta/hero...nnotatit-beta/applications/AnnotatIt/models/db.py\')'
+p84
+sS'func'
+p85
+S'restricted'
+p86
+sa(dp87
+g62
+S'/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/applications/AnnotatIt/models/db.py'
+p88
+sg64
+(dp89
+S'auth.user.first_name'
+p90
+S'undefined'
+p91
+sS'default'
+p92
+g91
+sS'auth'
+p93
+S'<gluon.tools.Auth object>'
+p94
+sS'Field'
+p95
+S"<class 'gluon.dal.Field'>"
+p96
+sS'length'
+p97
+g91
+sS'auth.user'
+p98
+S'None'
+p99
+ssg70
+I63
+sg71
+(dp100
+I64
+S"    Field('image', 'upload', uploadfield='image_file'),"
+p101
+sI65
+S"    Field('image_file', 'blob'))"
+p102
+sI66
+S''
+sI67
+S'################'
+p103
+sI58
+S'# auth.enable_record_versioning(db)'
+p104
+sI59
+S''
+sI60
+S'#for user information'
+p105
+sI61
+S"db.define_table('user_info',"
+p106
+sI62
+S"    Field('user_id', 'reference auth_user', default=auth.user_id, requires=IS_NOT_EMPTY()),"
+p107
+sI63
+S"    Field('nickname', length=50, default=auth.user.first_name),"
+p108
+ssg83
+S'()'
+p109
+sg85
+S'<module>'
+p110
+sasS'pyver'
+p111
+S'Python 2.7.3: /home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/venv/bin/python (prefix: /home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/venv)'
+p112
+sS'session'
+p113
+g57
+(S's\x1a\x00\x00\x00<div><table></table></div>'
+tRp114
+sS'etype'
+p115
+S"<type 'exceptions.AttributeError'>"
+p116
+sS'date'
+p117
+S'Thu Jul 18 10:30:29 2013'
+p118
+sS'response'
+p119
+g57
+(S'ss\x10\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top">body</td><td valign="top">:</td><td><div>&lt;cStringIO.StringO object at 0x249c998&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">cookies</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">session_id_annotatit</td><td valign="top">:</td><td><div>127.0.0.1-c5bf0e20-8d0b-408b-bfca-30dad2bdc345<table><tr><td style="font-weight:bold;vertical-align:top">comment</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">domain</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">expires</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">httponly</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">max-age</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path</td><td valign="top">:</td><td><div>/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">secure</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">version</td><td valign="top">:</td><td><div></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">delimiters</td><td valign="top">:</td><td><div><table><tr><td><div>{{</div></td></tr><tr><td><div>}}</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">files</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">flash</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">generic_patterns</td><td valign="top">:</td><td><div><table><tr><td><div>*</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">headers</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">X-Powered-By</td><td valign="top">:</td><td><div>web2py</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">menu</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">meta</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">models_to_run</td><td valign="top">:</td><td><div><table><tr><td><div>^\\w+\\.py$</div></td></tr><tr><td><div>^default/\\w+\\.py$</div></td></tr><tr><td><div>^default/index/\\w+\\.py$</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">postprocessing</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_cookie_expires</td><td valign="top">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_data_name</td><td valign="top">:</td><td><div>session_data_annotatit</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_filename</td><td valign="top">:</td><td><div>/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/applications/AnnotatIt/sessions/127.0.0.1-c5bf0e20-8d0b-408b-bfca-30dad2bdc345</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_id</td><td valign="top">:</td><td><div>127.0.0.1-c5bf0e20-8d0b-408b-bfca-30dad2bdc345</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_id_name</td><td valign="top">:</td><td><div>session_id_annotatit</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_new</td><td valign="top">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_storage_type</td><td valign="top">:</td><td><div>file</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">status</td><td valign="top">:</td><td><div>200</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">view</td><td valign="top">:</td><td><div>default/index.html</div></td></tr></table></div>'
+tRp120
+sS'locals'
+p121
+(dp122
+S'Service'
+p123
+S"<class 'gluon.tools.Service'>"
+p124
+sS'OBJECT'
+p125
+S"<class 'gluon.html.OBJECT'>"
+p126
+sS'SQLDB'
+p127
+S"<class 'gluon.dal.DAL'>"
+p128
+sg113
+S'<Storage {}>'
+p129
+sS'LINK'
+p130
+S"<class 'gluon.html.LINK'>"
+p131
+sS'BR'
+p132
+S"<class 'gluon.html.BR'>"
+p133
+sS'local_import'
+p134
+S'<function <lambda>>'
+p135
+sS'APP_DOMAIN_NAME_2'
+p136
+S"'Annotat.It'"
+p137
+sS'LI'
+p138
+S"<class 'gluon.html.LI'>"
+p139
+sS'PRE'
+p140
+S"<class 'gluon.html.PRE'>"
+p141
+sS'IS_INT_IN_RANGE'
+p142
+S"<class 'gluon.validators.IS_INT_IN_RANGE'>"
+p143
+sS'uuid'
+p144
+S"<module 'uuid' from '/usr/lib/python2.7/uuid.pyc'>"
+p145
+sS'IS_LOWER'
+p146
+S"<class 'gluon.validators.IS_LOWER'>"
+p147
+sS'IS_STRONG'
+p148
+S"<class 'gluon.validators.IS_STRONG'>"
+p149
+sS'cache'
+p150
+S'<gluon.cache.Cache object>'
+p151
+sS'IS_IN_DB'
+p152
+S"<class 'gluon.validators.IS_IN_DB'>"
+p153
+sS'TAG'
+p154
+S'<gluon.html.__TAG__ object>'
+p155
+sS'SQLField'
+p156
+S"<class 'gluon.dal.Field'>"
+p157
+sS'mail'
+p158
+S'<gluon.tools.Mail object>'
+p159
+sS'BODY'
+p160
+S"<class 'gluon.html.BODY'>"
+p161
+sS'IS_DATE_IN_RANGE'
+p162
+S"<class 'gluon.validators.IS_DATE_IN_RANGE'>"
+p163
+sS'TH'
+p164
+S"<class 'gluon.html.TH'>"
+p165
+sS'URL'
+p166
+S'<function URL>'
+p167
+sS'__file__'
+p168
+S"'/home/leo/projects/AnnotatIt/annotatit-beta/hero...nnotatit-beta/applications/AnnotatIt/models/db.py'"
+p169
+sS'db'
+p170
+S'<DAL uri="sqlite://heroku.test.sqlite">'
+p171
+sS'auth'
+p172
+S'<gluon.tools.Auth object>'
+p173
+sS'P'
+S"<class 'gluon.html.P'>"
+p174
+sS'TFOOT'
+p175
+S"<class 'gluon.html.TFOOT'>"
+p176
+sS'XHTML'
+p177
+S"<class 'gluon.html.XHTML'>"
+p178
+sS'datetime'
+p179
+S"<type 'datetime.datetime'>"
+p180
+sS'ON'
+p181
+S'True'
+p182
+sS'OL'
+p183
+S"<class 'gluon.html.OL'>"
+p184
+sS'TEXTAREA'
+p185
+S"<class 'gluon.html.TEXTAREA'>"
+p186
+sS'WEBMASTERS_EMAIL_DOMAIN_2'
+p187
+S"'annotat.it'"
+p188
+sS'MENU'
+p189
+S"<class 'gluon.html.MENU'>"
+p190
+sS'LOAD'
+p191
+S'<function LOAD>'
+p192
+sS'CODE'
+p193
+S"<class 'gluon.html.CODE'>"
+p194
+sS'HTTP'
+p195
+S"<class 'gluon.http.HTTP'>"
+p196
+sS'HR'
+p197
+S"<class 'gluon.html.HR'>"
+p198
+sS'IS_DATETIME'
+p199
+S"<class 'gluon.validators.IS_DATETIME'>"
+p200
+sS'HEAD'
+p201
+S"<class 'gluon.html.HEAD'>"
+p202
+sS'LABEL'
+p203
+S"<class 'gluon.html.LABEL'>"
+p204
+sS'OPTGROUP'
+p205
+S"<class 'gluon.html.OPTGROUP'>"
+p206
+sS'CLEANUP'
+p207
+S"<class 'gluon.validators.CLEANUP'>"
+p208
+sS'plugins'
+p209
+S'<gluon.tools.PluginManager object>'
+p210
+sS'SELECT'
+p211
+S"<class 'gluon.html.SELECT'>"
+p212
+sS'CENTER'
+p213
+S"<class 'gluon.html.CENTER'>"
+p214
+sS'prettydate'
+p215
+S'<function prettydate>'
+p216
+sS'Crud'
+p217
+S"<class 'gluon.tools.Crud'>"
+p218
+sS'Auth'
+p219
+S"<class 'gluon.tools.Auth'>"
+p220
+sS'__builtins__'
+p221
+S"{'ArithmeticError': <type 'exceptions.ArithmeticError'>, 'AssertionError': <type 'exceptions.AssertionError'>, 'AttributeError': <type 'exceptions.AttributeError'>, 'BaseException': <type 'exceptions.BaseException'>, 'BufferError': <type 'exceptions.BufferError'>, 'BytesWarning': <type 'exceptions.BytesWarning'>, 'DeprecationWarning': <type 'exceptions.DeprecationWarning'>, 'EOFError': <type 'exceptions.EOFError'>, 'Ellipsis': Ellipsis, 'EnvironmentError': <type 'exceptions.EnvironmentError'>, ...}"
+p222
+sS'HTML'
+p223
+S"<class 'gluon.html.HTML'>"
+p224
+sS'SQLFORM'
+p225
+S"<class 'gluon.sqlhtml.SQLFORM'>"
+p226
+sS'EM'
+p227
+S"<class 'gluon.html.EM'>"
+p228
+sS'redirect'
+p229
+S'<function redirect>'
+p230
+sS'FIELDSET'
+p231
+S"<class 'gluon.html.FIELDSET'>"
+p232
+sS'IS_EQUAL_TO'
+p233
+S"<class 'gluon.validators.IS_EQUAL_TO'>"
+p234
+sS'embed64'
+p235
+S'<function embed64>'
+p236
+sS'IS_LIST_OF'
+p237
+S"<class 'gluon.validators.IS_LIST_OF'>"
+p238
+sS'__name__'
+p239
+S"'__restricted__'"
+p240
+sS'EMBED'
+p241
+S"<class 'gluon.html.EMBED'>"
+p242
+sS'APP_DOMAIN_NAME'
+p243
+S"'AnnotatIt.com'"
+p244
+sS'FORM'
+p245
+S"<class 'gluon.html.FORM'>"
+p246
+sS'H2'
+p247
+S"<class 'gluon.html.H2'>"
+p248
+sS'H3'
+p249
+S"<class 'gluon.html.H3'>"
+p250
+sS'BUTTON'
+p251
+S"<class 'gluon.html.BUTTON'>"
+p252
+sS'H1'
+p253
+S"<class 'gluon.html.H1'>"
+p254
+sS'H6'
+p255
+S"<class 'gluon.html.H6'>"
+p256
+sS'H4'
+p257
+S"<class 'gluon.html.H4'>"
+p258
+sS'H5'
+p259
+S"<class 'gluon.html.H5'>"
+p260
+sS'UL'
+p261
+S"<class 'gluon.html.UL'>"
+p262
+sS'get_db'
+p263
+S'<function get_db>'
+p264
+sS'IS_UPPER'
+p265
+S"<class 'gluon.validators.IS_UPPER'>"
+p266
+sS'xmlescape'
+p267
+S'<function xmlescape>'
+p268
+sS'IS_TIME'
+p269
+S"<class 'gluon.validators.IS_TIME'>"
+p270
+sS'OPTION'
+p271
+S"<class 'gluon.html.OPTION'>"
+p272
+sS'WEBMASTERS_EMAIL'
+p273
+S"'leo@annotatit.com'"
+p274
+sS'TITLE'
+p275
+S"<class 'gluon.html.TITLE'>"
+p276
+sS'CRYPT'
+p277
+S"<class 'gluon.validators.CRYPT'>"
+p278
+sS'IS_EMPTY_OR'
+p279
+S"<class 'gluon.validators.IS_EMPTY_OR'>"
+p280
+sS'MARKMIN'
+p281
+S"<class 'gluon.html.MARKMIN'>"
+p282
+sS'INPUT'
+p283
+S"<class 'gluon.html.INPUT'>"
+p284
+sS'STRONG'
+p285
+S"<class 'gluon.html.STRONG'>"
+p286
+sS'COL'
+p287
+S"<class 'gluon.html.COL'>"
+p288
+sS'service'
+p289
+S'<gluon.tools.Service object>'
+p290
+sS'SCRIPT'
+p291
+S"<class 'gluon.html.SCRIPT'>"
+p292
+sS'WEBMASTERS_EMAIL_2'
+p293
+S"'leo@annotat.it'"
+p294
+sS'TABLE'
+p295
+S"<class 'gluon.html.TABLE'>"
+p296
+sS'IS_IPV4'
+p297
+S"<class 'gluon.validators.IS_IPV4'>"
+p298
+sS'IS_LENGTH'
+p299
+S"<class 'gluon.validators.IS_LENGTH'>"
+p300
+sS'IS_IPV6'
+p301
+S"<class 'gluon.validators.IS_IPV6'>"
+p302
+sS'XML'
+p303
+S"<class 'gluon.html.XML'>"
+p304
+sS'B'
+S"<class 'gluon.html.B'>"
+p305
+sS'IMG'
+p306
+S"<class 'gluon.html.IMG'>"
+p307
+sS'SQLTABLE'
+p308
+S"<class 'gluon.sqlhtml.SQLTABLE'>"
+p309
+sS'IS_MATCH'
+p310
+S"<class 'gluon.validators.IS_MATCH'>"
+p311
+sS'IS_ALPHANUMERIC'
+p312
+S"<class 'gluon.validators.IS_ALPHANUMERIC'>"
+p313
+sS'SPAN'
+p314
+S"<class 'gluon.html.SPAN'>"
+p315
+sS'IS_JSON'
+p316
+S"<class 'gluon.validators.IS_JSON'>"
+p317
+sS'IS_IPADDRESS'
+p318
+S"<class 'gluon.validators.IS_IPADDRESS'>"
+p319
+sS'WEBMASTERS_EMAIL_NAME'
+p320
+S"'leo'"
+p321
+sS'IS_SLUG'
+p322
+S"<class 'gluon.validators.IS_SLUG'>"
+p323
+sS'BEAUTIFY'
+p324
+S"<class 'gluon.html.BEAUTIFY'>"
+p325
+sS'META'
+p326
+S"<class 'gluon.html.META'>"
+p327
+sS'IS_DATE'
+p328
+S"<class 'gluon.validators.IS_DATE'>"
+p329
+sS'IS_EMAIL'
+p330
+S"<class 'gluon.validators.IS_EMAIL'>"
+p331
+sS'IS_NOT_EMPTY'
+p332
+S"<class 'gluon.validators.IS_NOT_EMPTY'>"
+p333
+sS'IS_FLOAT_IN_RANGE'
+p334
+S"<class 'gluon.validators.IS_FLOAT_IN_RANGE'>"
+p335
+sS'TBODY'
+p336
+S"<class 'gluon.html.TBODY'>"
+p337
+sS'CAT'
+p338
+S"<class 'gluon.html.CAT'>"
+p339
+sS'Field'
+p340
+S"<class 'gluon.dal.Field'>"
+p341
+sS'DIV'
+p342
+S"<class 'gluon.html.DIV'>"
+p343
+sS'LEGEND'
+p344
+S"<class 'gluon.html.LEGEND'>"
+p345
+sS'APP_NAME'
+p346
+S"'AnnotatIt'"
+p347
+sS'COLGROUP'
+p348
+S"<class 'gluon.html.COLGROUP'>"
+p349
+sS'DAL'
+p350
+S"<class 'gluon.dal.DAL'>"
+p351
+sS'TT'
+p352
+S"<class 'gluon.html.TT'>"
+p353
+sS'TR'
+p354
+S"<class 'gluon.html.TR'>"
+p355
+sS'__package__'
+p356
+S'None'
+p357
+sS'IFRAME'
+p358
+S"<class 'gluon.html.IFRAME'>"
+p359
+sS'TD'
+p360
+S"<class 'gluon.html.TD'>"
+p361
+sS'PluginManager'
+p362
+S"<class 'gluon.tools.PluginManager'>"
+p363
+sS'IS_URL'
+p364
+S"<class 'gluon.validators.IS_URL'>"
+p365
+sS'A'
+S"<class 'gluon.html.A'>"
+p366
+sS'STYLE'
+p367
+S"<class 'gluon.html.STYLE'>"
+p368
+sS'IS_DATETIME_IN_RANGE'
+p369
+S"<class 'gluon.validators.IS_DATETIME_IN_RANGE'>"
+p370
+sS'IS_IMAGE'
+p371
+S"<class 'gluon.validators.IS_IMAGE'>"
+p372
+sS'I'
+S"<class 'gluon.html.I'>"
+p373
+sS'crud'
+p374
+S'<gluon.tools.Crud object>'
+p375
+sS'IS_NOT_IN_DB'
+p376
+S"<class 'gluon.validators.IS_NOT_IN_DB'>"
+p377
+sg119
+S"<Storage {'body': <cStringIO.StringO object at 0...da> at 0x1da2e60>, 'view': 'default/index.html'}>"
+p378
+sS'WEBMASTERS_EMAIL_DOMAIN'
+p379
+S"'annotatit.com'"
+p380
+sS'THEAD'
+p381
+S"<class 'gluon.html.THEAD'>"
+p382
+sS'ANY_OF'
+p383
+S"<class 'gluon.validators.ANY_OF'>"
+p384
+sS'IS_NULL_OR'
+p385
+S"<class 'gluon.validators.IS_EMPTY_OR'>"
+p386
+sg56
+S"<Storage {'function': 'index', 'body': <cStringI...ications/AnnotatIt/', 'post_vars': <Storage {}>}>"
+p387
+sS'IS_EXPR'
+p388
+S"<class 'gluon.validators.IS_EXPR'>"
+p389
+sS'IS_IN_SET'
+p390
+S"<class 'gluon.validators.IS_IN_SET'>"
+p391
+sS'IS_UPLOAD_FILENAME'
+p392
+S"<class 'gluon.validators.IS_UPLOAD_FILENAME'>"
+p393
+sS'time'
+p394
+S"<module 'time' (built-in)>"
+p395
+sS'IS_DECIMAL_IN_RANGE'
+p396
+S"<class 'gluon.validators.IS_DECIMAL_IN_RANGE'>"
+p397
+sS'T'
+S'<gluon.languages.translator object>'
+p398
+sssS'traceback'
+p399
+S'Traceback (most recent call last):\n  File "/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/gluon/restricted.py", line 212, in restricted\n    exec ccode in environment\n  File "/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/applications/AnnotatIt/models/db.py", line 63, in <module>\n    Field(\'nickname\', length=50, default=auth.user.first_name),\nAttributeError: \'NoneType\' object has no attribute \'first_name\'\n'
+p400
+s.
