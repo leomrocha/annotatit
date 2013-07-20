@@ -59,3 +59,77 @@
 
 }
 
+
+.mybig-box{
+	margin:20px 0px;
+}
+
+.mybig-box .mybig-box-left{
+	width: 35%;
+	float: left;
+	height: 340px;
+}
+
+.mybig-box .mybig-box-mid{
+	width: 60%;
+	float: left;
+	height: 340px;
+}
+
+.mybig-box .mybig-box-right{
+	width: 5%;
+	float: right;
+	height: 300px;
+}
+
+.mybig-box .mybig-box-left{
+	padding: 25px;
+}
+
+.mybig-box .mybig-box-left{
+	font-size: 35px;
+	line-height: 45px;
+	margin-bottom: 10px;
+}
+
+.mybig-box .mybig-box-left p{
+	font-size: 16px;
+	line-height: 26px;
+}
+
+.mybig-box .mybig-box-left a.btn{
+	padding: 10px 12px !important;
+	margin-top: 10px;
+	font-size: 15px !important;
+}
+
+.mybig-box .mybig-box-left .box-links a{
+	margin-right: 10px;
+	color: #fff;
+	font-size: 15px;
+}
+
+.mybig-box .mybig-box-left .box-links a:hover{
+	color: #fff;
+}
+
+.mybig-box .mybig-box-right .box-content{
+	padding: 15px;
+}
+
+.mybig-box .mybig-box-right{
+	font-size: 15px;
+}
+
+.mybig-box .mybig-box-right h4{
+	color: #aaa;
+	margin-top: 20px !important; 
+	line-height: 10px !important;
+}
+
+.mybig-box .mybig-box-right .box-title{
+	font-size: 20px;
+	margin-bottom: 5px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #333;
+}
