@@ -73,6 +73,9 @@
 									height: '300px'
 							    });
 		</script>
+
+		<!--Color picker -->
+		<link rel="stylesheet" type="text/css" href="assets/css/jquery.simplecolorpicker.css">
 		
 	</head>
 
@@ -412,12 +415,12 @@
 							<!--Comment section -->
 							<div class="span5">
 								<div class="widget-box ">
-									<!--Widget header -->
-									<div class="widget-header">
-										<h4 class="lighter smaller"> <i class="icon-pencil orange"></i>
-											Notes
-										</h4>
-										<div class="widget-toolbar no-border">
+										<div class="widget-header">
+											<h4 class="lighter smaller">
+												<i class="icon-pencil orange"></i>
+												Notes
+											</h4>
+											<div class="widget-toolbar no-border">
 											<a class="btn btn-info btn-small dropdown-toggle" data-toggle="dropdown" href="#">
 												<label>Filters</label>
 												<span class="caret"></span>
@@ -439,13 +442,11 @@
 												</form>
 											</div>
 										</div>
-									</div>
-									<!--End widget header-->
-									<!--Widget body-->
-									<div class="widget-body">
-										<div class="widget-main no-padding">
-											<div class="slimScrollDiv" style="position: relative; overflow: auto; width: auto; height: 550px;">
-												<div class="dialogs" style="overflow: auto; width: auto; height: 660px;">
+										</div>
+
+										<div class="widget-body">
+											<div class="widget-main no-padding">
+												<div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 430px;"><div class="dialogs" style="overflow: auto; width: auto; height: 410px;">
 													<div class="itemdiv dialogdiv">
 														<div class="user">
 															<img alt="Alexa's Avatar" src="assets/avatars/avatar1.png"></div>
@@ -546,159 +547,39 @@
 															<div class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
 														</div>
 													</div>
-												</div>
-												<div class="slimScrollBar ui-draggable" style="background-color: rgb(0, 0, 0); width: 7px; position: absolute; top: 0px; opacity: 0.4; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; z-index: 99; right: 1px; height: 227.3357142857143px; background-position: initial initial; background-repeat: initial initial;"></div>
-												<div class="slimScrollRail" style="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; background-color: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px; background-position: initial initial; background-repeat: initial initial;"></div>
-											</div>
-										</div>
-										<!--/widget-main-->
-									<!--Add comments -->
-									<hr>
-									<div class="block">
-										<div class="row-fluid">
-										<!-- ADDED LEO -->
-										
-											<div class="span9" style="padding-left:10px;">
-											    <div class="btn-group">
-                                                  <a class="btn btn-primary" href="#"> p </a>
-                                                  <a class="btn btn-warning" href="#">w</a>
-                                                  <a class="btn btn-info" href="#"> i</a>
-                                                  <a class="btn btn-primary" href="#"> p </a>
-                                                  <a class="btn btn-warning" href="#">w</a>
-                                                  <a class="btn btn-info" href="#"> i</a>
-                                                  <a class="btn btn-primary" href="#"> p </a>
-                                                  <a class="btn btn-warning" href="#">w</a>
-                                                  <a class="btn btn-info" href="#"> i</a>
-                                                  <a class="btn  dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
-                                                  <ul class="dropdown-menu">
-                                                    <li><a href="#"></i> COLOR1 </a></li>
-                                                    <li><a href="#"></i> COLOR2 </a></li>
-                                                    <li><a href="#"></i> COLOR3 </a></li>
-                                                    <li class="divider"></li>
-                                                    <li><a href="#"><i class="i"></i> Make admin</a></li>
-                                                  </ul>
-                                                </div>
-											<!-- END added Leo-->
-												<textarea class="span12" id="form-field-8" placeholder="Enter your comment:"></textarea>
-											</div>
-											<!-- commented LEO 
-											<div class="span3">
-												<p>Select stamp color:</p>
-												<div class="btn-group">
-													<select class="hide wysiwyg_colorpicker" title="Change Color" style="display: none;">
-														<option value="#ac725e">#ac725e</option>
-														<option value="#d06b64">#d06b64</option>
-														<option value="#f83a22">#f83a22</option>
-														<option value="#fa573c">#fa573c</option>
-														<option value="#ff7537">#ff7537</option>
-														<option value="#ffad46">#ffad46</option>
-														<option value="#42d692">#42d692</option>
-														<option value="#16a765">#16a765</option>
-														<option value="#7bd148">#7bd148</option>
-														<option value="#b3dc6c">#b3dc6c</option>
-														<option value="#fbe983">#fbe983</option>
-														<option value="#fad165">#fad165</option>
-														<option value="#92e1c0">#92e1c0</option>
-														<option value="#9fe1e7">#9fe1e7</option>
-														<option value="#9fc6e7">#9fc6e7</option>
-														<option value="#4986e7">#4986e7</option>
-														<option value="#9a9cff">#9a9cff</option>
-														<option value="#b99aff">#b99aff</option>
-														<option value="#c2c2c2">#c2c2c2</option>
-														<option value="#cabdbf">#cabdbf</option>
-														<option value="#cca6ac">#cca6ac</option>
-														<option value="#f691b2">#f691b2</option>
-														<option value="#cd74e6">#cd74e6</option>
-														<option value="#a47ae2">#a47ae2</option>
-														<option value="#444444">#444444</option>
-													</select>
-													<div class="btn-group dropup">
-														<a data-toggle="dropdown" class="dropdown-toggle" href="#">
-															<span class="btn-colorpicker" style="background-color:#ac725e" data-original-title="" title=""></span>
-														</a>
-														<ul class="dropdown-menu pull-right">
-															<li>
-																<a class="colorpick-btn selected" href="#" style="background-color:#ac725e;" data-color="#ac725e"></a>
-															</li>
-															<li>
-																<a class="colorpick-btn" href="#" style="background-color:#d06b64;" data-color="#d06b64"></a>
-															</li>
-															<li>
-																<a class="colorpick-btn" href="#" style="background-color:#f83a22;" data-color="#f83a22"></a>
-															</li>
-															<li>
-																<a class="colorpick-btn" href="#" style="background-color:#fa573c;" data-color="#fa573c"></a>
-															</li>
-															<li>
-																<a class="colorpick-btn" href="#" style="background-color:#ff7537;" data-color="#ff7537"></a>
-															</li>
-															<li>
-																<a class="colorpick-btn" href="#" style="background-color:#ffad46;" data-color="#ffad46"></a>
-															</li>
-															<li>
-																<a class="colorpick-btn" href="#" style="background-color:#42d692;" data-color="#42d692"></a>
-															</li>
-															<li>
-																<a class="colorpick-btn" href="#" style="background-color:#16a765;" data-color="#16a765"></a>
-															</li>
-															<li>
-																<a class="colorpick-btn" href="#" style="background-color:#7bd148;" data-color="#7bd148"></a>
-															</li>
-															<li>
-																<a class="colorpick-btn" href="#" style="background-color:#b3dc6c;" data-color="#b3dc6c"></a>
-															</li>
-															<li>
-																<a class="colorpick-btn" href="#" style="background-color:#fbe983;" data-color="#fbe983"></a>
-															</li>
-															<li>
-																<a class="colorpick-btn" href="#" style="background-color:#fad165;" data-color="#fad165"></a>
-															</li>
-															<li>
-																<a class="colorpick-btn" href="#" style="background-color:#92e1c0;" data-color="#92e1c0"></a>
-															</li>
-															<li>
-																<a class="colorpick-btn" href="#" style="background-color:#9fe1e7;" data-color="#9fe1e7"></a>
-															</li>
-															<li>
-																<a class="colorpick-btn" href="#" style="background-color:#9fc6e7;" data-color="#9fc6e7"></a>
-															</li>
-															<li>
-																<a class="colorpick-btn" href="#" style="background-color:#4986e7;" data-color="#4986e7"></a>
-															</li>
-															<li>
-																<a class="colorpick-btn" href="#" style="background-color:#9a9cff;" data-color="#9a9cff"></a>
-															</li>
-															<li>
-																<a class="colorpick-btn" href="#" style="background-color:#b99aff;" data-color="#b99aff"></a>
-															</li>
-															<li>
-																<a class="colorpick-btn" href="#" style="background-color:#c2c2c2;" data-color="#c2c2c2"></a>
-															</li>
-															<li>
-																<a class="colorpick-btn" href="#" style="background-color:#cabdbf;" data-color="#cabdbf"></a>
-															</li>
-															<li>
-																<a class="colorpick-btn" href="#" style="background-color:#cca6ac;" data-color="#cca6ac"></a>
-															</li>
-															<li>
-																<a class="colorpick-btn" href="#" style="background-color:#f691b2;" data-color="#f691b2"></a>
-															</li>
-															<li>
-																<a class="colorpick-btn" href="#" style="background-color:#cd74e6;" data-color="#cd74e6"></a>
-															</li>
-															<li>
-																<a class="colorpick-btn" href="#" style="background-color:#a47ae2;" data-color="#a47ae2"></a>
-															</li>
-															<li>
-																<a class="colorpick-btn" href="#" style="background-color:#444444;" data-color="#444444"></a>
-															</li>
-														</ul>
+
+												</div><div class="slimScrollBar ui-draggable" style="background-color: rgb(0, 0, 0); width: 7px; position: absolute; top: 82px; opacity: 0.4; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; z-index: 99; right: 1px; height: 227.3357142857143px; background-position: initial initial; background-repeat: initial initial;"></div><div class="slimScrollRail" style="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; background-color: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px; background-position: initial initial; background-repeat: initial initial;"></div></div>
+
+												<form>
+
+													<div class="form-actions input-append">
+														<div class="control-group">
+															<label class="control-label" for="colorpicker-inline">Select color</label>
+															<div class="controls">
+																<select name="colorpicker-inline" id="colorpicker-inline">
+																	<!-- Colors from Google Calendar -->														
+																	<option value="#7bd148">Green</option>
+																	<option value="#5484ed">Bold blue</option>
+																	<option value="#a4bdfc">Blue</option>
+																	<option value="#46d6db">Turquoise</option>
+																	<option value="#7ae7bf">Light green</option>
+																	<option value="#51b749">Bold green</option>
+																	<option value="#fbd75b">Yellow</option>
+																	<option value="#ffb878">Orange</option>
+																	<option value="#ff887c">Red</option>
+																	<option value="#dc2127">Bold red</option>
+																	<option value="#dbadff">Purple</option>
+																	<option value="#e1e1e1">Gray</option>
+																	<option value="#7bd148">Green</option>
+																</select>
+															</div>
+														</div>
+														<textarea class="span12" id="form-field-8" placeholder="Insert comment" style="height:80px"></textarea>
 													</div>
-													<input style="display:none;" disabled="" class="hide" type="text" data-edit="foreColor"></div> end commented LEO -->
-											</div>
-										</div>							
+												</form>
+											</div><!--/widget-main-->
+										</div><!--/widget-body-->
 									</div>
-									<!--/widget-body-->							
 								</div>
 							</div>
 						</div>
@@ -806,7 +687,74 @@
 			$('.dropdown-menu').click(function(event){
      			event.stopPropagation();
  				});
-		</script
+		</script>
+
+		<!--Colorpicker-->
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.js"></script>
+			<script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-transition.js"></script>
+			<script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-modal.js"></script>
+			<script src="assets/js/jquery.simplecolorpicker.js"></script>
+
+			<script>
+			$(document).ready(function() {
+			  setTimeout(function() {
+			    $('#colorpicker-inline').simplecolorpicker('selectColor', '#fbd75b');
+			  }, 1000);
+
+			  $('select[name="colorpicker-inline-background"]').change(function() {
+			    $(document.body).css('background-color', $('select[name="colorpicker-inline-background"]').val());
+			  });
+			  setTimeout(function() {
+			    // colorpicker-inline-background contains 3 times the color #7BD148
+			    $('select[name="colorpicker-inline-background"]').simplecolorpicker('selectColor', '#7BD148');
+			  }, 2000);
+
+			  $('select[name="colorpicker-picker-background"]').change(function() {
+			    $(document.body).css('background-color', $('select[name="colorpicker-picker-background"]').val());
+			  });
+			  setTimeout(function() {
+			    // Generates a JavaScript error
+			    $('select[name="colorpicker-picker-background"]').simplecolorpicker('selectColor', 'unknown');
+			  }, 3000);
+
+			  $('#init').on('click', function() {
+			    $('select[name="colorpicker-inline"]').simplecolorpicker();
+			    $('select[name="colorpicker-picker"]').simplecolorpicker({picker: true});
+			    $('select[name="colorpicker-inline-background"]').simplecolorpicker();
+			    $('select[name="colorpicker-picker-background"]').simplecolorpicker({picker: true});
+			  });
+
+			  $('#destroy').on('click', function() {
+			    $('select[name="colorpicker-inline"]').simplecolorpicker('destroy');
+			    $('select[name="colorpicker-picker"]').simplecolorpicker('destroy');
+			    $('select[name="colorpicker-inline-background"]').simplecolorpicker('destroy');
+			    $('select[name="colorpicker-picker-background"]').simplecolorpicker('destroy');
+			  });
+
+			  // By default, activate simplecolorpicker plugin on HTML selects
+			  $('#init').trigger('click');
+			});
+			</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 		<!--[if IE]>
 			<script type="text/javascript">
