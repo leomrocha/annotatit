@@ -27,6 +27,8 @@
 	<!--[if lte IE 8]>
 	<link rel="stylesheet" href="{{=URL('static','css/ext_lib/ace-ie.min.css')}}" />
 	<![endif]-->
+    {{block head_extra}}
+    {{end}}
 
 
 {{end}}
@@ -259,6 +261,9 @@
 					</div>
 				</div>
 			<!--End SideBar-->
+
+        {{block content}}
+        {{end}}
 
 		<!--Main Content-->	
 			<div class="main-content">
