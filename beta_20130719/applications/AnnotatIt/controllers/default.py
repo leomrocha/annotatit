@@ -18,7 +18,7 @@ from gluon.validators import *
 def index():
     """
     """
-    print "INDEX = "+str(auth.user)
+    #print "INDEX = "+str(auth.user)
     if auth.user:
         redirect(redirect(URL('member','profile')))
     return dict()

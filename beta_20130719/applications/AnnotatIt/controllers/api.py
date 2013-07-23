@@ -181,6 +181,31 @@ _can_delete_section = _can_delete_fscomment = _can_delete_reg
 #        return dp if dp else dict()
 #    return locals()
 
+#/api/current_user
+@request.restful()
+def current_user():
+    """
+    This is ment to give the user his/her id and a way to update the profile
+    """
+    #@auth.requires(_can_read_user,requires_login = False) #Not needed this is public info
+    def GET():
+        #returns only a SINGLE user
+        usr = db(db.auth_user.id == auth.user_id).select(
+                                                    db.auth_user.id,
+                                                    db.auth_user.first_name,
+                                                    db.auth_user.last_name,
+                                                    db.auth_user.email,
+                                                    #db.auth_user.thumbnail
+                                                   ).first()
+        return usr.as_dict() if usr else return dict()
+    @auth.requires(_can_update_user)
+    def PUT(u_id,**vars):
+        return db.auth_user.validate_and_update(**vars)
+        #return db(db.auth_user._id==u_id).update(**vars)
+        #return dict()
+    return locals()
+
+
 #/api/user/[:id]
 @request.restful()
 def user():
@@ -195,18 +220,32 @@ def user():
             nickname
             image (path to the image)
     """
+    print "API user called"
     #@auth.requires(_can_read_user,requires_login = False) #Not needed this is public info
     def GET(u_id):
-        #returns only a SINGLE user
-        usr = db(db.user_info.user_id == u_id).select(
-                                    db.user_info.user_id,
-                                    db.user_info.nickname,
-                                    db.user_info.image
-                                    ).first()
-        if usr:
-            d = usr.as_dict()
-            d.update({"image": URL('download', usr.image)})
-            return d
+        #print "GET user "+str(u_id)
+        if u_id:
+            print "returning detail in another user"
+            #returns only a SINGLE user
+            usr = db(db.user_info.user_id == u_id).select(
+                                        db.user_info.user_id,
+                                        db.user_info.nickname,
+                                        db.user_info.image
+                                        ).first()
+            if usr:
+                d = usr.as_dict()
+                d.update({"image": URL('download', usr.image)})
+                return d
+        else:
+            print "returning current user"
+            usr = db(db.auth_user.id == auth.user_id).select(
+                                                    db.auth_user.id,
+                                                    db.auth_user.first_name,
+                                                    db.auth_user.last_name,
+                                                    db.auth_user.email,
+                                                    #db.auth_user.thumbnail
+                                                   ).first()
+            return usr.as_dict() if usr else return dict()
         return dict()
     @auth.requires(_can_write_user)
     def POST(*args,**vars):
@@ -260,7 +299,7 @@ def media():
         To delete a record only the ID is needed
             
     """
-    #@auth.requires(_can_read_media, requires_login = False) #deprecated, now has to be called from the inside
+    #@auth.requires(_can_read_media, requires_login = False) #deprecated, now has to be called from the inside of the method
     def GET(action, m_key):
         '''
         Returns a SINGLE media record or dict() (empty)
@@ -270,7 +309,7 @@ def media():
         '''
         #
         try:
-            q = db(db.media["media_"+action+"_key"] == m_key) #TODO replace this line with view/embed/annotate key
+            q = db(db.media["media_"+action+"_key"] == m_key)
             if _can_read_media(q.select().first()):
                 m = q.select(
                             db.media.id,

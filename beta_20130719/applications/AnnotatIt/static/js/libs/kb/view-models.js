@@ -34,7 +34,7 @@ That MIGTH be implemented later:
  */
 var CommentViewModel = kb.ViewModel.extend({
   constructor: function(model) {
-    kb.ViewModel.prototype.constructor.call(this, model, {internals: ['comment']});         
+    kb.ViewModel.prototype.constructor.call(this, model, {internals: ['text']});         
     // Data
     this.comment = kb.defaultObservable(this._comment, '');
     // Operations
@@ -52,7 +52,7 @@ var CommentViewModel = kb.ViewModel.extend({
  * @return {CommentsViewModel}
  */
 var CommentsViewModel = function(comments) {
-  var _this = this;
+  var self = this;
   this.comments = kb.collectionObservable(comments, {
     view_model: CommentViewModel,
     sort_attribute: 'comment'
@@ -60,13 +60,13 @@ var CommentsViewModel = function(comments) {
 
   this.new_comment = ko.observable('');
   this.onAddComment = function(view_model, event) {
-    if (!$.trim(_this.new_comment()) || (event.keyCode !== ENTER_KEY)) {
+    if (!$.trim(self.new_comment()) || (event.keyCode !== ENTER_KEY)) {
       return true;
     }
-    _this.comments.collection().create({
-      comment: $.trim(_this.new_comment())
+    self.comments.collection().create({
+      comment: $.trim(self.new_comment())
     });
-    return _this.new_comment('');
+    return self.new_comment('');
   };
 };
 
@@ -99,7 +99,7 @@ var SyncCommentViewModel = kb.ViewModel.extend({
  * @return {SyncCommentsViewModel}
  */
 var SyncCommentsViewModel = function(sync_comments) {
-  var _this = this;
+  var self = this;
   this.sync_comments = kb.collectionObservable(sync_comments, {
     view_model: SyncCommentViewModel,
     sort_attribute: 'media_time'
@@ -111,12 +111,12 @@ var SyncCommentsViewModel = function(sync_comments) {
   //TODO add event handler
   //the second argument (this) is passed in event.data by jQuery, that way the 
   //reference to the current object is not lost due to event handling
-  $(document).on("Annotatit:Event:MediaPlayerFacade:time:update",this, this.updateMediaTime);
+  $(document).on("Annotatit:Event:MediaPlayerFacade:time:update",this.updateMediaTime);
 
   this.updateMediaTime = function(event, time) {
     //validate that time is a number, or transform it to
-    //_this.current_media_time(time); 
-    event.data.media_time(time); //event.data is the SyncCommentsViewModel object
+    //self.current_media_time(time); 
+    self.media_time(time); //event.data is the SyncCommentsViewModel object
   };
    
   this.seekTime = function(time){
@@ -126,54 +126,60 @@ var SyncCommentsViewModel = function(sync_comments) {
   };
   
   this.onAddComment = function(view_model, event) {
-    if (!$.trim(_this.new_sync_comment()) || (event.keyCode !== ENTER_KEY)) {
+    if (!$.trim(self.new_sync_comment()) || (event.keyCode !== ENTER_KEY)) {
       return true;
     }
-    _this.sync_comments.collection().create({
-      comment: _this.new_sync_comment(),
-      media_time: _this.current_media_time()
+    self.sync_comments.collection().create({
+      comment: self.new_sync_comment(),
+      media_time: self.current_media_time()
     });
-    return _this.new_sync_comment('');
+    return self.new_sync_comment('');
   };
 };
 
 /**
- * FlaggedSyncCommentViewModel: ViewModel for FlaggedSyncComment
+ * FSCommentVM: ViewModel for FlaggedSyncComment
  * @type {kb.ViewModel}
  * @attribute comment
  * @param  {FlaggedSyncComment} model
- * @return {FlaggedSyncCommentViewModel}   
+ * @return {FSCommentVM}   
  */
-var FlaggedSyncCommentViewModel = kb.ViewModel.extend({
+var FSCommentVM = kb.ViewModel.extend({
   constructor: function(model) {
-    var _this = this;
+    var self = this;
     kb.ViewModel.prototype.constructor.call(this, model);
+    //TODO understand WHERE is saved the model reference
+    //TODO understand if the model is changed automatically, or I have to do it by hand
     // Data
     this.editing = ko.observable(false);
     this.flags = [
-      {flag_name:"What", keyboard_shortcut:"w", flag_color:"#0000FF"},
-      {flag_name:"Good", keyboard_shortcut:"g", flag_color:"#00ff00"},
-      {flag_name:"Warning", keyboard_shortcut:"!", flag_color:"#ffff00"},
-      {flag_name:"Bad", keyboard_shortcut:"b", flag_color:"#ff0000"}
+      {flag_name:"blue", keyboard_shortcut:"b", flag_color:"#0000FF"},
+      {flag_name:"green", keyboard_shortcut:"g", flag_color:"#00ff00"},
+      {flag_name:"yellow", keyboard_shortcut:"y", flag_color:"#ffff00"},
+      {flag_name:"red", keyboard_shortcut:"r", flag_color:"#ff0000"}
     ];
     // Operations
     ko.computed(function() {
-      flag = _.findWhere(_this.flags, {
-        keyboard_shortcut: _this.keyboard_shortcut()
+      flag = _.findWhere(self.flags, {
+        keyboard_shortcut: self.keyboard_shortcut()
       });
-      _this.flag_color(flag.flag_color);
-      _this.flag_name(flag.flag_name);
+      self.flag_color(flag.flag_color);
+      self.flag_name(flag.flag_name);
     });
+    
+    //nice idea thoung it is not really a good dev practice
     $("#AnnotatItGraphCanvas").on("click", function() {
-      if (_this.editing()) {  
-        _this.media_time(MediaPlayerFacade.getCurrentTime());
+      if (self.editing()) {  
+        self.media_time(MediaPlayerFacade.getCurrentTime());
       };
     });
+    
     this.Edit = function() {
-      _this.editing(true);
+      self.editing(true);
     };
     this.Save = function() {
-      _this.editing(false);
+      self.editing(false);
+      return model.save();
     };
     this.Destroy = function() {
       return model.destroy();
@@ -183,14 +189,13 @@ var FlaggedSyncCommentViewModel = kb.ViewModel.extend({
 });
 
 /**
- * FlaggedSyncCommentsViewModel: ViewModel for FlaggedSyncComments
+ * FSCommentsListVM: ViewModel for FlaggedSyncronizedComments
  * @attribute comments
  * @param  {FlaggedSyncComments} comments 
- * @param {JQueryDOM Element} player_slider DOM Element with JQuery-UI slider attached
- * @return {FlaggedSyncCommentsViewModel}
+ * @return {FSCommentsListVM}
  */
-var FlaggedSyncCommentsViewModel = function(comments) {
-  var _this = this;
+var FSCommentsListVM = function(comments) {
+  var self = this;
   // Data
   this.new_media_time = ko.observable(0);
   this.new_text = ko.observable("");
@@ -204,36 +209,30 @@ var FlaggedSyncCommentsViewModel = function(comments) {
     {flag_name:"Bad", keyboard_shortcut:"b", flag_color:"#ff0000"}
   ];
   this.comments = kb.collectionObservable(comments, {
-    view_model: FlaggedSyncCommentViewModel
+    view_model: FSCommentVM
   });
 
   // Operations
   $(document).on("Annotatit:Event:MediaPlayerFacade:time:update", function() {
-    _this.new_media_time(MediaPlayerFacade.getCurrentTime());
+    self.new_media_time(MediaPlayerFacade.getCurrentTime());
   });
   this.addComment = function() {
-    _this.comments.collection().create({
-      type: "FlaggedSyncComment", //TODO (data type definition) fix this field in the format, should be selected or created in an automatic way
-      owner_id: 1, //should be 
+    self.comments.collection().create({
+      owner_id: 1, //TODO should be the current user
       can_edit: true,
       can_delete: true,
       owner_name: "Leo",//should get from the session of the current user
       owner_thumbnail_url: "http://localhost:5000/AnnotatIt/static/images/portrait_placeholder_90.png",
       media_id: "a1", //current media id, has to get the media id in the player ... how to do this?
-      parent_id: "",//will not use
-      creation_datetime: Date(), //automatic fields in the server
-      update_datetime: Date(), //
-      text: _this.new_text(),
-      media_time: _this.new_media_time(),
+      text: self.new_text(),
+      media_time: self.new_media_time(),
       flag_name: this.new_flag_name(),
       keyboard_shortcut: this.new_keyboard_shortcut(),
       flag_color: this.new_flag_color(),
-      text: _this.new_text(),
-      creation_datetime: "Wed Jul 3 14:17", 
-      update_datetime: "Wed Jul 3 14:19" 
+      text: self.new_text(),
     }
     GraphDisplayBox.add(comment);
-    _this.comments.collection().create(comment);
-    return _this.new_sync_comment('');
+    self.comments.collection().create(comment);
+    return self.new_sync_comment('');
   };
 };
