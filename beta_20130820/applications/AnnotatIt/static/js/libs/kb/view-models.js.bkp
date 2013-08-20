@@ -1,0 +1,579 @@
+(function($) {
+    ////////////////
+    // ViewModels //
+    ////////////////
+    //console.log("defining ViewModels");
+
+    //This var defines an scope of all the vars.
+    if(! _.has($, "AnnotatIt")){
+        $.AnnotatIt = {};
+    }
+    
+    var AnnotatIt = $.AnnotatIt;
+
+
+
+
+
+    /*
+    The signals that MUST be emmited 
+
+        //On updating a [Flag|Section|SyncComment|Comment]
+        //this is for connecting with GraphicDisplay
+        $.event.trigger("Annotatit:Event:[Flag|Section|SyncComment|Comment]:updated", DATA);
+        
+        //on mouse clicked over a [Flag|Section|SyncComment]
+        $.event.trigger("Annotatit:Event:time:set", MEDIA_TIME);
+        $.event.trigger("Annotatit:Event:[Flag|Section|SyncComment|Comment]:mouse:click", DATA);
+
+
+    That MIGTH be implemented later:
+        //on mouse events over a [Flag|Section|SyncComment|Comment]
+        $.event.trigger("Annotatit:Event:[Flag|Section|SyncComment|Comment]:mouse:over", DATA);
+        $.event.trigger("Annotatit:Event:[Flag|Section|SyncComment|Comment]:mouse:out", DATA);
+        $.event.trigger("Annotatit:Event:[Flag|Section|SyncComment|Comment]:mouse:press", DATA);
+        $.event.trigger("Annotatit:Event:[Flag|Section|SyncComment|Comment]:mouse:release", DATA);
+    */
+
+
+    /**
+     * MediaVM: ViewModel for a single media object
+     * @type {kb.ViewModel}
+     * @attribute comment
+     * @param  {Media} model
+     * @return {MediaVM}   
+     */
+    AnnotatIt.MediaVM = kb.ViewModel.extend({
+        constructor: function(model) {
+            var self = this;
+            kb.ViewModel.prototype.constructor.call(this, model);
+            
+            self.media = model;
+            /*
+            self.id = kb.observable(model, 'id');
+            self.title = kb.observable(model, 'title');
+            self.owner_id = kb.observable(model, 'owner_id');
+            self.media_thumbnail = kb.observable(model, 'media_thumbnail');
+            self.media_duration = kb.observable(model, 'media_duration');
+            self.media_annotate_key = kb.observable(model, 'media_annotate_key');
+            self.media_view_results_key = kb.observable(model, 'media_view_results_key');
+            self.media_embed_key = kb.observable(model, 'media_embed_key');
+            */
+            self.isOwner = ko.computed(function(){
+                    //warning!! depends on global
+                    try{
+                        if (self.owner_id == AnnotatIt.me.id){
+                            return true;
+                            }
+                    } catch(err){}
+                    return false;
+                });
+            /* //automatically generated observable, no need to specify by hand yet
+            self.m_title = ko.observable();
+            self.m_url = ko.observable();
+            self.m_description = ko.observable();
+            //invitations
+            self.invitedAnnotators = ko.observableArray();
+            self.invitedViewers = ko.observableArray();
+            
+            //privacy
+            self.m_privacy = ko.observableArray([ "private", "unlisted", "public"]);
+            self.selectedPrivacy = ko.observable("public");
+            
+            //permissions
+            self.m_viewers = ko.observableArray([
+                new PrivacyOption("all", "all"),
+                new PrivacyOption("by invitation", "authorized_groups"),
+                new PrivacyOption("only me", "only_me")
+            ]);
+            self.selectedViewers = ko.observable();
+            self.m_annotators = ko.observableArray([
+                new PrivacyOption("by invitation", "authorized_groups"),
+                new PrivacyOption("only me", "only_me"),
+                new PrivacyOption("all", "all")
+            ]);
+            self.selectedAnnotators = ko.observable();
+            */
+
+            
+            self.saveModel = function() {
+                //console.log("Save!!")
+                self.media.save();
+            };
+            self.fetchModel = function() {
+                //console.log("Save!!")
+                self.media.fetch();
+            };
+            return self;
+        }
+    });
+
+    /**
+     * AddMediaVM: ViewModel for MediaCollection( though is not general yet, is only for the add_media view)
+     * @type {kb.ViewModel}
+     * @attribute comment
+     * @param  {MediaCollection} model
+     * @return {AddMediaVM}   
+     */
+    var PrivacyOption = function(name, val) {
+        this.optName = name;
+        this.optValue = val;
+    };
+    AnnotatIt.AddMediaVM = kb.ViewModel.extend({
+    
+        constructor: function(model) {
+            
+            var self = this;
+            kb.ViewModel.prototype.constructor.call(this, model);
+            //attributes
+            self.medias = model;
+            self.m_title = ko.observable();
+            self.m_url = ko.observable();
+            self.m_description = ko.observable();
+            
+            //privacy
+            //TODO put again the multiple choice here. But for the moment will remain optionless
+            //self.m_privacy = ko.observableArray([ "private", "unlisted", "public"]);
+            self.m_privacy = ko.observableArray(["public"]);
+            self.selectedPrivacy = ko.observable("public");
+            
+            //permissions
+            self.m_viewers = ko.observableArray([
+                //TODO put again the multiple choice here. But for the moment will remain optionless
+                new PrivacyOption("all", "all")//,
+                //new PrivacyOption("by invitation", "authorized_groups"),
+                //new PrivacyOption("only me", "only_me")
+            ]);
+            self.selectedViewers = ko.observable();
+            self.m_annotators = ko.observableArray([
+                //TODO put again the multiple choice here. But for the moment will remain optionless
+                //new PrivacyOption("by invitation", "authorized_groups"),
+                //new PrivacyOption("only me", "only_me")//,
+                new PrivacyOption("all", "all")
+            ]);
+            self.selectedAnnotators = ko.observable();
+            
+            //invitations
+            self.invitedAnnotators = ko.observableArray();
+            self.invitedViewers = ko.observableArray();
+            
+            // Data
+            self.createMedia = function(formElement){
+                    var mdl = model.create({
+                            title :  self.m_title(), 
+                            media_url : self.m_url(),
+                            description : self.m_description(),
+                            privacy : self.selectedPrivacy(),
+                            annotation_permissions : self.selectedAnnotators().optValue,
+                            view_permissions : self.selectedViewers().optValue,
+                            //invitees
+                            invited_annotators : self.invitedAnnotators(),
+                            invited_viewers : self.invitedViewers(),
+                            //if success, now get all the invitees
+                        });
+                    console.log(mdl);
+                    //mdl.save();
+            };
+            self.Save = function() {
+                console.log("Save!!")
+                //return model.save();
+            };
+            return self;
+        }
+    });
+
+
+    /**
+     * MediaListVM: ViewModel for MediaCollection (for the listing)
+     * @type {kb.ViewModel}
+     * @attribute comment
+     * @param  {MediaCollection} model
+     * @return {MediaListVM}   
+     */
+    AnnotatIt.MediaListVM = kb.ViewModel.extend({
+    
+        constructor: function(model) {
+            
+            var self = this;
+            kb.ViewModel.prototype.constructor.call(this, model);
+            //attributes
+            self.medias = model;
+            self.m_title = ko.observable();
+            self.m_url = ko.observable();
+            self.m_description = ko.observable();
+            
+            this.mediaFiles = kb.collectionObservable(model, {
+                view_model: AnnotatIt.MediaVM
+            });
+            
+            self.loadAllMedia = function(){
+                self.medias.fetch();
+            };
+            self.editMedia = function() {
+                //console.log("Save!!")
+                //return model.save();
+            };
+            self.addMedia = function() {
+                //console.log("Save!!")
+                //return model.save();
+            };
+            self.annotateMedia = function() {
+                //console.log("Save!!")
+                //return model.save();
+            };
+            self.viewMedia = function() {
+                //console.log("Save!!")
+                //return model.save();
+            };
+            self.shareMedia = function() {
+                //console.log("Save!!")
+                //return model.save();
+            };
+            return self;
+        }
+    });
+
+
+    /**
+     * FSCommentVM: ViewModel for FlaggedSyncComment
+     * @type {kb.ViewModel}
+     * @attribute comment
+     * @param  {FlaggedSyncComment} model
+     * @return {FSCommentVM}   
+     */
+    AnnotatIt.FSCommentVM = kb.ViewModel.extend({
+        constructor: function(model) {
+            var self = this;
+            kb.ViewModel.prototype.constructor.call(this, model);
+            //related user's model. Needs KnockBack observables
+            var usrmdl = new AnnotatIt.User();
+            usrmdl.id = self.owner_id();
+            usrmdl.fetch();
+            self.first_name = kb.observable(usrmdl, { key: 'nickname'} );
+            self.thumbnail = kb.observable(usrmdl, { key: 'image_link'} );
+            // extra data needed
+            self.editing = ko.observable(false);
+            console.log("media time of this comment");
+            console.log(self.media_time());
+            self.timetxt = ko.computed( function() {number2txttime(self.media_time())});
+            console.log(self.timetxt());
+            //self.duration = 
+            
+            self.can_delete = 
+              self.can_edit = ko.computed(function(){ 
+                //console.log("setting ownership");
+                //console.log(self.owner_id());
+                //console.log(AnnotatIt.me.id);
+                if (self.owner_id() == AnnotatIt.me.id){
+                    return true;
+                }
+                return false;
+            });
+
+            //methods
+            
+            self.seekTime = function(){
+                console.log("seek Time: "+ self.media_time() );
+                //emit time signal
+                //MUST be a number
+                $.event.trigger("Annotatit:Event:time:set", self.media_time());
+            };
+
+
+            self.Edit = function() {
+                self.editing(true);
+            };
+            self.Save = function() {
+                self.editing(false);
+                return model.save();
+            };
+            self.Destroy = function() {
+                return model.destroy();
+            }
+            return self;
+        }
+    });
+
+    /**
+     *CommentFlag: Flags (a Model, but not need to synchronize yet) 
+     * that are associated with the comments
+     * 
+     */
+    var CommentFlag = function(name, val, shortcut) {
+        this.flag_name = name;
+        this.flag_color = val;
+        this.keyboard_shortcut = shortcut;
+    };
+    /**
+     * FSCommentsListVM: ViewModel for FlaggedSyncronizedComments
+     * @attribute comments
+     * @param  {FlaggedSyncComments} comments 
+     * @return {FSCommentsListVM}
+     */
+    //AnnotatIt.FSCommentsListVM = function(comments, sections) {
+    AnnotatIt.FSCommentsListVM = function(models) {
+        var self = this;
+        // Data
+        self.new_media_time = ko.observable(0);
+        self.new_text = ko.observable("");
+        console.log("Comments List times");
+        console.log(self.new_media_time())
+        self.timetxt = ko.computed( function() {number2txttime(self.new_media_time())});
+        console.log(self.timetxt());
+        
+        self.comments = kb.collectionObservable(models, {
+            view_model: AnnotatIt.FSCommentVM
+        });
+        self.comments.sortAttribute('media_time');
+        self.commentsSelected = ko.observable(true);
+        self.commentFormSelected = ko.observable(false);
+        self.comments.sort();
+        
+        self.p_flags = ko.observableArray([
+            //colors from google calendar
+            new CommentFlag("Green", "#7bd148", "g"),
+            new CommentFlag("Bold blue", "#5484ed", "B"),
+            new CommentFlag("Blue", "#a4bdfc", "b"),
+            new CommentFlag("Turquoise", "#a4bdfc", "t"),
+            new CommentFlag("Light green", "#7ae7bf", "L"),
+            new CommentFlag("Bold green", "#51b749", "G"),
+            new CommentFlag("Yellow", "#fbd75b", "y"),
+            new CommentFlag("Orange", "#ffb878", "o"),
+            new CommentFlag("Red", "#ff887c", "r"),
+            new CommentFlag("Bold red", "#dc2127", "R"),
+            new CommentFlag("Purple", "#dbadff", "p"),
+            new CommentFlag("Gray", "#e1e1e1", "r")
+        ]);
+        self.selectedFlag = ko.observable(new CommentFlag("Bold blue", "#5484ed", "B"));
+        
+        self.selectFlag = function(flag_name, flag_color, letter){
+            //console.log("select new color");
+            //console.log(flag_name);
+            //console.log(flag_color);
+            //console.log(letter);
+            //I know it is not efficient. dont worry be huggies.
+            self.selectedFlag = ko.observable(new CommentFlag(flag_name, flag_color, letter));
+            //now focus the box and stop the time update!! (a new comment should be created)
+            self.commentFormSelected(true);
+            //change background color!!
+        };
+        // Update time (event binding)
+        $(document).on("Annotatit:Event:MediaPlayerFacade:time:update", function(event, time) {
+            //guarantee that no comment will be bloqued forever in the time I started typing
+            
+            //if(Math.abs(self.new_media_time - time ) > 20 || ( $.trim(self.new_text() )=="")){
+            if ( $.trim(self.new_text() )==""){
+                self.shouldUpdate = true;
+            }
+            if(self.shouldUpdate){
+                self.new_media_time(time);
+            }
+            //self.new_media_time(MediaPlayerFacade.getCurrentTime());
+            //self.commentFormSelected(true);
+        });
+        // Update time (event binding)
+        $(document).on("Annotatit:Event:time:set", function(event, time) {
+            console.log("time SET");
+            self.shouldUpdate = true;
+        });
+        //creation functions
+        self.createComment = function(view_model, event) {
+            //console.log("key up");
+            //console.log(event.keyCode);
+            //if ($.trim(self.new_text()) && (event.keyCode == ENTER_KEY)) {
+            if ( event.keyCode == ENTER_KEY ) {
+                //console.log("enter presssed");
+                self.addComment();
+                self.shouldUpdate = true;
+            }else{
+                if(self.shouldUpdate){ 
+                    self.shouldUpdate = false;
+                }
+            }
+        };
+        self.addComment = function() {
+            //console.log("Creating a new comment");
+            //console.log
+            var comment = self.comments.collection().create({
+                owner_id: AnnotatIt.me.id,
+                media_id: AnnotatIt.media_file.id, //current media id, gets the media id from GLOBAL var
+                text: self.new_text(),
+                media_time: self.new_media_time(),
+                flag_name: self.selectedFlag().flag_name,
+                keyboard_shortcut: self.selectedFlag().keyboard_shortcut,
+                flag_color: self.selectedFlag().flag_color
+            }//,
+             //{success : function() { console.log("comment creation success");  self.comments.push(comment);}  } 
+            );
+            //GraphDisplayBox.add(comment);
+            //self.comments.push(comment); //WARNING, this could break due to network lag and because create should be asynchronous.... put it in a success function call of creation!!
+            self.new_text("");
+            self.comments.sort();
+            return comment;
+            };
+        
+    };
+    
+
+
+//WARNING!!! THe only difference with FSCommentVM is that here call begin_time instead of media_time!!!!
+//Check how to do it better without duplicating code
+    /**
+     * SectionVM: ViewModel for section
+     * @type {kb.ViewModel}
+     * @attribute comment
+     * @param  {Section} model
+     * @return {SectionVM}   
+     */
+    AnnotatIt.SectionVM = kb.ViewModel.extend({
+        constructor: function(model) {
+            var self = this;
+            kb.ViewModel.prototype.constructor.call(this, model);
+            //related user's model. Needs KnockBack observables
+            var usrmdl = new AnnotatIt.User();
+            usrmdl.id = self.owner_id();
+            usrmdl.fetch();
+            self.first_name = kb.observable(usrmdl, { key: 'nickname'} );
+            self.thumbnail = kb.observable(usrmdl, { key: 'image_link'} );
+            // extra data needed
+            self.editing = ko.observable(false);
+            
+            self.timetxt = ko.computed( function() {number2txttime(self.new_begin_time)});
+            //self.duration = 
+            
+            self.can_delete = 
+              self.can_edit = ko.computed(function(){ 
+                //console.log("setting ownership");
+                //console.log(self.owner_id());
+                //console.log(AnnotatIt.me.id);
+                if (self.owner_id() == AnnotatIt.me.id){
+                    return true;
+                }
+                return false;
+            });
+
+            //methods
+            
+            self.seekTime = function(){
+                console.log("seek Time: "+ self.begin_time() );
+                //emit time signal
+                //MUST be a number
+                $.event.trigger("Annotatit:Event:time:set", self.begin_time());
+            };
+
+
+            self.Edit = function() {
+                self.editing(true);
+            };
+            self.Save = function() {
+                self.editing(false);
+                return model.save();
+            };
+            self.Destroy = function() {
+                return model.destroy();
+            }
+            return self;
+        }
+    });
+
+    /**
+     * SectionsListVM: ViewModel for Sections
+     * @attribute sections
+     * @param  {Sections} Sections 
+     * @return {SectionsListVM}
+     */
+    //AnnotatIt.FSCommentsListVM = function(comments, sections) {
+    AnnotatIt.SectionsListVM = function(models) {
+        var self = this;
+        // Data
+        self.new_section_name = ko.observable("");
+        self.new_begin_time = ko.observable(0); 
+        self.new_end_time = ko.observable(0);
+
+        self.beginTimetxt = ko.computed( function() { number2txttime(self.new_begin_time) } );
+        self.endTimetxt = ko.computed( function() { number2txttime(self.new_end_time) } );
+            
+        self.sections = kb.collectionObservable(models, {
+            view_model: AnnotatIt.SectionVM
+        });
+        self.sections.sortAttribute('begin_time');
+        self.sectionFormSelected = ko.observable(false);
+        self.sections.sort();
+        
+        self.p_flags = ko.observableArray([
+            //colors from google calendar
+            new CommentFlag("Green", "#7bd148", "g"),
+            new CommentFlag("Bold blue", "#5484ed", "B"),
+            new CommentFlag("Blue", "#a4bdfc", "b"),
+            new CommentFlag("Turquoise", "#a4bdfc", "t"),
+            new CommentFlag("Light green", "#7ae7bf", "L"),
+            new CommentFlag("Bold green", "#51b749", "G"),
+            new CommentFlag("Yellow", "#fbd75b", "y"),
+            new CommentFlag("Orange", "#ffb878", "o"),
+            new CommentFlag("Red", "#ff887c", "r"),
+            new CommentFlag("Bold red", "#dc2127", "R"),
+            new CommentFlag("Purple", "#dbadff", "p"),
+            new CommentFlag("Gray", "#e1e1e1", "r")
+        ]);
+        self.selectedFlag = ko.observable(new CommentFlag("Bold blue", "#5484ed", "B"));
+        
+        self.selectFlag = function(flag_name, flag_color, letter){
+            //console.log("select new color");
+            //console.log(flag_name);
+            //console.log(flag_color);
+            //console.log(letter);
+            //I know it is not efficient. dont worry be huggies.
+            self.selectedFlag = ko.observable(new CommentFlag(flag_name, flag_color, letter));
+            //now focus the box and stop the time update!! (a new comment should be created)
+            self.sectionFormSelected(true);
+            //change background color!!
+        };
+        
+        self.sectionsSelected = ko.observable(false);
+
+        self.selectSections = function(){
+            self.sectionsSelected(true);
+            self.sectionFormSelected(true);
+        };
+        // Update time (event binding)
+        $(document).on("Annotatit:Event:MediaPlayerFacade:time:update", function(event, time) {            
+            //TODO change this logic to something for 
+            if(self.shouldUpdate){
+                self.new_media_time(time);
+            }
+        });
+        // Update time (event binding)
+        $(document).on("Annotatit:Event:time:set", function(event, time) {
+            console.log("time SET");
+            self.shouldUpdate = true;
+        });
+        //creation functions
+        self.createSection = function(view_model, event) {
+            //TODO create logic for section creation
+            //TODO add a way to cancel
+        };
+        self.addSection = function() {
+            //console.log("Creating a new comment");
+            //console.log
+            var section = self.sections.collection().create({
+                owner_id: AnnotatIt.me.id,
+                media_id: AnnotatIt.media_file.id, //current media id, gets the media id from GLOBAL var
+                name: self.new_section_name(),
+                begin_time: self.new_begin_time(),
+                end_time: self.new_end_time(),
+                color: self.selectedFlag().flag_color
+            }//,
+             //{success : function() { console.log("comment creation success");  self.comments.push(comment);}  } 
+            );
+            return section;
+            };
+        
+    };
+
+    
+    //console.log("All ViewModels defined");
+
+})(jQuery);
+
+
+

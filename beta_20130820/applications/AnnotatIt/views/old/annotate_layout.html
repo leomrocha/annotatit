@@ -1,0 +1,35 @@
+{{extend 'annotatit_layout.html'}}
+{{block title}}
+<hr/>
+{{end}}
+{{block replace_main}}
+
+
+    <section id="main" class="main row">
+    <div class="row" >
+        <div class="span5 left-sidebar" style="width: 520px">
+            {{block media_frame}}
+            {{end}}
+        </div>
+        <div class="span4" style="height:350px;">
+            {{block comments_frame}}    
+            {{end}}
+        </div>
+        <div class="span2">
+            {{block controls_frame}}    
+            {{end}}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="AnnotatItGraphDiv" id="AnnotatItGraphDiv"  width="700" height="200">
+        {{block graph_frame}}    
+        {{end}}
+        </div>
+    </div>
+
+
+    </section><!--/main-->
+
+{{end}}
+

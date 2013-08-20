@@ -1,0 +1,371 @@
+{{left_sidebar_enabled= False}}
+{{right_sidebar_enabled=False}}
+
+{{extend 'annotatit_layout.html'}}
+{{block head}}
+    <style>
+    
+    /* MARKETING CONTENT
+    -------------------------------------------------- */
+    .step_container .span4 {
+      text-align: center;
+      border:0px solid;
+      border-radius:25px;
+    }
+    .step_container h2 {
+      font-weight: normal;
+    }
+    .step_container .span4 p {
+      margin-left: 10px;
+      margin-right: 10px;
+       text-align: center;
+    }
+
+    .container .button p{
+       text-align: center;
+    }
+    
+    .info_link {
+      text-align: center;
+      background-color: #feeebd;
+      border:1px solid;
+      border-radius:5px;
+      border-color:#fefeed;
+    }
+    /**/
+    </style>
+{{end}}
+
+{{block center}}
+
+<!-- Step 2 --> 
+<!-- If add link -->
+    <!-- Show  -->
+        <!-- Box for adding link -->
+        <!-- Choice for privacy: private, unlisted, public  -->
+        <!-- Checkbox: Send me an email when done -->
+<div class="container form_container">
+
+<div class="step_container step1">
+
+  <div class="row form">
+    <div class="span2 ">
+        <img class="step1 active" src="{{=URL('static', 'images/step_pink_1.png')}}" alt="step 1" >
+    </div><!-- /.span4 -->
+
+    <div class="span4 ">
+        <input id="media_title" placeholder="Write your title here" > </input>
+    </div><!-- /.span4 -->
+    <div class="span4 ">
+        <input id="media_link" placeholder="Copy the link here" > </input>
+    </div><!-- /.span4 -->
+        <div class="span4 ">
+        <span > </span>
+    </div><!-- /.span4 -->
+  </div><!-- /.row -->
+</div><!-- /.container -->
+<hr/>
+
+
+<!-- Step 2 --> 
+<!-- TODO  If upload file -->
+<!-- It is the same as before but replaces the  add link box with an upload box -->
+<!-- Notify that the service is not yet available but we will notify when it is online-->
+<!-- go to Step 2 "add link" --> 
+
+<!-- Step 3 --> 
+<!-- If add media was successful -->
+    <!-- Show  -->
+        <!-- Select who -->
+            <!-- Can annotate -->
+            <!-- Can view -->
+        <!-- Box for adding annotators -->
+        <!-- Box for adding viewers -->
+
+<div class="step_container step2">
+
+  <div class="row form">
+    <div class="span2 ">
+        <img class="step2 active" src="{{=URL('static', 'images/step_blue_2.png')}}" alt="step 2 " >
+    </div><!-- /.span4 -->
+    
+    <div class="span4 ">
+        <p> Who can Annotate ?</p>
+        <select id="annotate_select">
+        <option value="only_me"> only me</option>
+        <option value="authorized_groups">by invitation</option>
+        <option value="all"> all</option>
+        </select>
+    </div><!-- /.span4 -->
+    <div class="span4 ">
+        <p> Who can View ?</p>
+        <select id="view_select">
+        <option value="only_me"> only me</option>
+        <option value="authorized_groups">by invitation</option>
+        <option value="all"> all</option>
+        </select>
+    </div><!-- /.span4 -->
+    
+  </div> <!-- /.row -->
+  <div class="row form">
+    <div class="span2 ">
+    </div><!-- /.span4 -->
+    <!-- ANNOTATE -->
+    <div class="span4 annotator" >
+        <div class="span4 annotator only_me" id="annotator_only_me">
+            <p>Only you can annotate this video </p>
+        </div><!-- /.span4 -->
+        <div class="span4 annotator invited" id="annotator_invited">
+            <textarea id="annotation_permissions" placeholder="my_friend@example.com, another_friend@example.com " ></textarea>  
+        </div><!-- /.span4 -->
+
+        <div class="span4 annotator uall" id="annotator_uall">
+            <p>Every person with the direct link and an AnnotatIt account can annotate </p>
+        </div><!-- /.span4 -->
+    </div> <!-- ./annotator -->
+    
+    <!-- VIEW -->
+    <div class="span4 viewer" >
+        <div class="span4 viewer only_me" id="viewer_only_me">
+            <p>Only you can view this video </p>
+        </div><!-- /.span4 -->
+        <div class="span4 viewer invited" id="viewer_invited">
+            <textarea id="view_permissions" placeholder="my_friend@example.com, another_friend@example.com " ></textarea>  
+        </div><!-- /.span4 -->
+        <div class="span4  viewer uall" id="viewer_uall">
+            <p>Every person with the direct link can view </p>
+        </div><!-- /.span4 -->
+    </div> <!-- ./viewer -->
+  </div><!-- /.row -->
+<hr/>
+</div><!-- /.container -->
+
+
+
+
+<!-- Step 4 --> 
+<!-- If previous step was successful -->
+    <!-- Suggest tags option  -->
+    <!-- Suggest Marks option  -->
+
+<div class="step_container step3" hidden="true" type="hidden" >
+  <div class="row form">
+    <div class="span2 ">
+        <img class="step3 active" src="{{=URL('static', 'images/step_orange_3.png')}}" alt="step 3 ">
+    </div><!-- /.span4 -->
+    
+    <div class="span4 ">
+        <p> Suggest Tags <span > (?) </span> </p>
+    </div><!-- /.span4 -->
+    <div class="span4 ">
+        <p> Suggest Marks <span > (?) </span> </p>
+    </div><!-- /.span4 -->    
+    <div class="span2 "  hidden="true">
+        <p>
+        <a class="btn btn-primary" href="javascript:suggestions">Submit</a>
+        </p>
+    </div><!-- /.span4 -->
+    
+  </div> <!-- /.row -->
+  <div class="row form">
+    <div class="span2 ">
+    </div><!-- /.span4 -->
+    <div class="span4" >
+        <textarea id="suggested_tags" placeholder="tag1, tag2, tag3 ......" ></textarea>  
+    </div><!-- /.span4 -->
+    <div class="span4" >
+        <textarea id="suggested_tags" placeholder="Write your tags here
+                                                 , one by line or separated by commas" ></textarea>  
+    </div><!-- /.span4 -->
+  </div> <!-- /.row -->
+<hr/>
+</div><!-- /.container -->
+
+
+<div class="container steps submit_button" >
+
+  <!-- Three columns of text below the carousel -->
+  <div class="row numbers">
+    <div class="span4">
+    </div><!-- /.span4 -->
+    <!-- Repeat this for every step -->
+    <div class="span4 button">
+        <p><a class="btn btn-primary" id="Submit" href="javascript:submit();">Submit</a></p>
+    </div><!-- /.span4 -->
+  </div><!-- /.row -->
+<hr/>
+</div><!-- /.container -->
+
+</div>  <!-- /.container form_container" -->
+
+<!-- Step 5 --> 
+<!-- If previous step was successful -->
+    <!-- Show  -->
+        <!-- Links for  -->
+            <!-- Annotation link  -->
+            <!-- View link  -->
+            <!-- Embed code  - copy this code to embed as an iframe in your blog -->
+
+
+<div class="step_container step4 media_links"  hidden="true" type="hidden" >
+  <div class="row form">
+    <div class="span2 "  >
+        <img class="step4 active" src="{{=URL('static', 'images/step_orange_3.png')}}" alt="step 4 active">
+    </div><!-- /.span4 -->
+    
+    <div class="span4 ">
+        <h3> Your file is ready!! </h3>
+        <!---->
+        <div id="thumbnail"><img id="img_thumbnail" src="#" /> </div>
+    </div><!-- /.span4 -->
+    <div class="span4 ">
+        <p><a class="btn btn-primary" id="annotation_link" href="#">Start Annotating!</a></p>
+        <p> <a class="btn btn-info" id="view_link" href="#">View Results</a></p>
+        <p>Embed Code: <textarea  id="embed_code" readonly></textarea></p>
+    </div><!-- /.span4 -->
+  </div> <!-- /.row -->
+</div><!-- /.container -->
+
+
+<!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js "></script> -->
+<script>
+    
+    //things for web2py to complete  during template processing
+    var ajax_url = '{{=URL("ajax", scheme=True, host=True)}}';
+    var annotate_url = '{{=URL("annotate_media", scheme=True, host=True)}}';
+    var view_url = '{{=URL("view_media", scheme=True, host=True)}}';
+    var embed_url = '{{=URL("embed_media", scheme=True, host=True)}}';
+    var images_url = '{{=URL("static","images")}}';
+    
+    
+    //hide everything that needs to be hidden
+    $(".media_links").hide();
+    //$(".media_links").show();
+    $(".step3").hide(); //this because is not yet implemented
+    $(".invited").hide(); //this ones because of optionals
+    $(".uall").hide(); //this ones because of optionals
+    
+    //setup changes in select
+    $("#annotate_select").on("change", function(){
+                            var val=$(this).attr('value');
+                            //console.log("annotate select +val =  "+val);
+                            if(val=="only_me"){
+                                //console.log(val);
+                                $("#annotator_invited").hide();
+                                $("#annotator_uall").hide();
+                                $("#annotator_only_me").show();
+                            }else if(val=="authorized_people"){
+                                //console.log(val);
+                                $("#annotator_uall").hide();
+                                $("#annotator_only_me").hide();
+                                $("#annotator_invited").show();
+                            }else if(val=="all"){
+                                //console.log(val);
+                                $("#annotator_invited").hide();
+                                $("#annotator_only_me").hide();
+                                $("#annotator_uall").show();                            
+                            }else{
+                                //console.log("no match :/");
+                            }
+                        });
+    $("#view_select").on("change", function(e){
+                            var val=$(this).attr('value');
+                            //console.log("view select +val =  "+val);
+                            if(val=="only_me"){
+                                $("#viewer_invited").hide();
+                                $("#viewer_uall").hide();
+                                $("#viewer_only_me").show();
+                            }else if(val=="authorized_people"){
+                                $("#viewer_invited").show();
+                                $("#viewer_uall").hide();
+                                $("#viewer_only_me").hide();
+                            }else if(val=="all"){
+                                $("#viewer_invited").hide();
+                                $("#viewer_only_me").hide();
+                                $("#viewer_uall").show();                            
+                            }
+                        });
+    ///////////////////////////////////////////////////////////////////////////
+    // from here should go to a separate js file minified and gzipped
+    ///////////////////////////////////////////////////////////////////////////
+
+    function submitSuccess(msg){
+        console.log("success ajax msg ="+msg)
+        $(".form_container").hide();
+        //setup response
+        var img_src = images_url+"/Video_200px.png"
+        if(msg.media_network == "youtube"){
+            img_src='http://img.youtube.com/vi/'+msg.media_id+'/default.jpg';
+        }// TODO do it for Vimeo
+        $("#img_thumbnail").attr("src", img_src);
+        //console.log("msg keys = "+_.keys(msg))
+        $("#annotation_link").attr("href",annotate_url+"/"+msg.media_annotate_key);
+        $("#annotation_link_copy").html(annotate_url+"/"+msg.media_annotate_key);
+        $("#view_link").attr("href",view_url+"/"+msg.media_view_results_key);
+        $("#view_link_copy").html(view_url+"/"+msg.media_view_results_key);
+        $("#embed_code").attr("value","<iframe src='"+embed_url+"/"+msg.media_embed_key+"  width=\"530\" height=\"800\"'></iframe>");
+        
+        $(".media_links").show();
+    }
+    
+    function submitFail(msg){
+        //TODO
+    }
+    
+    function submit(e){
+        console.log("submit works");
+        var obj = new  Object();
+        //get link
+        obj.title = $("#media_title").val();
+        obj.link = $("#media_link").val();
+        //get permissions
+        //get annotation permissions
+        obj.annotation_permissions =$("#annotate_select").val();
+        //if invited annotators:
+            //recover annotators invitation list
+            obj.invited_annotators = $("#annotation_permissions").val();
+        //get view permissions
+        obj.view_permissions =$("#view_select").val();
+        //if invited viewers:
+            //recover viewers invitation list
+            obj.invited_viewers = $("#view_permissions").val();
+        console.log("obj = "+JSON.stringify(obj));
+        submitQuery("_add_media", obj, submitSuccess, submitFail)
+        //send message
+        //if success
+            //hide 
+    }
+    
+    //name in the possibilities for the service
+    //jsonData the JSON text or object
+    function submitQuery(name, jsonData, successCallback, failCallback){
+        //TODO check that name is one of the available services
+        //TODO check that jsonData is a valid 
+        //      else, return an error
+        //make call
+        $.ajax({
+               type: "PUT",
+               url: ajax_url+name,
+               data: jsonData
+            }).done(function( msg ) {
+                console.log("response: "+ msg);
+                if(msg !== "False" && msg !==false && 
+                    msg !=="Error" && msg !=="undefined"){
+                    //parse msg
+                    try{
+                        var parsed = $.parseJSON(msg);
+                        successCallback(parsed);
+                        return msg;
+                    }catch(err){
+                        console.log("ERROR unexpected error parsing msg "+msg);
+                        console.log("ERROR = "+err);
+                        failCallback(msg);
+                    }
+                }
+                });
+        return true;
+    }
+
+</script>
+
+{{end}}

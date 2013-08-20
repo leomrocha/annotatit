@@ -1,0 +1,698 @@
+(function($) {
+    ///////////////////////////////
+    // Comments Graph Plot //
+    ///////////////////////////////
+    
+    console.log("defining CommentsPLot");
+
+    //This var defines an scope of all the vars.
+    if(! _.has($, "AnnotatIt")){
+        $.AnnotatIt = {};
+    }
+    
+    var AnnotatIt = $.AnnotatIt;
+    
+    //adding functionality not present in D3 
+    //from: https://gist.github.com/trtg/3922684
+    d3.selection.prototype.moveToFront = function() { 
+        return this.each(function() {  this.parentNode.appendChild(this); }); 
+    }; 
+    /*
+    circles.on("mouseover",function(){
+      var sel = d3.select(this);
+      sel.moveToFront();
+    });
+    */
+
+    /**
+     *
+     *
+     *
+     *
+     **/
+    AnnotatIt.CommentsPlot = (function ($ ) {
+            //properties
+            self = null;
+            //data to plot
+            comments = [];
+            sections = [];
+            notesCollection = null;
+            commentsCollection = null;
+            sectionsCollection = null;
+            //plot environment
+            paper = null;
+            backgroundRect = null;
+            height = 0;
+            width = 0;
+            //properties for scale and position transformation
+            tpadding = 25;
+            //tpadding = 10;
+            vpadding = 7;
+            hpadding = 7;
+            
+            duration = 0;
+            currentTime = 0;
+            
+            categories = 10, //arbitrary, but should be automated and should redraw if change 
+            commentsPaddingTop = 30,
+            sectionsCategories = 10, //arbitrary, but should be automated and should redraw if change 
+            sectionsPaddingTop = 30,
+            
+            cR = 5;
+            sH = 5;
+            
+            xScale = null;
+            xLinearScale = null;
+            xAxis = null;
+            yScale = null;
+            sectionYScale = null;
+            yAxis = null;
+            initialized = false;
+            //properties for data drawing
+            //dataWith = ;
+            //dataHeight ;
+            //time cursors
+            cursors = null;
+            currentTimeCursor = null;
+            currentTimeText = null;
+            mouseFollowerCursor = null;
+            mouseFollowerText = null;
+            //tooltips:
+            commentTooltip = null;
+            sectionTooltip = null;
+            
+            //private methods
+            
+            //Comments Data handling
+            getColor = function(comment, index){
+                return comment.get("flag_color");
+            };
+            getMediaTime = function(data,index){
+                return data.get("media_time");
+            };
+            getBeginTime = function(data,index){
+                return data.get("begin_time");
+            };
+            getEndTime = function(data,index){
+                return data.get("end_time");
+            };
+            getKey = function(comment, index){
+                //console.log("getting comment key");
+                //console.log(comment);
+                //var key = comment.get("id"); //Warning!! assuming comments is a Backbone Model!!
+                //console.log(key);
+                //return key;
+                return comment.get("id"); //Warning!! assuming comments is a Backbone Model!!
+            };
+            
+            getCenterX = function(data,index){
+                //console.log("getting center of comment");
+                //console.log(data);
+                //var cx = data.get("media_time"); //Warning!! assuming comments is a Backbone Model!!
+                //console.log(cx);
+                //return xScale(cx);
+                return xScale(new Date(1970, 0, 1, 0, 0, data.get("begin_time")));
+            };
+            
+            yCounter = 0;
+            getCenterY = function(data,index){
+                return yScale( ( yCounter++ )%(categories) );
+            };
+            
+            sectionsYCounter = 0;
+            getSectionY = function(data,index){
+                return sectionYScale( ( sectionsYCounter++ )%(sectionsCategories) );
+            };
+            
+            
+            getRadious = function(data,index){
+                return 4;
+                //return ((height - (commentsPaddingTop*2))/(categories*4));
+            };
+            
+            //Cursors
+            onMediaTimeUpdate = function(event, time){
+                //console.log("media time  update");
+                //console.log(event,time);
+                //console.log(time);
+                //set x coordinates for 
+                currentTime = time;
+                var xpos = xScale(new Date(1970, 0, 1, 0, 0, time));
+                currentTimeCursor.attr("x1", xpos).attr("x2", xpos);
+                currentTimeText.attr("x", xpos)
+                                //.attr("y", 20)
+                                .text(function(){ return number2txttime(currentTime) ;} );
+                var currentTimeArray = notesCollection.filter( function(d){
+                                                var x1 = xScale(d.get("begin_time"));
+                                                var x2 =  xScale(d.get("end_time"));
+                                                if (x1 == x2){
+                                                    x2 = x1 + 2*sH;
+                                                }
+                                                if (x1 <= xpos && xpos <= x2){
+                                                    return true;
+                                                }
+                                                return false;
+                                            });
+                //console.log("currentTimeArray ");
+                //console.log(currentTimeArray);
+                //TODO check differences with last selection
+                //TODO make add highlight and remove highlight lists
+                // TODO launch events ONLY if there is a change in the lists
+                //$.event.trigger("Annotatit:Event:Plot:currentTimeList", currentTimeArray);
+                /*//get intersections
+                var intersectList = sections.selectAll("rect").filter(function(d,i){
+                                            var x1 = xScale(d.get("begin_time"));
+                                            var x2 =  xScale(d.get("end_time"));
+                                            if (x1 == x2){
+                                                //x1 = x1 - sH;
+                                                x2 = x1 + sH;
+                                            }
+                                            //console.log(x1,x2);
+                                            //console.log(x1,x2, mpos[0]);
+                                            if (x1 <= xpos && xpos <= x2){
+                                            //if(d.get("begin_time") <= xScale.invert(mpos[0]) && xScale.invert(mpos[0]) <=  d.get("end_time")){
+                                                return true;
+                                            }
+                                            return false;
+                                        });
+                //equally space the intersection
+                var tmpcount = 0;
+                var gettmpY = function(){
+                    return yScale( ( tmpcount++ )%(categories) );
+                };
+                intersectList.attr("y", gettmpY );
+                //console.log("intersection list with current time cursor:");
+                //console.log(intersectList);*/
+            };
+            updateCursors = function(){
+                //get mouse coordinates
+                //console.log("mousemove");
+                var mpos = d3.mouse(this);
+                //move mousefollowercursor
+                mouseFollowerCursor//.transition()
+                                   // .delay(50)
+                                    .attr("x1", mpos[0])
+                                    .attr("x2", mpos[0])
+                //convert to time
+                mouseFollowerText.attr("x", mpos[0])
+                            //.attr("y", 20)
+                            .text(function(){ return number2txttime(xLinearScale.invert(mpos[0])) ;});
+                //get current cursor on hover
+                var hoverArray = notesCollection.filter( function(d){
+                                                var x1 = xScale(new Date(1970, 0, 1, 0, 0, d.get("begin_time") ));
+                                                var x2 =  xScale(new Date(1970, 0, 1, 0, 0, d.get("end_time") ));
+                                                if (x1 == x2){
+                                                    x1 = x1 - cR;
+                                                    x2 = x2 + cR;
+                                                }
+                                                if (x1 <= mpos[0] && mpos[0] <= x2){
+                                                    return true;
+                                                }
+                                                return false;
+                                            });
+                //console.log("hover array");
+                //console.log(hoverArray);
+                //launch event for handling in another part of the system
+                if (hoverArray.length > 0){
+                    //console.log("hover array");
+                    //console.log(hoverArray);
+                    $.event.trigger("Annotatit:Event:Plot:hoverList", [hoverArray]);
+                }
+                //TODO check differences with last selection
+                //TODO make add highlight and remove highlight lists
+                // TODO launch events ONLY if there is a change in the lists
+                /* //dinamic positioning, first attempt... not nice enough
+                var tmpcount = 0;
+                var intersectCount = 0;
+                var intersectList = sections.selectAll("rect").filter(function(d,i){
+                                            var x1 = xScale(d.get("begin_time"));
+                                            var x2 =  xScale(d.get("end_time"));
+                                            if (x1 == x2){
+                                                //x1 = x1 - sH;
+                                                x2 = x1 + 3*sH;
+                                            }
+                                            //console.log(x1,x2);
+                                            //console.log(x1,x2, mpos[0]);
+                                            if (x1 <= mpos[0] && mpos[0] <= x2){
+                                            //if(d.get("begin_time") <= xScale.invert(mpos[0]) && xScale.invert(mpos[0]) <=  d.get("end_time")){
+                                                //console.log(intersectCount);
+                                                intersectCount++;
+                                                return true;
+                                            }
+                                            return false;
+                                        });
+                //equally space the intersection
+                var tmpYScale = d3.scale.linear()
+                        .domain([ 0, intersectCount])
+                        .range([ sectionsPaddingTop*2, height - hpadding]);
+
+                var gettmpY = function(){
+                    var ret = tmpYScale( ( tmpcount++ )%(intersectCount) );
+                    return ret;
+                };
+                intersectList.transition().attr("y", gettmpY );
+                */
+                //console.log("intersection list with mouse cursor:");
+                //console.log(intersectList);
+            };
+            
+            //jQuery events for API interface with external components
+            seekTime = function(time){
+                //console.log("seek Time: "+ time );
+                $.event.trigger("Annotatit:Event:time:set", time);
+            };
+            activateMouseFollower = function(){
+                //console.log("activating mouse follower");
+                paper.on("mousemove",updateCursors);
+            };
+            deactivateMouseFollower = function(){
+                //console.log("DEactivating mouse follower");
+                paper.on("mousemove",null);
+            };
+            activateMouseClickOnPaper = function(){
+                //console.log("activating mouse follower");
+                paper.on("click",function(){ seekTime(xLinearScale.invert( d3.mouse(this)[0]));} );
+            };
+            deactivateMouseClickOnPaper = function(){
+                //console.log("DEactivating mouse follower");
+                paper.on("click",null );
+            };
+            
+            
+            //public methods
+            return {
+                //helper functions (the ones that actually get the useful data from the input)
+                //data updating methods
+                //updates data to update
+                //erases data that is not longer available
+                updateAllComments : function(arrData){
+                    //console.log("getting the arrData");
+                    //console.log(arrData);
+                    var allData = comments.selectAll("circle")
+                            .data(arrData, getKey );
+                    //console.log(allData);
+                    //console.log("enter selection");
+                    //console.log(allData.enter());
+                    allData.enter()
+                            .append('circle')
+                            .attr("class","comment")
+                            .attr("cx", getCenterX )
+                            .attr("cy", getCenterY )
+                            .attr("r", function(d,i){  return cR; } )
+                            //.style("stroke", getColor)
+                            .style("fill", getColor)
+                            .on("mouseover", function(d,i){ 
+                                    //console.log("mouseover = ");
+                                    //console.log(d);
+                                    //avoid event conflict with other events
+                                    deactivateMouseFollower();
+                                    deactivateMouseClickOnPaper();
+                                    //change moouse cursor to finger pointer
+                                    var sel = d3.select(this);
+                                    //transition to bigger
+                                    sel.transition().attr("r", 2*cR);
+                                    //bring to front
+                                    sel.moveToFront();
+                                    //show tooltip
+                                    //Get this bar's x/y values, then augment for the tooltip
+                                    var mpos = d3.mouse(this);
+                                    var pXpos = d3.event.pageX; //d3.select(this).attr("cx"); //
+                                    var pYpos = d3.event.pageY; // d3.select(this).attr("cy"); //
+                                    //console.log(mpos);
+                                    var xpos = pXpos - mpos[0]/5; 
+                                    //console.log("setted x = "+ xpos);
+                                    var ypos = pYpos - mpos[1]/5;
+                                    //console.log("setted y= "+ypos);
+                                    //console.log("now setup position");
+
+                                    //Update the tooltip position and value
+                                    commentTooltip.style("left", xpos + "px")
+                                              .style("top", ypos + "px");
+                                    //console.log("fill the content");
+                                    //console.log(commentTooltip.select('#content'));
+                                    commentTooltip.select("#content")
+                                                    .text( d.get("text") );
+                                    commentTooltip.select("#media_time")
+                                                    .text( number2txttime(d.get("media_time") ) );
+                                    commentTooltip.select("#flag")
+                                                    .text(d.get("flag_name"))
+                                                    .style("background-color",d.get("flag_color"));
+                                    commentTooltip.select("#user")
+                                                    .text(d.user.get("nickname"));
+                                    commentTooltip.select("#thumbnail")
+                                                    .attr("src",d.user.get("image_link"));
+                                    //console.log("now show the tooltip");
+                                    //Show the tooltip
+                                    commentTooltip.classed("tooltip_hidden", false);
+                                    } )
+                            .on("mouseout", function(d,i){
+                                    //change mouse cursor to normal
+                                    var sel = d3.select(this);
+                                    //transition to smaller
+                                    sel.transition().attr("r", cR);
+                                    //reactivate other events in conflict
+                                    activateMouseFollower();
+                                    activateMouseClickOnPaper();
+                                    //hide tooltip
+                                    commentTooltip.classed("tooltip_hidden", true);
+                                    } )
+                            .on("click", function(d,i){
+                                //console.log("comment clicked");
+                                seekTime(getMediaTime(d));
+                            });
+                    allData.exit().remove();
+                    return self;
+                }, //./updateAllComments
+                
+                updateAllSections : function(arrData){
+                    //console.log("getting the arrData");
+                    //console.log(arrData);
+                    var allData = sections.selectAll("rect")
+                            .data(arrData, getKey );
+                    allData.enter()
+                            .append('rect')
+                            .attr("class","section")
+                            .attr("x",  function(d,i){   return xScale(new Date(1970, 0, 1, 0, 0, d.get('begin_time') )); } )
+                            .attr("y", getSectionY )
+                            .attr("width", function(d,i){ return xScale(new Date(1970, 0, 1, 0, 0, (d.get('end_time') - d.get('begin_time'))));} )
+                            .attr("height",  sH )
+                            .style("fill", function(d,i){ return d.get('flag_color'); })
+                            .on("mouseover", function(d,i){
+                                    //console.log("mouseover = ");
+                                    //console.log(d);
+                                    //avoid event conflict with other events
+                                    //deactivateMouseFollower();
+                                    deactivateMouseClickOnPaper();
+                                    //change moouse cursor to finger pointer
+                                    var sel = d3.select(this);
+                                    //transition to bigger
+                                    //var mvy = d3.select(this).attr("y") - yScale(0.5);
+                                    //sel.transition().attr("height", sH*2);//
+                                    //                .attr("y", mvy );
+                                    //bring to front
+                                    sel.moveToFront();
+                                    //show tooltip
+                                    //Get this bar's x/y values, then augment for the tooltip
+                                    var mpos = d3.mouse(this);
+                                    var pXpos = d3.event.pageX; //d3.select(this).attr("cx"); //
+                                    var pYpos = d3.event.pageY; // d3.select(this).attr("cy"); //
+                                    //console.log(mpos);
+                                    var xpos = pXpos - mpos[0]/5; 
+                                    //console.log("setted x = "+ xpos);
+                                    var ypos = pYpos - mpos[1]/5;
+                                    //console.log("setted y= "+ypos);
+                                    //console.log("now setup position");
+
+                                    //Update the tooltip position and value
+                                    sectionTooltip.style("left", xpos + "px")
+                                              .style("top", ypos + "px");
+                                    //console.log("fill the content");
+                                    //console.log(sectionTooltip.select('#content'));
+                                    sectionTooltip.select("#name")
+                                                    .text( d.get("text") );
+                                    sectionTooltip.select("#begin_time")
+                                                    .text( number2txttime(d.get("begin_time") ) );
+                                    sectionTooltip.select("#end_time")
+                                                    .text( number2txttime(d.get("end_time") ) );
+                                    sectionTooltip.select("#flag")
+                                                    .text(d.get("flag_name"))
+                                                    .style("background-color",d.get("flag_color"));
+                                    sectionTooltip.select("#user")
+                                                    .text(d.user.get("nickname"));
+                                    sectionTooltip.select("#thumbnail")
+                                                    .attr("src",d.user.get("image_link"));
+                                    //console.log("now show the tooltip");
+                                    //Show the tooltip
+                                    sectionTooltip.classed("tooltip_hidden", false);
+                            })
+                            .on("mouseout", function(d,i){
+                                    //change mouse cursor to normal
+                                    var sel = d3.select(this);
+                                    //transition to smaller
+                                    //sel.transition().attr("height", sH);//
+                                    //var mvy = d3.select(this).attr("y") + yScale(1);
+                                    //sel.transition().attr("height", cR*2)
+                                    //                .attr("y", mvy );
+                                    //reactivate other events in conflict
+                                    //activateMouseFollower();
+                                    activateMouseClickOnPaper();
+                                    //hide tooltip
+                                    sectionTooltip.classed("tooltip_hidden", true);
+                                    } )
+                            .on("click", function(d,i){
+                                //console.log("comment clicked");
+                                seekTime(getBeginTime(d));
+                            });
+
+                    allData.exit().remove();
+                    return self;
+                }, //./updateAllSections
+                
+                updateAll : function(arrData){
+                    //TODO improve this filtering, now is by hand cause I don't understand why d3 does not handle it correct
+                    //uses BackboneJS filter (from underscore)
+                    commentsCollection = arrData.filter(function(d){
+                                                return d.get("begin_time") == d.get("end_time");
+                                            });
+                    sectionsCollection = arrData.filter(function(d){
+                                                return d.get("begin_time") < d.get("end_time");
+                                            });
+                    //console.log("all comments");
+                    //console.log("lala");
+                    //console.log(commentsCollection);
+                    self.updateAllComments(commentsCollection);
+                    //console.log(sectionsCollection);
+                    self.updateAllSections(sectionsCollection);
+                    return self;
+                },
+                
+                //only adds elements (if not duplicated)
+                add : function(arrData){
+                //TODO
+                    return this;
+                }, //./add
+                //only updates existing elements 
+                update : function(arrData){
+                //TODO
+                    return this;
+                }, //./update
+                
+                //only updates existing elements 
+                remove : function(arrData){
+                //TODO
+                    return this;
+                }, //./remove
+                
+                //Extra drawing methods
+                
+                //redraws the entire plot
+                redraw : function(){
+                //TODO
+                    return this;
+                }, //./redraw
+                
+                //setup the backbone collection model for easy update:
+                setNotesCollection : function(col){
+                    notesCollection = col;
+                },
+                setCommentsCollection : function(col){
+                    commentsCollection = col;
+                },
+                setSectionsCollection : function(col){
+                    sectionsCollection = col;
+                },
+                
+                //update without sending a new array
+                updateCommentsFromCollection : function(){
+                    //console.log("updating from collection");
+                    //console.log(commentsCollection);
+                    var arr = commentsCollection.toArray();
+                    //console.log(arr);
+                    //console.log(self);
+                    //console.log(this);
+                    if(self){
+                        //console.log("self");
+                        //console.log(self);
+                        self.updateAllComments(arr);
+                    }
+                    //console.log("finished updating");
+                },
+                //update without sending a new array
+                updateSectionsFromCollection : function(){
+                    //console.log("updating from collection");
+                    //console.log(commentsCollection);
+                    var arr = sectionsCollection.toArray();
+                    if(self){
+                        //console.log("self");
+                        //console.log(self);
+                        self.updateAllSections(arr);
+                    }
+                    //console.log("finished updating");
+                },
+                updateNotesFromCollection : function(){
+                    //var arr = notesCollection.toArray();
+                    if(self){
+                        self.updateAll(notesCollection);
+                    }
+                },
+                //some other 
+                countContentCreators: function(arrData){
+                    return this;
+                },
+                
+                //init at the end or functions not already declared make a mess:
+                init : function(w, h, d){
+                    //console.log("initializing CommentsPlot");
+                    //console.log("duration = "+duration);
+                    //console.log("this.duration = "+this.duration);
+                    paper = d3.select("#CommentsPlotDiv").append('svg').attr({
+                                      'width': w,
+                                      'height': h,
+                                    });
+                                    //.style('border', '1px solid black');
+                    width = w;
+                    height = h;
+
+                    duration = d;
+
+                    sectionsPaddingTop = height*0.4;
+                    
+                    categories = (sectionsPaddingTop - hpadding - commentsPaddingTop )/(2*cR);
+                    sectionsCategories = (height - hpadding - sectionsPaddingTop )/sH;
+
+                    cR = getRadious();
+                    //setup of background
+                    backgroundRect = paper.append("g")
+                                            .append("rect")
+                                            .attr("class","section")
+                                            .attr("rx", 6)
+                                            .attr("ry", 6)
+                                            .attr("x",  0 )
+                                            .attr("y", 0 )
+                                            .attr("width", width )
+                                            .attr("height",  height )
+                                            .style("fill", "white")
+                                            .style("stroke", "#CCCCCC" );
+                    //setup of scales and axes
+                    console.log("creating scale" );
+                    console.log(new Date (duration*1000));
+                    console.log(new Date (duration));
+                    console.log(new Date(1970, 0, 1, 0, 0, duration));
+                    
+                    xScale = d3.time.scale()
+                                        .domain([new Date(1970, 0, 1, 0, 0, 0), new Date(1970, 0, 1, 0, 0, duration) ])
+                                        .range([ 0+vpadding, width-vpadding]);
+                    xLinearScale = d3.scale.linear()
+                                        .domain([0, duration])
+                                        .range([ 0+vpadding, width-vpadding]);
+                    xAxis = d3.svg.axis()
+                                      .scale(xScale)
+                                      .orient("top")
+                                      .ticks(5);
+                    if(duration < 60) {
+                        xAxis.tickFormat(d3.time.format("%S"));
+                    }else if (duration < 3600 ){
+                        xAxis.tickFormat(d3.time.format("%M:%S"));
+                    }else{
+                        xAxis.tickFormat(d3.time.format("%H:%M"));
+                    }
+                                      
+                    paper.append("g")
+                                .attr("class", "axis")
+                                .attr("transform", "translate(0," + tpadding + ")")
+                                .call(xAxis);
+                    yScale = d3.scale.linear()
+                                        .domain([ 0, categories])
+                                        .range([ commentsPaddingTop, sectionsPaddingTop - hpadding]);
+                                        //.range([ height - hpadding, tpadding]);
+                    sectionYScale = d3.scale.linear()
+                                        .domain([ 0, sectionsCategories])
+                                        .range([ sectionsPaddingTop, height - tpadding]);
+                    /*
+                    //Begin debug. Y axis is only for debugging purposes
+                    yAxis = d3.svg.axis()
+                                      .scale(yScale)
+                                      .orient("left")
+                                      .ticks(3);
+                    paper.append("g")
+                            .attr("class", "axis")
+                            .attr("transform", "translate(" + vpadding + ",0)")
+                            .call(yAxis);
+                    //END debug
+                    */
+                    //preparing the g tag where to put the comments
+                    comments = paper.append('g').attr("class","comments");
+                    sections = paper.append('g').attr("class","sections");
+                    //time cursors (current media time + mouse follower), should always be on the front
+                    cursors = paper.append("g")
+                            .attr("class", "cursors");
+                            
+                    //current media time cursor ... follows the update event from the media player
+                    currentTimeCursor = cursors.append("line")
+                                                .attr("class", "cursor")
+                                                .attr("id", "mediaTimeCursor")
+                                                .attr("x1", 50)
+                                                .attr("y1", 10)
+                                                .attr("x2", 50)
+                                                .attr("y2", height)
+                                                //.attr("color", '#ff1122')
+                                                .style("stroke", '#ff1122');
+                                                //.append("svg:title")
+                                                //.text(function(d) { return xScale.invert(d.x1); });
+                                                //.attr("", );
+                    currentTimeText = cursors.append("text")
+                                                  .attr("id", "cursorTime")
+                                                  .attr("x", 10)
+                                                  .attr("y", 10)
+                                                  .attr("text-anchor", "middle")
+                                                  .attr("font-family", "sans-serif")
+                                                  .attr("font-size", "11px")
+                                                  .attr("font-weight", "bold")
+                                                  .attr("fill", "black")
+                                                  .text(function(){ return number2txttime(currentTime) ;} );
+                    //mouse follower cursor ... follows the mouse: onmousemove event
+                    mouseFollowerCursor = cursors.append("line")
+                                                .attr("class", "cursor")
+                                                .attr("id", "mouseFollowerCursor")
+                                                .attr("x1", 100)
+                                                .attr("y1", 20)
+                                                .attr("x2", 100)
+                                                .attr("y2", height)
+                                                //.attr("color", '#11ff22')
+                                                .style("stroke", "#11ff22");
+
+                    mouseFollowerText = cursors.append("text")
+                                                  .attr("id", "cursorTime")
+                                                  .attr("x", 100)
+                                                  .attr("y", 20)
+                                                  .attr("text-anchor", "middle")
+                                                  .attr("font-family", "sans-serif")
+                                                  .attr("font-size", "11px")
+                                                  .attr("font-weight", "bold")
+                                                  .attr("fill", "black")
+                                                  .text(function(){ return number2txttime(100) ;});
+                    commentTooltip = d3.select("#comment_tooltip");
+                    sectionTooltip = d3.select("#section_tooltip");
+                    //General  event handling
+                    //paper.on("mousemove",updateCursors);
+                    activateMouseFollower();
+                    activateMouseClickOnPaper();
+                    //External (jQuery) event handling
+                    $(document).on("Annotatit:Event:MediaPlayerFacade:time:update", onMediaTimeUpdate);
+                    //$(document).on("Annotatit:Event:FSCommentsListVM:update", this ,this.updateCommentsFromCollection);
+                    $(document).on("Annotatit:Event:Note:update", this ,this.updateNotesFromCollection);
+                    initialized = true;
+                    self = this;
+                    return this;
+                }, //./init
+            };
+        }($));
+    
+
+    //console.log("finished created comments plot class");
+
+})(jQuery);
+
+
+
+

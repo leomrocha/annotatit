@@ -1,0 +1,186 @@
+{{extend 'layout_user.html'}}
+
+{{block head_extra}}
+		<link rel="stylesheet" href="{{=URL('static','css/ext_lib/colorbox.css')}}" />
+{{end}}
+
+{{block content}}
+
+<div class="main-content"  id="MyMediaPage">
+
+	<!--Breadcrumbs-->
+	<!--
+	<div class="breadcrumbs" id="breadcrumbs">
+		<ul class="breadcrumb">
+			<li> <i class="icon-desktop"></i>
+				<a href="#">My Media</a>
+			</li>
+		</ul>
+
+		<div class="nav-search" id="nav-search">
+			<form class="form-search">
+				<span class="input-icon">
+					<input type="text" placeholder="Search ..." class="input-small nav-search-input" id="nav-search-input" autocomplete="off" />
+					<i class="icon-search nav-search-icon"></i>
+				</span>
+			</form>
+		</div>
+	</div>-->
+	<!--/Breadcrumbs-->
+
+	<div class="page-content">
+
+		<!--Filter-->
+		<!--<form class="form-horizontal" style="padding-top:10px">
+			<div class="control-group">
+				<label class="control-label" for="form-field-1">Filter by:</label>
+				<div class="controls">
+					<select name="Filter">
+						<option></option>
+						<option>media I can annotate</option>
+						<option>media I own</option>
+						<option>media I can view</option>
+					</select>
+				</div>
+			</div>
+		</form>
+		-->
+
+
+		<div class="row-fluid">
+			<div class="span12">
+				<!--PAGE CONTENT BEGINS-->
+
+				<div class="row-fluid">
+					<ul class="ace-thumbnails"  data-bind="template: { name: 'media_template' , foreach: mediaFiles }">
+					<!--This part is filled automatically-->
+
+					</ul>
+				</div><!--PAGE CONTENT ENDS-->
+
+			</div><!--/.span-->
+
+		</div><!--/.row-fluid-->
+
+	</div><!--/.page-content-->
+	
+	<!--Add media-->
+	<div class="ace-settings-container" id="ace-settings-container">
+		<a href="{{=URL('member', 'add_media')}}">
+			<button class="btn btn-app btn-purple btn-small">
+				<i class="icon-cloud-upload bigger-200"></i> Add Media
+			</button>
+		</a>
+	</div><!--End Add media-->
+</div><!--/.main-content-->
+	
+{{end}}
+
+{{block extra_scripts}}
+
+<script id="media_template" type="text/template">
+<li>
+	<a href="../member/annotate_media/<%-media_annotate_key()%>">
+		<img alt="150x150" src="<%-media_thumbnail()%>" />
+		<!-- TODO get thumbnail-->
+		<div class="text">
+			<div class="inner" data-bind="text: title" ></div>
+		</div>
+		<!-- media duration -->
+		<% if (false) { %><!--TODO Commented while I add the functionality-->
+		<div class="tags">
+			<span class="label label-info arrowed" data-bind="text: media_duration" ></span>
+		</div>
+		<% } %>
+	</a>
+
+	<div class="tools">
+		<% if (media_annotate_key) { %>
+		    <a href="../member/annotate_media/<%-media_annotate_key()%>">
+			    <i class="icon-edit"></i>
+		    </a>
+		<% } %>
+	    <% if (false) { %><!--TODO Commented while I add the functionality -->
+	        <% if (media_view_results_key) { %>
+		        <a href="../member/view_media/<%-media_view_results_key()%>">
+			        <i class="icon-eye-open"></i>
+		        </a>
+	        <% } %>
+	        <% if (media_embed_key) { %>
+                <a href="#/media/embed/<%-media_embed_key()%>">
+			        <i class="icon-share-alt"></i> <!-- TODO please put an icon that represents embedding-->
+			        <!-- TODO make a hover message with the address and be able to copy to clipboard the code for embedding-->
+		        </a>
+		    <% } %>
+		    <% if (isOwner) { %>
+		    <a href="#/media/edit/<%-id()%>">
+			    <i class="icon-share-alt"></i>
+		    </a>
+		    <% } %>
+	    <% } %>
+	</div>
+	
+	<!-- Facebook, twitter and G+ share icons should be associated to each item-->
+</li>
+</script>
+
+
+    <!-- Dependences -->
+    <script src="{{=URL('static','js/ext_lib/knockback.js')}}"></script>
+    <script src="{{=URL('static','js/ext_lib/ko-mapping.js')}}"></script>
+    <!-- FORM client side validation with knockout - WARNING may cause problems with IE-->
+    <script src="{{=URL('static','js/ext_lib/knockout.validation.min.js')}}"></script>
+
+
+    <!-- Facade for media players auto loads the dependences if not already loaded-->
+    <script src="{{=URL('static','js/libs/media_player_facade.js')}}"></script>
+    <!--<script src="{{=URL('static','js/libs/graph_display_box.js')}}"></script>-->
+
+
+    <!-- IN PROGRESS integration with knockbackjs-->
+    <script src="{{=URL('static','js/libs/kb/knockout-underscore-templater.js')}}"></script>
+    <script src="{{=URL('static','js/libs/kb/shared.js')}}"></script>
+    <script src="{{=URL('static','js/libs/kb/models.js')}}"></script>
+    <script src="{{=URL('static','js/libs/kb/view-models.js')}}"></script>
+    <script src="{{=URL('static','js/libs/kb/my_media.js')}}"></script>
+
+    <!--page specific plugin scripts-->
+	<script src="{{=URL('static','js/ext_lib/jquery.colorbox-min.js')}}"></script>
+
+	<!--inline scripts related to this page-->
+
+	<script type="text/javascript">
+    $(function() {
+	    var colorbox_params = {
+		    reposition:true,
+		    scalePhotos:true,
+		    scrolling:false,
+		    previous:'<i class="icon-arrow-left"></i>',
+		    next:'<i class="icon-arrow-right"></i>',
+		    close:'&times;',
+		    current:'{current} of {total}',
+		    maxWidth:'100%',
+		    maxHeight:'100%',
+		    onOpen:function(){
+			    document.body.style.overflow = 'hidden';
+		    },
+		    onClosed:function(){
+			    document.body.style.overflow = 'auto';
+		    },
+		    onComplete:function(){
+			    $.colorbox.resize();
+		    }
+	    };
+
+	    $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
+	    $("#cboxLoadingGraphic").append("<i class='icon-spinner orange'></i>");//let's add a custom loading icon
+
+	    /**$(window).on('resize.colorbox', function() {
+		    try {
+			    //this function has been changed in recent versions of colorbox, so it won't work
+			    $.fn.colorbox.load();//to redraw the current frame
+		    } catch(e){}
+	    });*/
+    });
+	</script>
+{{end}}

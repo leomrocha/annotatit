@@ -1,0 +1,425 @@
+{{left_sidebar_enabled= False}}
+{{right_sidebar_enabled=False}}
+
+{{extend 'landing_layout.html'}}
+{{block head}}
+
+ <style>
+
+    /* GLOBAL STYLES
+    -------------------------------------------------- */
+    /* Padding below the footer and lighter body text */
+
+    body {
+      padding-bottom: 40px;
+      color: #5a5a5a;
+    }
+
+
+
+    /* CUSTOMIZE THE NAVBAR
+    -------------------------------------------------- */
+
+    /* Special class on .container surrounding .navbar, used for positioning it into place. */
+    .navbar-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      margin-top: 20px;
+      margin-bottom: -90px; /* Negative margin to pull up carousel. 90px is roughly margins and height of navbar. */
+      //background-color: #FFA635;
+    }
+    .navbar-wrapper .navbar {
+
+    }
+
+    /* Remove border and change up box shadow for more contrast */
+    .navbar .navbar-inner {
+      border: 0;
+      -webkit-box-shadow: 0 2px 10px rgba(0,0,0,.25);
+         -moz-box-shadow: 0 2px 10px rgba(0,0,0,.25);
+              box-shadow: 0 2px 10px rgba(0,0,0,.25);
+    }
+
+    /* Downsize the brand/project name a bit */
+    .navbar .brand {
+      padding: 14px 20px 16px; /* Increase vertical padding to match navbar links */
+      font-size: 16px;
+      font-weight: bold;
+      text-shadow: 0 -1px 0 rgba(0,0,0,.5);
+    }
+
+    /* Navbar links: increase padding for taller navbar */
+    .navbar .nav > li > a {
+      padding: 15px 20px;
+    }
+
+    /* Offset the responsive button for proper vertical alignment */
+    .navbar .btn-navbar {
+      margin-top: 10px;
+    }
+
+
+
+    /* CUSTOMIZE THE CAROUSEL
+    -------------------------------------------------- */
+
+    /* Carousel base class */
+    .carousel {
+      margin-bottom: 60px;
+    }
+
+    .carousel .container {
+      position: relative;
+      z-index: 9;
+    }
+
+    .carousel-control {
+      height: 80px;
+      margin-top: 0;
+      font-size: 120px;
+      text-shadow: 0 1px 1px rgba(0,0,0,.4);
+      background-color: transparent;
+      border: 0;
+      z-index: 10;
+    }
+
+    .carousel .item {
+      height: 500px;
+    }
+    .carousel img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      min-width: 100%;
+      height: 500px;
+    }
+
+    .carousel-caption {
+      background-color: transparent;
+      position: static;
+      max-width: 550px;
+      padding: 0 20px;
+      margin-top: 200px;
+    }
+    .carousel-caption h1,
+    .carousel-caption .lead {
+      margin: 0;
+      line-height: 1.25;
+      color: #fff;
+      text-shadow: 0 1px 1px rgba(0,0,0,.4);
+    }
+    .carousel-caption .btn {
+      margin-top: 10px;
+    }
+
+
+
+    /* MARKETING CONTENT
+    -------------------------------------------------- */
+
+    /* Center align the text within the three columns below the carousel */
+    .marketing .span4 {
+      text-align: center;
+      background-color: #feeebd;
+      border:0px solid;
+      border-radius:25px;
+    }
+    .marketing h2 {
+      font-weight: normal;
+    }
+    .marketing .span4 p {
+      margin-left: 10px;
+      margin-right: 10px;
+       text-align: center;
+       
+    }
+
+    .marketing .span6 {
+      text-align: center;
+      background-color: #feeebd;
+      border:0px solid;
+      border-radius:25px;
+    }
+    .marketing .span6 p {
+      margin-left: 10px;
+      margin-right: 10px;
+       text-align: center;
+       
+    }
+
+
+    /* Featurettes
+    ------------------------- */
+
+    .featurette-divider {
+      margin: 80px 0; /* Space out the Bootstrap <hr> more */
+    }
+    .featurette {
+      padding-top: 120px; /* Vertically center images part 1: add padding above and below text. */
+      overflow: hidden; /* Vertically center images part 2: clear their floats. */
+    }
+    .featurette-image {
+      margin-top: -120px; /* Vertically center images part 3: negative margin up the image the same amount of the padding to center it. */
+    }
+
+    /* Give some space on the sides of the floated elements so text doesn't run right into it. */
+    .featurette-image.pull-left {
+      margin-right: 40px;
+    }
+    .featurette-image.pull-right {
+      margin-left: 40px;
+    }
+
+    /* Thin out the marketing headings */
+    .featurette-heading {
+      font-size: 50px;
+      font-weight: 300;
+      line-height: 1;
+      letter-spacing: -1px;
+    }
+
+
+
+    /* RESPONSIVE CSS
+    -------------------------------------------------- */
+
+    @media (max-width: 979px) {
+
+      .container.navbar-wrapper {
+        margin-bottom: 0;
+        width: auto;
+      }
+      .navbar-inner {
+        border-radius: 0;
+        margin: -20px 0;
+      }
+
+      .carousel .item {
+        height: 500px;
+      }
+      .carousel img {
+        width: auto;
+        height: 500px;
+      }
+
+      .featurette {
+        height: auto;
+        padding: 0;
+      }
+      .featurette-image.pull-left,
+      .featurette-image.pull-right {
+        display: block;
+        float: none;
+        max-width: 40%;
+        margin: 0 auto 20px;
+      }
+    }
+
+
+    @media (max-width: 767px) {
+
+      .navbar-inner {
+        margin: -20px;
+      }
+
+      .carousel {
+        margin-left: -20px;
+        margin-right: -20px;
+      }
+      .carousel .container {
+
+      }
+      .carousel .item {
+        height: 300px;
+      }
+      .carousel img {
+        height: 300px;
+      }
+      .carousel-caption {
+        width: 65%;
+        padding: 0 70px;
+        margin-top: 100px;
+      }
+      .carousel-caption h1 {
+        font-size: 30px;
+      }
+      .carousel-caption .lead,
+      .carousel-caption .btn {
+        font-size: 18px;
+      }
+
+      .marketing .span4 + .span4 {
+        margin-top: 40px;
+      }
+
+      .featurette-heading {
+        font-size: 30px;
+      }
+      .featurette .lead {
+        font-size: 18px;
+        line-height: 1.5;
+      }
+
+    }
+    </style>
+
+
+{{end}}
+{{block center}}
+
+{{if not auth.user:}}
+
+    <!-- Carousel
+    ================================================== -->
+    <div id="myCarousel" class="carousel slide">
+      <div class="carousel-inner">
+        <div class="item active">
+          <img src="{{=URL('static', 'images/annotatit_banner.png')}}" alt="Annotatit Banner">
+          <!-- change image for AnnotatIt logo-->
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>AnnotatIt.</h1>
+              <p class="lead">The easiest way to make collaborative synchronized notes over a video or audio file.</p>
+              <a class="btn btn-large btn-primary" href="{{=URL('user', 'login')}}">Start now</a>
+            </div>
+          </div>
+        </div>
+        <div class="item">
+          <img src="{{=URL('static', 'images/collaborative_banner.png')}}" alt="">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>Collaborative File Annotation.</h1>
+              <p class="lead">Add an audio or video file, and share with your people!</p>
+              <a class="btn btn-large btn-primary" href="{{=URL('user', 'login')}}">Suscribe Now</a>
+            </div>
+          </div>
+        </div>
+        <div class="item">
+          <img src="{{=URL('static', 'images/synch_banner.png')}}" alt="">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>Synchronized Annotations</h1>
+              <p class="lead">Your comments and tags are synchronized in time with the video.</p>
+              <p class="lead">You take the notes, AnnotatIt synchronizes them automatically.</p>
+              <a class="btn btn-large btn-primary" href="{{=URL('user', 'login')}}">I start now!</a>
+            </div>
+          </div>
+        </div>
+        
+        <!--<div class="item">
+          <img src="../assets/img/examples/slide-02.jpg" alt="">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>Embed the results where you need it.</h1>
+              <p class="lead">Once annotated, you can share the results page in your page or blog!</p>
+              <a class="btn btn-large btn-primary" href="#">I want to use it first!</a>
+            </div>
+          </div>
+        </div>-->
+      </div>
+      <a class="left carousel-control" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+      <a class="right carousel-control" href="#myCarousel" data-slide="next">&rsaquo;</a>
+    </div><!-- /.carousel -->
+
+
+
+    <!-- Marketing messaging and featurettes
+    ================================================== -->
+    <!-- Wrap the rest of the page in another container to center all the content. -->
+
+    <div class="container marketing">
+
+      <!-- Three columns of text below the carousel -->
+      <div class="row">
+        <div class="span4">
+          <h2>Basic</h2>
+          <img class="img-circle" data-src="holder.js/140x140">
+          
+          <p>Take notes on any video from Youtube or Vimeo. </p>
+          <p> Embed the result page where you need it</p>
+          <p> Download your notes to your computer</p>
+          <p><a class="btn btn-primary " href="{{=URL('user', 'login')}}">Start Now &raquo;</a></p>
+        </div><!-- /.span4 -->
+        <div class="span4">
+          <h2>Pro</h2>
+          <img class="img-circle" data-src="holder.js/140x140">
+          <p> All from Basic Plan  <span >  PLUS</span></p> 
+          <p>Upload audio & video files to the private area. </p>
+          <p>Privacy protection</p>
+          <p>Personalized tags and groups </p>
+          <p>Other features </p>
+          <p><a class="btn btn-primary " href="#">Contact us &raquo;</a></p>
+        </div><!-- /.span4 -->
+        <div class="span4">
+          <h2>Enterprise</h2>
+          <img class="img-circle" data-src="holder.js/140x140">
+          
+          <p> Personalized plans and features for your needs</p>
+          <p> Embed the service in your own site</p>
+          <p> Tailored Professional Support </p>
+          <p><a class="btn btn-primary " href="#">Contact us for details &raquo;</a></p>
+        </div><!-- /.span4 -->
+      </div><!-- /.row -->
+
+
+      <!-- START THE FEATURETTES -->
+<!--
+      <hr class="featurette-divider">
+
+      <div class="featurette">
+        <img class="featurette-image pull-left" src="../assets/img/examples/browser-icon-firefox.png">
+        <h2 class="featurette-heading">Collaborate with others! <span class="muted">Many people can comment in the same file.</span></h2>
+        <p class="lead">Invite other people to coolaborate with you, you all can take notes on the same file!</p>
+      </div>
+      
+      <hr class="featurette-divider">
+
+      <div class="featurette">
+        <img class="featurette-image pull-right" src="../assets/img/examples/browser-icon-chrome.png">
+        <h2 class="featurette-heading"> Synchronized Comments. <span class="muted">One click will take you to the moment you commented</span></h2>
+        <p class="lead"> Comments are automatically synchronized so you don't have to remember when in the video 
+        you made the comment. AnnotatIt will do it for you! Just click on the time. </p>
+        <p class="lead"> You can edit your previous comments. </p>
+      </div>
+
+      <hr class="featurette-divider">
+
+      <div class="featurette">
+        <img class="featurette-image pull-left" src="../assets/img/examples/browser-icon-safari.png">
+        <h2 class="featurette-heading">What do other people say: <span class="muted"> AnnotatIt is Awesome.</span></h2>
+        <p class="lead">"This thing is great!" - Jean</p>
+        <p class="lead">"With this I can analyze audio files of my students much faster" - Christine</p>
+        <p class="lead">"Is the best annotation online software!" - Leo</p>
+      </div>
+
+      <hr class="featurette-divider">
+-->
+      <!-- /END THE FEATURETTES -->
+    </div><!-- /.container -->
+
+{{else:}} <!-- If it is a logged user-->
+
+ <div class="container marketing">
+
+      <!-- Three columns of text below the carousel -->
+      <div class="row">
+        <div class="span6">
+          <h2>My Media</h2>
+          <p> List your media files</p> 
+          <p><a class="btn btn-primary " href="{{=URL('my_media')}}">My Media &raquo;</a></p>
+        </div><!-- /.span4 -->
+        <div class="span6">
+          <h2>Add Media</h2>
+          <p> Add new media files to your AnnotatIt collection<p/>
+          <p>Youtube and Vimeo files supported</p>
+          <p><a class="btn btn-primary " href="{{=URL('add_media')}}">Add Media &raquo;</a></p>
+        </div><!-- /.span4 -->
+      </div><!-- /.row -->
+
+
+{{pass}}
+
+{{end}}

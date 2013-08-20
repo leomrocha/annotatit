@@ -1,0 +1,120 @@
+{{extend 'layout_user.html'}}
+
+{{block content}} <!-- TODO this line must replace the following, remember to erase the # symbol-->
+
+
+<div class="main-content"  id="MyMediaPage">
+
+	<div class="page-content">
+	
+        <form class="form-horizontal" id="AnnotatItAddMedia" data-bind="submit: createMedia">
+	        <div class="container-fluid">
+		        <div class="row-fluid">
+			        <div class="span6">
+				        <div class="control-group">
+					        <label class="control-label" for="form-field-1">{{=T('Title')}}</label>
+
+					        <div class="controls">
+						        <input type="text" id="form-field-1" placeholder="Write a title" data-bind="value: m_title" />
+					        </div>
+				        </div>
+
+                        <div class=" media_file_upload">
+				            <div class= "controls">
+					            <input type="text" class="input-medium search-query" placeholder="Copy link here" data-bind="value: m_url"/>
+				            </div>
+
+				            <br/>
+
+				            <div class="control-group">
+					            <label class="control-label">Media Description</label>
+					            <div class="controls">
+						            <textarea class="span8 limited" id="form-field-9" data-maxlength="140" data-bind="value: m_description"></textarea>
+					            </div>
+				            </div>
+                            <select data-bind="options: m_privacy, value:selectedPrivacy"></select>
+				        </div> <!-- ./media_file_upload -->
+			        </div>
+
+			        <div class= "span4" id="permissions_options">
+				        <label for="form-field-select-4">Give permission to view</label>
+				        <div class="row-fluid">
+                            <select data-bind="options: m_viewers, optionsText: 'optName', value: selectedViewers"></select>
+        <div  data-bind="visible: selectedViewers().optValue == 'authorized_groups' "> <!-- -->
+					            <textarea type="text" name="tags" id="form-field-tags" placeholder="Enter email addresses" 
+            					    data-bind="value: invitedViewers "></textarea>
+					
+					            <span class="help-button" data-rel="popover" data-trigger="hover" data-placement="right" data-content="People you add here will be able to view  this media file" >?</span>
+					            <br>
+					            <br>
+					            <label>
+						            <input name="form-field-checkbox" type="checkbox" />
+						            &nbsp;
+						            <span class="lbl">Notify?</span>
+					            </label>
+				            </div>
+				        </div>
+
+				        <hr>
+
+				        <label for="form-field-select-4">Give permission to Annotate</label>
+				        <div class="row-fluid">
+                            <select data-bind="options: m_annotators, optionsText: 'optName', value: selectedAnnotators"></select>
+                            <div  data-bind="visible: selectedAnnotators().optValue == 'authorized_groups' "> <!-- -->
+					            <textarea name="tags" id="form-field-tags2" placeholder="Enter email address" 
+            					    data-bind="value: invitedAnnotators "> </textarea>
+					            <span class="help-button" data-rel="popover" data-trigger="hover" data-placement="right" data-content="People you add here will be able to view andannotate this media file" >?</span>
+					            <br>
+					            <br>
+					            <label>
+						            <input name="form-field-checkbox" type="checkbox" />
+						            &nbsp;
+						            <span class="lbl">Notify?</span>
+					            </label>
+				            </div>
+				        </div>
+
+			        </div>
+			        <!-- End permissions_options-->
+			
+		        </div>
+	        </div>
+
+	        <div class="form-actions">
+		        <button class="btn btn-info" type="submit">
+			        <i class="icon-ok bigger-110"></i>
+			        Submit
+		        </button>
+		        &nbsp; &nbsp; &nbsp;
+		        <button class="btn" type="reset">
+			        <i class="icon-undo bigger-110"></i>
+			        Reset
+		        </button>
+	        </div>
+        </form>
+	</div><!--/.page-content-->
+</div><!--/.main-content-->
+{{end}}
+
+{{block extra_scripts}}
+
+
+<!-- Dependences -->
+<script src="{{=URL('static','js/ext_lib/knockback.js')}}"></script>
+<script src="{{=URL('static','js/ext_lib/ko-mapping.js')}}"></script>
+
+
+
+<!-- Facade for media players auto loads the dependences if not already loaded-->
+<script src="{{=URL('static','js/libs/media_player_facade.js')}}"></script>
+<!--<script src="{{=URL('static','js/libs/graph_display_box.js')}}"></script>-->
+
+
+<!-- IN PROGRESS integration with knockbackjs-->
+<script src="{{=URL('static','js/libs/kb/knockout-underscore-templater.js')}}"></script>
+<script src="{{=URL('static','js/libs/kb/shared.js')}}"></script>
+<script src="{{=URL('static','js/libs/kb/models.js')}}"></script> <!-- Order IS important-->
+<script src="{{=URL('static','js/libs/kb/view-models.js')}}"></script>
+<script src="{{=URL('static','js/libs/kb/add_media.js')}}"></script>
+
+{{end}}

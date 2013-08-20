@@ -1,0 +1,14 @@
+(function($) {
+    ///////////////////////////////
+    // Comments Graph Plot //
+    ///////////////////////////////
+    
+    console.log("defining CommentsPLot");
+    
+
+    console.log("finished created comments plot class");
+
+})(jQuery);
+
+
+

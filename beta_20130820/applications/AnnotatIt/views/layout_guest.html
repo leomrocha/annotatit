@@ -1,0 +1,106 @@
+{{extend 'layout_base.html'}}
+
+{{block head}}
+    {{
+        response.files.append(URL('static','css/ext_lib/style2.css'))
+    }}
+    {{block extra head}}
+    {{end}}
+<!-- Aca estan definiendo el tag que pueden usar en el template hijo, -->
+
+    <!-- copy this block in the child template if you need to add extra headers-->
+{{end}}
+
+{{block body}}
+<!-- Aca estan mezclando cosas. Fijense en la definicion en layout_base, no pueden anidar esto aca, tiene que seguir la misma estructura que en el template padre-->
+<div class="mypage-heading">
+    <div class="mycontainer">
+        <div class="myrow">
+            <div class="span12">
+                <div class="container">
+                    <div class="row">
+                        <div class="span10">
+                            <div class="social">
+                                <a href="{{=URL('index')}}" class="blightblue"> <i class="icon-home"rel="tooltip" title="Home"></i>
+                                </a>
+                                <a href="{{=URL('faq')}}" class="borange"> <i class="icon-question-sign" rel="tooltip" title="Do yo have questions?" ></i>
+                                </a>
+                                <a href="{{=URL('about')}}" class="bred">
+                                    <i class=" icon-info-sign" rel="tooltip" title="About" ></i>
+                                </a>
+                                <a href="{{=URL('contact')}}" class="bgreen">
+                                    <i class="icon-envelope" rel="tooltip" title="Contact" ></i>
+                                </a>
+                                <a href="{{=URL('terms_and_privacy')}}" class="bviolet">
+                                    <i class="icon-check" rel="tooltip" title="Terms and Conditions" ></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="span2">
+                            <div class="social">
+                                <a href="{{=URL('user/login')}}" data-toggle="modal">Login</a>
+                                &nbsp; &nbsp; | &nbsp;
+                                <a href="{{=URL('user/register')}}" data-toggle="modal">Register</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{block content}}
+{{end}}
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="span12">
+                <div class="copy">
+                    <p>
+                        Copyright &copy;
+                        <a href="#">AnnotatIt</a>
+                        - <a href="{{=URL('')}}">Home</a>
+                        | <a href="{{=URL('about')}}">About</a>
+                        | <a href="{{=URL('FAQ')}}">FAQ</a>
+                        | <a href="{{=URL('contact')}}">Contact Us</a>
+                        | <a href="{{=URL('terms_and_privacy')}}"> Terms and Conditions</a>
+                        | <a href="{{=URL('terms_and_privacy')}}"> Privacy </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</footer>
+{{end}}
+
+
+{{block end_scripts}}
+    <!-- All the scripts should load here for faster rendering to the user -->
+    <!-- JS -->
+    <script src="{{=URL('static','js/ext_lib/jquery.js')}}"></script>
+    <!-- jQuery -->
+    <script src="{{=URL('static','js/ext_lib/bootstrap.js')}}"></script>
+    <!-- Bootstrap -->
+    <script src="{{=URL('static','js/ext_lib/jquery.isotope.js')}}"></script>
+    <!-- isotope -->
+    <script src="{{=URL('static','js/ext_lib/ddlevelsmenu.js')}}"></script>
+    <!-- Navigation menu -->
+
+    <script src="{{=URL('static','js/ext_lib/filter.js')}}"></script>
+    <script src="{{=URL('static','js/ext_lib/jquery.prettyPhoto.js')}}"></script>
+    <!-- prettyPhoto -->
+    <script src="{{=URL('static','js/ext_lib/jquery.cslider.js')}}"></script>
+    <!-- jQuery cSlider -->
+    <script src="{{=URL('static','js/ext_lib/modernizr.custom.28468.js')}}"></script>
+    <!-- Support -->
+    <script src="{{=URL('static','js/ext_lib/custom.js')}}"></script>
+
+    <!-- Custom JS -->
+    <script type= "text/javascript"> $(document).ready(function(){
+    $("[rel=tooltip]").tooltip({ placement: 'bottom'});
+    });</script>
+    {{block extra_scripts}}
+    <!-- Allow child templates to add (instead of replace) scripts (example carrousel)-->
+    {{end}}
+{{end}}

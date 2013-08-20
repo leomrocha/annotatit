@@ -1,0 +1,75 @@
+{{extend 'layout_guest.html'}}
+
+{{block content}}
+  <div class="content">
+    <div class="container">
+      <div class="blog">
+        <div class="row">
+          <div class="span12">
+
+            <!-- Blog Posts -->
+
+            <div class="container">
+              <div class="row">
+                <div class="span12">
+                  <div class="hero-title">
+                    <h1 class="lightblue">{{=T("About The Founder and AnnotatIt")}}</h1>
+                  </div>
+                  <hr>
+                  <div class="clearfix"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="span8">
+                <div class="posts">
+
+                  <!-- Each posts should be enclosed inside "entry" class" -->
+                  <!-- Post one -->
+                  <div class="entry" style="color:black">
+                    <p>
+                      {{=T(" Hello, I'm Leonardo Rocha, an Argentinian Computer Engineer living in the French Riviera.")}}
+                    </p>
+                    <p>
+                      {{=T("Since coming to France I have worked as a research engineer for more than 3 years at INRIA, the national French research institute in informatics and automation. I did do lots of video annotation (manual and automated), sofware engineering for real time video processing and real time on demand (no downtime) reconfiguration of video processing software.")}}
+                    </p>
+                    <p>
+                      {{=T("In January 2013 I joined ") }}{{=A("Toastmasters Côte d'Azur", _href="http://www.toastmasters-cote-azur.fr") + T(" and I had the need to show my mentor videos of my speeches before the actual presentation.") }}
+                    </p>
+                    <p>
+                      {{=T("I needed a good way to share a video and be able to have good feedback that helped me learning faster. But, also making it easy for my mentor to do it. this needed to be EASY TO USE and USEFUL.")}}
+                    </p>
+                    <p>
+                      {{=T("I looked for a solution online, and as I did not found anything that meet my needs, I decided creating it")}}
+                    </p>
+                    <p>
+                      {{=T("AnnotatIt was born of an actual need! That is why this application is useful!")}}
+                    </p>
+                    <p>
+                      {{=T("I have spent the last months building different versions of the site, trying new ideas, testing, learning and improving the site.")}}
+                    </p>
+                    <p>
+                      {{=T("I have met awesome people, and many have helped me in making this idea a reality. Some giving feedback, some supporting and giving me advice, some of them pushing me forward. And some of them writing actual code.")}}
+                    </p>
+                    <p>
+                      {{=T("AnnotatIt was born out of need. AnnotatIt is changing the way we learn!")}}
+                    </p>
+                    <p>
+                      {{=T("If you have a question, a need or a sugestion (we love improvement sugestions) please")}} {{=A("contact us", _href=URL('contact'))}}
+                    </p>
+                  </div>
+
+                  <!-- Comment section --> </div>
+              </div>
+              <div class="span4">
+                
+                <img src="{{=URL("static", "images/annotatit_pencil_300.png")}}"></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{{end}}

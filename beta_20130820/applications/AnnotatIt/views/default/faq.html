@@ -1,0 +1,197 @@
+{{extend 'layout_guest.html'}}
+
+{{block extra head}}
+    <style>
+    .faq-title{
+        color: #ffffff;
+    }
+    </style>
+    
+{{end}}
+
+
+{{block content}}
+<div class="content">
+        <div class="container">
+            <div class="row">
+                <div class="span12">
+
+                    <div class="container">
+                        <div class="row">
+                            <div class="span12">
+                                <div class="hero-title">
+                                    <h1 class="lightblue">Frequently Asked Questions</h1>
+                                </div>
+                                <hr>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ -->
+                    <div class="accordion" id="">
+                        <!-- Each item should be enclosed inside the class "accordion-group". Note down the below markup. -->
+                        <!-- First Accordion -->
+                        <div class="accordion-group">
+                            <div class="accordion-heading" style="background-color:#52B9E9">
+                                <a class="accordion-toggle faq-title" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+                                    <!-- Title with experience details. -->
+                                    <h4> <strong>What is AnnotatIt ?</strong>
+                                    </h4>
+                                </a>
+                            </div>
+                            <div id="collapseOne" class="accordion-body collapse in">
+                                <div class="accordion-inner" style="color:black">
+                                    <!-- Details about job -->
+                                    <p>
+                                        AnnotatIt is an online platform for coolaborative multimedia annotation.
+                                        
+                                    </p>
+                                    <p>
+                                        The basic idea is to be able to write notes and mark media sections with your study group, company, coach, teacher or by yourself. This allows you to easily access the parts of the video or audio file that are of interest.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Second Accordion -->
+                        <div class="accordion-group">
+                            <div class="accordion-heading" style="background-color: #F88529">
+                                <a class="accordion-toggle faq-title" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
+                                    <h4> <strong>How was AnnotatIt born?</strong>
+                                    </h4>
+                                </a>
+                            </div>
+                            <div id="collapseTwo" class="accordion-body collapse in">
+                                <div class="accordion-inner" style="color:black">
+                                    <p>
+                                        AnnotatIt was born out of an actual need.
+                                    </p>
+                                    <p>
+                                      {{=T("In January 2013 I joined ") }}{{=A("Toastmasters Côte d'Azur", _href="http://www.toastmasters-cote-azur.fr") + T(" and I had the need to show my mentor videos of my speeches before the actual presentation.") }}
+                                    </p>
+                                    <p>
+                                      {{=T("I needed a good way to share a video and be able to have good feedback that helped me learning faster. But, also making it easy for my mentor to do it. this needed to be EASY TO USE and USEFUL.")}}
+                                    </p>
+                                    <p>
+                                      {{=T("I looked for a solution online, and as I did not found anything that meet my needs, I decided creating it")}}
+                                    </p>
+                                    <p>
+                                      {{=T("Here it is!!")}}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-group">
+                            <div class="accordion-heading" style="background-color:#43C83C">
+                                <a class="accordion-toggle faq-title" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
+                                    <!-- Title with experience details. -->
+                                    <h4>
+                                        <strong>What is media Annotation?</strong>
+                                    </h4>
+                                </a>
+                            </div>
+                            <div id="collapseThree" class="accordion-body collapse in">
+                                <div class="accordion-inner" style="color:black">
+                                    <!-- Details about job -->
+                                    <p>
+                                        Media annotation means making synchronized notes (drawings, text, marking parts) on a media file for later being able to easily see, discuss and understand that media.
+                                    </p>
+                                    <p>
+                                        Basically in AnnotatIt you take a note and this note will be tied to the moment where you started making that note.
+                                    </p>
+                                    <p>
+                                        Later you or your friends can click on the note and  it will take you to the exact moment the note was taken.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Thrid accordion -->
+                        <div class="accordion-group">
+                            <div class="accordion-heading" style="background-color:#932AB6">
+                                <a class="accordion-toggle faq-title" data-toggle="collapse" data-parent="#accordion2" href="#collapseFour">
+                                    <h4>
+                                        <strong>Can I annotate audio files?</strong>
+                                    </h4>
+                                </a>
+                            </div>
+                            <div id="collapseFour" class="accordion-body collapse in">
+                                <div class="accordion-inner" style="color:black">
+                                    <p>
+                                        We are going to add payed support for video and audio files. Leave us your email so we can tell you about it when we deploy.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-group">
+                            <div class="accordion-heading" style="background-color:#FA3031">
+                                <a class="accordion-toggle faq-title" data-toggle="collapse" data-parent="#accordion2" href="#collapseFive">
+                                    <!-- Title with experience details. -->
+                                    <h4>
+                                        <strong>Can you add X and Y feature?</strong>
+                                    </h4>
+                                </a>
+                            </div>
+                            <div id="collapseFive" class="accordion-body collapse in">
+                                <div class="accordion-inner" style="color:black">
+                                    <!-- Details about job -->
+                                    <p>
+                                        We are working hard and long hours to put all that is needed in place. We have invested a lot in this site. Making good web development is beyond hard. There is so much behind the scenes that is even difficult to explain the complexities. But we are dedicated in making this software better every day.
+                                    </p>
+                                    <p>
+                                        We are keeping a list of AWESOME features we want to add and that people have been asking for. We are working on making it happen.
+                                    </p>
+                                    <p>
+                                        Please contact us in the subject and we will count a vote on your request.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-group">
+                            <div class="accordion-heading" style="background-color:#52B9E9">
+                                <a class="accordion-toggle faq-title" data-toggle="collapse" data-parent="#accordion2" href="#collapseSix">
+                                    <!-- Title with experience details. -->
+                                    <h4>
+                                        <strong>Why should I pay the pro account?</strong>
+                                    </h4>
+                                </a>
+                            </div>
+                            <div id="collapseSix" class="accordion-body collapse in ">
+                                <div class="accordion-inner" style="color:black">
+                                    <!-- Details about job -->
+                                    <p>
+                                        Because Pro users get the best features first, better support and also because it is the only way we can provide privacy to your media (audio and video files). 
+                                    </p>
+                                    <p>
+                                        PRO accounts have support for audio files too! So it is beyond Awesome.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-group">
+                            <div class="accordion-heading" style="background-color: #F88529">
+                                <a class="accordion-toggle faq-title" data-toggle="collapse" data-parent="#accordion2" href="#collapseSeven">
+                                    <h4> <strong>Can I add your features to my site?</strong>
+                                    </h4>
+                                </a>
+                            </div>
+                            <div id="collapseSeven" class="accordion-body collapse in">
+                                <div class="accordion-inner" style="color:black">
+                                    <p>
+                                        If you have a blog or small site, we have an option for embedding the view or annotation page. For the moment it is a bit rough, but we are actively working to improve it.
+                                    </p>
+                                    <p>
+                                        Also currently we have and make special agreements with companies interested in our solutions. If you are a company that is interested in making an special agreement, contact us for more details.
+                                    </p>
+
+                                    <p>
+                                      Also we are working on creating a great programming API that will give you more freedom. Leave us your email if you are interested!!
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{{end}}

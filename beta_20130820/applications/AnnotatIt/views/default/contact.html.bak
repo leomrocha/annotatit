@@ -1,0 +1,17 @@
+{{extend 'layout_guest.html'}}
+
+{{block content}}
+<h1> insert a new contact</h1>
+	{{=form}}
+ 
+<ul>
+    {{for row in rows:}}
+    <li>
+        {{="%(name)s - %(email)s - %(text)s" % row}}
+    </li>
+    {{pass}}
+</ul>
+{{end}}  <!-- end block body-->
+{{block extra_scripts}}
+<!-- Here write any page speficic things for example specific scripts-->
+{{end}}

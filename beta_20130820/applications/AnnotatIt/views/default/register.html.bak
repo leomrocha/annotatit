@@ -1,0 +1,204 @@
+{{extend 'layout_guest.html'}}
+
+
+{{block content}}
+<div class="content">
+        <div class="container">
+            <div class="register">
+                <div class="row">
+                    <div class="span6">
+                        <div class="formy bred">
+                            <h3>Register for New Account</h3>
+                            <div class="form">
+                                <!-- Register form (not working)-->
+                                <form class="form-horizontal">
+                                    <!-- Name -->
+                                    <div class="control-group">
+                                        <label class="control-label" for="name">Name</label>
+                                        <div class="controls">
+                                            <input type="text" class="input-large" id="name"></div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="name">Surname</label>
+                                        <div class="controls">
+                                            <input type="text" class="input-large" id="name"></div>
+                                    </div>
+                                    <!-- Email -->
+                                    <div class="control-group">
+                                        <label class="control-label" for="email">Email</label>
+                                        <div class="controls">
+                                            <input type="text" class="input-large" id="email"></div>
+                                    </div>
+                                    <!-- Password -->
+                                    <div class="control-group">
+                                        <label class="control-label" for="email">Password</label>
+                                        <div class="controls">
+                                            <input type="password" class="input-large" id="password"></div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="email">Repeat Password</label>
+                                        <div class="controls">
+                                            <input type="password" class="input-large" id="password"></div>
+                                    </div>
+
+                                    <!-- Checkbox -->
+                                    <div class="control-group">
+                                        <div class="controls">
+                                            <label class="checkbox inline">
+                                                <input type="checkbox" id="inlineCheckbox1" value="agree">Agree with Terms and Conditions</label>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="span6">
+                        <div class="formy bblue">
+                            <h2>SIGN UP NOW!</h2>
+                            <br>
+                            <hr>
+                            <br>
+                            <h4>Fill out your details and choose a package below to sign up!</h4>
+                            <br>
+                            <br>
+                            <p class="pull-right">
+                                <i class="icon-pencil icon-yellow"></i>
+                                &nbsp; AnnotatIt
+                            </p>
+                            <br></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pricing-table">
+
+                <!-- Pricing table -->
+                <!-- Price details. Note down the class name before you edit. -->
+                <div class="row">
+
+                    <div class="span6">
+
+                        <!-- Add the class "phighlight" to highlight specific table -->
+
+                        <!-- Pricing table #1. Class name "price-a" -->
+                        <div class="price-a pricel center">
+                            <div class="phead-top blightblue">
+                                <!-- Title -->
+                                <h4>Starter</h4>
+                            </div>
+                            <div class="phead-bottom">
+                                <!-- Price. Use the syntax correctly. -->
+                                <p>
+                                    <span class="pst">$</span>
+                                    4.99
+                                    <span class="psb">/m</span>
+                                </p>
+                            </div>
+                            <div class="arrow-down"></div>
+                            <div class="plist">
+                                <!-- List -->
+                                <ul>
+                                    <li>1 GB Disk Space</li>
+                                    <li>10 GB Data Transfer</li>
+                                    <li>10 Email Ids</li>
+                                </ul>
+                            </div>
+                            <div class="pbutton">
+                                <!-- button -->
+                                <a href="#" class="btn btn-danger btn-large">Buy Now</a>
+                            </div>
+                        </div>
+
+                        <!-- Pricing table #2. Class name "price-b" -->
+                        <div class="price-b pricel center">
+                            <div class="phead-top blightblue">
+                                <h4>Basic</h4>
+                            </div>
+                            <div class="phead-bottom">
+                                <p>
+                                    <span class="pst">$</span>
+                                    8.99
+                                    <span class="psb">/m</span>
+                                </p>
+                            </div>
+                            <div class="arrow-down"></div>
+                            <div class="plist">
+                                <ul>
+                                    <li>1 GB Disk Space</li>
+                                    <li>10 GB Data Transfer</li>
+                                    <li>10 Email Ids</li>
+                                </ul>
+                            </div>
+                            <div class="pbutton">
+                                <!-- button -->
+                                <a href="#" class="btn btn-danger btn-large">Buy Now</a>
+                            </div>
+                        </div>
+
+                        <div class="clearfix"></div>
+                    </div>
+
+                    <div class="span6">
+
+                        <!-- Pricing table #3. Class name "price-a" -->
+                        <div class="price-a pricel center">
+                            <div class="phead-top bviolet">
+                                <h4>Business</h4>
+                            </div>
+                            <div class="phead-bottom">
+                                <p>
+                                    <span class="pst">$</span>
+                                    12.99
+                                    <span class="psb">/m</span>
+                                </p>
+                            </div>
+                            <div class="arrow-down"></div>
+                            <div class="plist">
+                                <ul>
+                                    <li>1 GB Disk Space</li>
+                                    <li>10 GB Data Transfer</li>
+                                    <li>10 Email Ids</li>
+                                </ul>
+                            </div>
+                            <div class="pbutton">
+                                <!-- button -->
+                                <a href="#" class="btn btn-danger btn-large">Buy Now</a>
+                            </div>
+                        </div>
+
+                        <!-- Pricing table #4. Class name "price-b" -->
+                        <div class="price-b pricel center">
+                            <div class="phead-top blightblue">
+                                <h4>Enterprise</h4>
+                            </div>
+                            <div class="phead-bottom">
+                                <p>
+                                    <span class="pst">$</span>
+                                    39.99
+                                    <span class="psb">/m</span>
+                                </p>
+                            </div>
+                            <div class="arrow-down"></div>
+                            <div class="plist">
+                                <ul>
+                                    <li>1 GB Disk Space</li>
+                                    <li>10 GB Data Transfer</li>
+                                    <li>10 Email Ids</li>
+                                </ul>
+                            </div>
+                            <div class="pbutton">
+                                <!-- button -->
+                                <a href="#" class="btn btn-danger btn-large">Buy Now</a>
+                            </div>
+                        </div>
+
+                        <div class="clearfix"></div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{{end}}

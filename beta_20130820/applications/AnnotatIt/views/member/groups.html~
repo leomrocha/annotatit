@@ -1,0 +1,29 @@
+{{extend 'layout_user.html'}}
+
+{{block extra_head}}
+{{end}}
+
+{{block content}}
+
+<div class="main-content">
+	<div class="page-content">
+
+		<!--Page-header-->
+		<div class="page-header position-relative">
+			<h1>Groups</h1>
+		</div>
+		<!--/Page-header-->
+		<div class="row-fluid">
+			<div class="span12">
+				<!--PAGE CONTENT BEGINS-->
+
+				{{=grid}}
+			</div>
+		</div>
+	</div>
+</div>
+
+{{end}}
+
+{{block extra_scripts}}
+{{end}}

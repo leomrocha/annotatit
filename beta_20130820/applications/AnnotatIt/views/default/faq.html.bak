@@ -1,0 +1,131 @@
+{{extend 'layout_guest.html'}}
+
+<div class="content">
+        <div class="container">
+            <div class="row">
+                <div class="span12">
+
+                    <div class="container">
+                        <div class="row">
+                            <div class="span12">
+                                <div class="hero-title">
+                                    <h1 class="lightblue">Frequently Asked Questions</h1>
+                                </div>
+                                <hr>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ -->
+                    <div class="accordion" id="accordion2">
+                        <!-- Each item should be enclosed inside the class "accordion-group". Note down the below markup. -->
+                        <!-- First Accordion -->
+                        <div class="accordion-group">
+                            <div class="accordion-heading" style="background-color:#52B9E9">
+                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+                                    <!-- Title with experience details. -->
+                                    <h4> <strong>Maecenas hendrerit neque id ante dictum mattis ?</strong>
+                                    </h4>
+                                </a>
+                            </div>
+                            <div id="collapseOne" class="accordion-body collapse in">
+                                <div class="accordion-inner" style="color:black">
+                                    <!-- Details about job -->
+                                    <p>
+                                        Proin porttitor eros a ante molestie gravida commodo dui adipiscing.
+                                        <a href="#">Morbi dictum nibh gravida</a>
+                                        mi pretium dapibus. Nullam in est urna. In vitae adipiscing enim. Curabitur rhoncus condimentum lorem, non convallis dolor faucibus eget. In ut nulla est. Sed a interdum mauris.
+                                    </p>
+                                    <p>
+                                        Praesent at tellus porttitor nisl porttitor sagittis. Mauris in massa ligula, a tempor nulla. Ut tempus interdum mauris vel vehicula. Nulla ullamcorper tortor non felis commodo in sagittis est accumsan. Nulla vitae cursus leo. Praesent eleifend sodales felis, in congue purus scelerisque eget. Donec commodo ligula et arcu luctus at viverra erat bibendum.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Second Accordion -->
+                        <div class="accordion-group">
+                            <div class="accordion-heading" style="background-color: #F88529">
+                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
+                                    <h4> <strong>Maecenas hendrerit neque id ante dictum mattis ?</strong>
+                                    </h4>
+                                </a>
+                            </div>
+                            <div id="collapseTwo" class="accordion-body collapse">
+                                <div class="accordion-inner" style="color:black">
+                                    <p>
+                                        Fusce imperdiet, risus eget viverra faucibus, diam mi vestibulum libero, ut vestibulum tellus magna nec enim. Nunc dapibus varius interdum. Phasellus at lorem ut lectus fermentum convallis. Sed diam nisi, pulvinar vitae molestie hendrerit, venenatis eget mauris. Integer porta erat ac eros porta ultrices. Proin porttitor eros a ante molestie gravida commodo dui adipiscing.
+                                        <a href="#">Morbi dictum nibh gravida</a>
+                                        mi pretium dapibus. Nullam in est urna. In vitae adipiscing enim.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Thrid accordion -->
+                        <div class="accordion-group">
+                            <div class="accordion-heading" style="background-color:#43C83C">
+                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
+                                    <h4>
+                                        <strong>Maecenas hendrerit neque id ante dictum mattis ?</strong>
+                                    </h4>
+                                </a>
+                            </div>
+                            <div id="collapseThree" class="accordion-body collapse">
+                                <div class="accordion-inner" style="color:black">
+                                    <p>
+                                        Aliquam erat volutpat. Maecenas quis tristique turpis. Nulla facilisi. Duis sed velit at ac ultrices magna. Aliquam consequat, purus vitae auctor ullamcorper, sem velit convallis quam, a pharetra justo nunc et mauris. Vivamus diam diam, fermentum sed dapibus eget, egestas sed eros. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-group">
+                            <div class="accordion-heading" style="background-color:#932AB6">
+                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFour">
+                                    <!-- Title with experience details. -->
+                                    <h4>
+                                        <strong>Maecenas hendrerit neque id ante dictum mattis ?</strong>
+                                    </h4>
+                                </a>
+                            </div>
+                            <div id="collapseFour" class="accordion-body collapse">
+                                <div class="accordion-inner" style="color:black">
+                                    <!-- Details about job -->
+                                    <p>
+                                        Proin porttitor eros a ante molestie gravida commodo dui adipiscing.
+                                        <a href="#">Morbi dictum nibh gravida</a>
+                                        mi pretium dapibus. Nullam in est urna. In vitae adipiscing enim. Curabitur rhoncus condimentum lorem, non convallis dolor faucibus eget. In ut nulla est. Sed a interdum mauris.
+                                    </p>
+                                    <p>
+                                        Praesent at tellus porttitor nisl porttitor sagittis. Mauris in massa ligula, a tempor nulla. Ut tempus interdum mauris vel vehicula. Nulla ullamcorper tortor non felis commodo in sagittis est accumsan. Nulla vitae cursus leo. Praesent eleifend sodales felis, in congue purus scelerisque eget. Donec commodo ligula et arcu luctus at viverra erat bibendum.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-group">
+                            <div class="accordion-heading" style="background-color:#FA3031">
+                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFive">
+                                    <!-- Title with experience details. -->
+                                    <h4>
+                                        <strong>Maecenas hendrerit neque id ante dictum mattis ?</strong>
+                                    </h4>
+                                </a>
+                            </div>
+                            <div id="collapseFive" class="accordion-body collapse">
+                                <div class="accordion-inner" style="color:black">
+                                    <!-- Details about job -->
+                                    <p>
+                                        Proin porttitor eros a ante molestie gravida commodo dui adipiscing.
+                                        <a href="#">Morbi dictum nibh gravida</a>
+                                        mi pretium dapibus. Nullam in est urna. In vitae adipiscing enim. Curabitur rhoncus condimentum lorem, non convallis dolor faucibus eget. In ut nulla est. Sed a interdum mauris.
+                                    </p>
+                                    <p>
+                                        Praesent at tellus porttitor nisl porttitor sagittis. Mauris in massa ligula, a tempor nulla. Ut tempus interdum mauris vel vehicula. Nulla ullamcorper tortor non felis commodo in sagittis est accumsan. Nulla vitae cursus leo. Praesent eleifend sodales felis, in congue purus scelerisque eget. Donec commodo ligula et arcu luctus at viverra erat bibendum.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

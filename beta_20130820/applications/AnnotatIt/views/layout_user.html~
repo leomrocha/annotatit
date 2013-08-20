@@ -1,0 +1,358 @@
+{{extend 'layout_base.html'}}
+
+{{block head}}
+    <!--  
+        Here goes:
+            All the things that should go on the <head></head>
+    tag
+            Specific CSS and some JS files (js files should go at the end) for guest views 
+        -->
+    <!--page specific plugin styles-->
+
+    <link rel="stylesheet" href="{{=URL('static','css/ext_lib/chosen.css')}}" />
+    <!--<link rel="stylesheet" href="{{=URL('static','css/ext_lib/datepicker.css')}}" />
+    <link rel="stylesheet" href="{{=URL('static','css/ext_lib/bootstrap-timepicker.css')}}" />
+    <link rel="stylesheet" href="{{=URL('static','css/ext_lib/daterangepicker.css')}}" />
+    <link rel="stylesheet" href="{{=URL('static','css/ext_lib/colorpicker.css')}}" />-->
+
+    <!--fonts-->
+
+    <link rel="stylesheet" href="{{=URL('static','css/ext_lib/ace-fonts.css')}}" />
+
+    <!--ace styles-->
+
+    <link rel="stylesheet" href="{{=URL('static','css/ext_lib/ace.min.css')}}" />
+    <link rel="stylesheet" href="{{=URL('static','css/ext_lib/ace-responsive.min.css')}}" />
+    <link rel="stylesheet" href="{{=URL('static','css/ext_lib/ace-skins.min.css')}}" />
+
+    <link rel="stylesheet" href="" type="text/css" media="all">
+
+    <!--[if lte IE 8]>
+    <link rel="stylesheet" href="{{=URL('static','css/ext_lib/ace-ie.min.css')}}" />
+    <![endif]-->
+    {{block head_extra}}
+    {{end}}
+
+
+{{end}}
+
+{{block body}}
+<!-- All that goes on the <body>
+tag -->
+<div class="navbar">
+	<!--NavBar-->
+	<div class="navbar-inner">
+		<div class="container-fluid">
+			<a href="{{=URL('default','index')}}" class="brand" >
+				<img src="{{=URL('static', 'images/annotatit_pencil_120_white.png')}}"/>
+			</a>
+			<!--/.brand-->
+
+			<ul class="nav ace-nav pull-right">
+				<!--Alarms -->
+				{{ if False:}}
+				<!-- THIS WILL NOT APPEAR IN THIS SOFTWARE VERSION, erased by the if False statement -->
+				<li class="purple">
+					<a data-toggle="dropdown" class="dropdown-toggle" href="#"> <i class="icon-bell-alt icon-animated-bell"></i>
+						<span class="badge badge-important">8</span>
+					</a>
+
+					<ul class="pull-right dropdown-navbar navbar-pink dropdown-menu dropdown-caret dropdown-closer">
+						<li class="nav-header">
+							<i class="icon-warning-sign"></i>
+							8 Notifications
+						</li>
+
+						<li>
+							<a href="#">
+								<div class="clearfix">
+									<span class="pull-left">
+										<i class="btn btn-mini no-hover btn-pink icon-comment"></i>
+										New Comments
+									</span>
+									<span class="pull-right badge badge-info">+12</span>
+								</div>
+							</a>
+						</li>
+
+						<li>
+							<a href="#">
+								<i class="btn btn-mini btn-primary icon-user"></i>
+								Bob just signed up as an editor ...
+							</a>
+						</li>
+
+						<li>
+							<a href="#">
+								<div class="clearfix">
+									<span class="pull-left">
+										<i class="btn btn-mini no-hover btn-success icon-shopping-cart"></i>
+										New Orders
+									</span>
+									<span class="pull-right badge badge-success">+8</span>
+								</div>
+							</a>
+						</li>
+
+						<li>
+							<a href="#">
+								<div class="clearfix">
+									<span class="pull-left">
+										<i class="btn btn-mini no-hover btn-info icon-twitter"></i>
+										Followers
+									</span>
+									<span class="pull-right badge badge-info">+11</span>
+								</div>
+							</a>
+						</li>
+
+						<li>
+							<a href="#">
+								See all notifications
+								<i class="icon-arrow-right"></i>
+							</a>
+						</li>
+					</ul>
+				</li>
+
+				<li class="green">
+					<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+						<i class="icon-envelope icon-animated-vertical"></i>
+						<span class="badge badge-success">5</span>
+					</a>
+
+					<ul class="pull-right dropdown-navbar dropdown-menu dropdown-caret dropdown-closer">
+						<li class="nav-header">
+							<i class="icon-envelope-alt"></i>
+							5 Messages
+						</li>
+
+						<!-- HERE is where messages will be added dynamically-->
+						<li>
+							<a href="#">
+								{{=T('See all messages')}}
+								<i class="icon-arrow-right"></i>
+							</a>
+						</li>
+					</ul>
+				</li>
+				{{pass}}
+				<!-- END if FALSE-->
+
+				<li class="light-blue">
+					<a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                        <!-- TODO ELIMINATE the avatar and put a real thing here -->
+						<img class="nav-user-photo" src="{{=URL('static','images/avatars/user.jpg')}}" alt="{{=auth.user}}'s Photo" />
+
+						<span class="user-info">
+							<small>{{=T('Welcome,')}}</small>
+							<span data-bind=""> {{=auth.user_id}} </span><!-- TODO put name instead of ID-->
+						</span>
+						<i class="icon-caret-down"></i>
+					</a>
+
+					<ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-closer">
+						<!-- TODO this menu should be automatically completed with server side templates
+    									but for the moment, do it static here-->
+						<!--<li>
+							<a href="{{=URL('member','profile')}}">
+								<i class="icon-cog"></i>
+								Settings
+							</a>
+						</li>-->
+
+						<li>
+							<a href="{{=URL('member','profile')}}">
+								<i class="icon-user"></i>
+								Profile
+							</a>
+						</li>
+
+						<li class="divider"></li>
+
+						<li>
+							<a href="{{=URL('user','logout')}}">
+								<i class="icon-off"></i>
+								Logout
+							</a>
+						</li>
+					</ul>
+				</li>
+			</ul>
+
+			<!--/.ace-nav-->
+		</div>
+		<!--/.container-fluid-->
+	</div>
+	<!--/.navbar-inner-->
+</div>
+<!--/.navbar-->
+
+<div class="main-container container-fluid">
+	<!--Side Bar -->
+	<a class="menu-toggler" id="menu-toggler" href="#">
+		<span class="menu-text"></span>
+	</a>
+
+	<div class="sidebar" id="sidebar"> <!--sidebar-shortcuts-->
+		<!--<div class="sidebar-shortcuts" id="sidebar-shortcuts">
+			<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+				<button class="btn btn-small btn-success">
+					<i class="icon-signal"></i>
+				</button>
+
+				<button class="btn btn-small btn-info">
+					<i class="icon-pencil"></i>
+				</button>
+
+				<button class="btn btn-small btn-warning">
+					<i class="icon-group"></i>
+				</button>
+
+				<button class="btn btn-small btn-danger">
+					<i class="icon-cogs"></i>
+				</button>
+			</div>
+			<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+				<span class="btn btn-success"></span>
+
+				<span class="btn btn-info"></span>
+
+				<span class="btn btn-warning"></span>
+
+				<span class="btn btn-danger"></span>
+			</div>
+		</div>
+		-->
+		<!--#sidebar-shortcuts-->
+        <!-- -LOGO -->
+        <!--<div class="sidebar-shortcuts logo" id="log
+        o-shortcuts">
+			<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+				<img src="{{=URL('static', 'images/annotatit_pencil_100.png')}}"/>
+			</div>
+
+			<div class="sidebar-shortcuts-mini" id="logo-shortcuts-mini">
+				<img width="20px" src="{{=URL('static', 'images/favicon.png')}}"/>
+			</div>
+		</div>--><!-- ./logo-->
+		
+        
+		<ul class="nav nav-list">
+			<li>
+				<a href="#" class="dropdown-toggle">
+					<button class="btn btn-small btn-success"><i class="icon-camera"></i></button>
+					<span class="menu-text">Media</span> <b class="arrow icon-angle-down"></b>
+				</a>
+
+				<ul class="submenu">
+					<li>
+						<a href="{{=URL('my_media')}}">
+							<i class="icon-double-angle-right"></i>
+							<button class="btn btn-small btn-warning"><i class="icon-youtube-play"></i></button>
+							<!--<button class="btn btn-small btn-warning"><i class="icon-film"></i></button>-->
+							My media
+						</a>
+					</li>
+					<li>
+						<a href="{{=URL('add_media')}}">
+							<i class="icon-double-angle-right"></i>
+							<button class="btn btn-small btn-purple"><i class="icon-cloud-upload"></i></button>
+							
+							Add media
+						</a>
+					</li>
+				</ul>
+			</li>
+			<!-- Temporarly unavailable until the feature is fully implemented
+			<li>
+				<a href="#" class="dropdown-toggle">
+					<i class="icon-group"></i>				   
+					<span class="menu-text">Contacts & Groups</span> <b class="arrow icon-angle-down"></b>
+				</a>
+
+				<ul class="submenu">
+				    <li>
+						<a href="mymedia.html">
+							<i class="icon-double-angle-right"></i>
+							<i class="icon-envelope"></i>
+							Contacts
+						</a>
+					</li>
+					<li>
+						<a href="mymedia.html">
+							<i class="icon-double-angle-right"></i>
+							<i class="icon-group"></i>
+							Groups
+						</a>
+					</li>
+				</ul>
+			</li>-->
+			<li>
+				<a href="{{=URL('member','profile')}}">
+					<button class="btn btn-small btn-danger">
+	    				<i class="icon-cogs"></i>
+    				</button>
+					<span class="menu-text">Profile</span>
+				</a>
+			</li>
+			<!-- Temporarly unavailable until the feature is fully implemented
+			<li>
+				<a href="howto.html">
+					<i class="icon-question-sign"></i>
+					<span class="menu-text">How to?</span>
+				</a>
+			</li>-->
+		</ul>
+		<!--/.nav-list-->
+
+		<div class="sidebar-collapse" id="sidebar-collapse">
+			<i class="icon-double-angle-left"></i>
+		</div>
+	</div>
+
+	<!--End SideBar-->
+	<!--Main Content-->
+	
+		{{block content}}
+		{{end}}
+</div>
+
+
+
+<footer class="footerAce">
+</footer>
+{{end}}
+
+{{block end_scripts}}
+<!-- All the scripts should load here for faster rendering to the user -->
+
+<!-- This is an example of an underscorejs template  -->
+<!-- The idea behind this is that everything that is repeated many times and
+    is dynamic will be treated by javascript code-->
+<script id="message_item_template" type="text/template">
+        <li>
+        <a href="#">
+	        <img src="<%-thumbnail_path%>" class="msg-photo" alt="<%-user_name%>'s Avatar" />
+	        <span class="msg-body">
+		        <span class="msg-title">
+			        <span class="blue"><%-user_name%></span>
+			        <%-message%></span>
+		        <span class="msg-time">
+			        <i class="icon-time"></i>
+			        <span><%-time%></span>
+		        </span>
+	        </span>
+        </a>
+        </li>
+    </script>
+
+
+<script src="{{=URL('static','js/ext_lib/ace-elements.min.js')}}"></script>
+<script src="{{=URL('static','js/ext_lib/ace.min.js')}}"></script>
+
+	
+    {{block extra_scripts}}
+    <!-- Allow child templates to add (instead of replace) scripts (example view media libs)-->
+    {{end}}
+{{end}}

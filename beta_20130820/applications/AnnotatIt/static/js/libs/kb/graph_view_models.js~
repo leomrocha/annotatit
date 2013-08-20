@@ -1,0 +1,80 @@
+(function($) {
+    ////////////////
+    // ViewModels //
+    ////////////////
+    console.log("defining ViewModels");
+
+    //This var defines an scope of all the vars.
+    if(! _.has($, "AnnotatIt")){
+        $.AnnotatIt = {};
+    }
+    
+    var AnnotatIt = $.AnnotatIt;
+    
+    //adding functionality not present in D3 
+    //from: https://gist.github.com/trtg/3922684
+    d3.selection.prototype.moveToFront = function() { 
+        return this.each(function() {  this.parentNode.appendChild(this); }); 
+    }; 
+
+
+    var CommentsPlot = {
+        //properties
+        self : this,
+        //methods
+        init : function(width, heigh){
+            var paper = d3.select().append('svg').attr({
+                              'width': width,
+                              'height': height,
+                            });
+                            //.style('border', '1px solid black');
+            return paper;
+        }, //./init
+        
+        
+        updateAll : function(comments){
+        
+        }, //./updateAll
+        
+        //only adds elements (if not duplicated)
+        add : function(comments){
+        
+        }, //./add
+        //only updates existing elements 
+        update : function(comments){
+        
+        }, //./update
+        remove : function(comments){
+        
+        }, //./remove
+        
+        
+    };// ./CommentsPlot
+    
+    /*
+    The signals that MUST be emmited 
+        //On updating a [Flag|Section|SyncComment|Comment]
+        //this is for connecting with GraphicDisplay
+        $.event.trigger("Annotatit:Event:[Flag|Section|SyncComment|Comment]:updated", DATA);
+        
+        //on mouse clicked over a [Flag|Section|SyncComment]
+        $.event.trigger("Annotatit:Event:time:set", MEDIA_TIME);
+        $.event.trigger("Annotatit:Event:[Flag|Section|SyncComment|Comment]:mouse:click", DATA);
+
+
+    That MIGTH be implemented later:
+        //on mouse events over a [Flag|Section|SyncComment|Comment]
+        $.event.trigger("Annotatit:Event:[Flag|Section|SyncComment|Comment]:mouse:over", DATA);
+        $.event.trigger("Annotatit:Event:[Flag|Section|SyncComment|Comment]:mouse:out", DATA);
+        $.event.trigger("Annotatit:Event:[Flag|Section|SyncComment|Comment]:mouse:press", DATA);
+        $.event.trigger("Annotatit:Event:[Flag|Section|SyncComment|Comment]:mouse:release", DATA);
+    */
+
+    
+
+    console.log("");
+
+})(jQuery);
+
+
+

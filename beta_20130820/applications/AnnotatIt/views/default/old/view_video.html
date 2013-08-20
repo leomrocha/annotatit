@@ -1,0 +1,133 @@
+{{extend 'view_layout.html'}}
+
+{{block viewer_head}}
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
+{{end}}
+
+{{block media_frame}}    
+    <object class="ytPlayer" id="ytPlayer" > </object>
+{{end}}
+
+{{block  video_init_scripts}}
+    <script  type="text/javascript">
+    var current_time = 0;
+    // This function is called when an error is thrown by the player
+    function onPlayerError(errorCode) {
+      alert("An error occured of type:" + errorCode);
+      console.log("An error occured of type:" + errorCode);
+    }
+
+    // This function is called when the player changes state
+    function onPlayerStateChange(newState) {
+      updateHTML("playerState", newState);
+    }
+
+    // Display information about the current state of the player
+    function updatePlayerInfo() {
+      // Also check that at least one function exists since when IE unloads the
+      // page, it will destroy the SWF before clearing the interval.
+      if(ytplayer && ytplayer.getDuration) {
+        updateTime("video_time", ytplayer.getCurrentTime());
+        //updateInteractiveComments(ytplayer.getCurrentTime());
+      }
+    }
+
+    // This function is automatically called by the player once it loads
+    function onYouTubePlayerReady(playerId) {
+      //console.log("Player loaded and ready, setting callbacks");
+      ytplayer = document.getElementById("ytPlayer");
+      // This causes the updatePlayerInfo function to be called every 50ms to
+      // get fresh data from the player
+      setInterval(updatePlayerInfo, 50);
+      updatePlayerInfo();
+      //ytplayer.addEventListener("onStateChange", "onPlayerStateChange");
+      ytplayer.addEventListener("onError", "onPlayerError");
+      //need to start playing to get video metadata.
+      //NEED video metadata to get duration of the video for calculating the positions of tags and comments!!
+      ytplayer.mute();
+      // play video to get meta data
+      ytplayer.playVideo();
+      yt_get_duration = function(){
+            // if duration is available
+            if (ytplayer.getDuration() > 0) {
+                // pause video
+                ytplayer.pauseVideo();
+                // unmute
+                ytplayer.unMute();
+                // save duration
+                return ytplayer.getDuration();
+
+            }
+            // else keep trying
+            else {
+                setTimeout(yt_get_duration[index], 150)
+            }
+        }
+      var duration = yt_get_duration();
+      video_duration = ytplayer.getDuration();
+      init_interactive_canvas();
+    }
+
+    function loadPlayer(){
+      //console.log("Loading Player");
+      // The video to load
+      var videoID = "{{=video.video_id}}"; 
+      // Lets Flash from another domain call JavaScript
+      var params = { allowScriptAccess: "always" };
+      // The element id of the Flash embed
+      var atts = { id: "ytPlayer" };
+      // All of the magic handled by SWFObject (http://code.google.com/p/swfobject/)
+      swfobject.embedSWF("http://www.youtube.com/v/" + videoID + 
+                         "?version=3&enablejsapi=1&playerapiid=player1", 
+                         "videoDiv", "520", "350", "9", null, null, params, atts);
+    }
+
+    function setVideoTime(time){
+        //console.log("setting time");    
+        //console.log(time);
+        //this parses the string hh:mm:ss into values and 
+        var t=time.split(":");
+        ntime=Number(t[0])*3600+Number(t[1])*60+Number(t[2]);
+        ytplayer.seekTo(ntime, true);
+    }
+
+
+    function pause_video(){
+        if(ytplayer){
+            ytplayer.pauseVideo();
+        }
+    }
+
+    function on_tag_click_specific(canvas, obj, tag_json){
+        //console.log("tag click");
+        setVideoTime(tag_json.video_time);
+        //play;
+        if(!ytplayer){
+            ytplayer = document.getElementById("ytPlayer");
+            }
+        ytplayer.playVideo();
+    }
+
+    function on_comment_click_specific(canvas, obj, comment_json){
+        //console.log("comment click");
+        setVideoTime(comment_json.video_time);
+        //play;
+        if(!ytplayer){
+            ytplayer = document.getElementById("ytPlayer");
+            }
+        ytplayer.playVideo();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////
+    ////INIT
+    ////////////////////////////////////////////////////////////////////////////////
+
+    //loading after window loaded
+    window.onload=function() {
+        loadPlayer();
+        //init_canvas();
+        
+    }  
+    </script>
+{{end}}
+

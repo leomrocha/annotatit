@@ -1,0 +1,93 @@
+{{extend 'layout_guest.html'}}
+
+    {{block extra_head}}
+        <!-- here write any page specific headers-->
+    {{end}}
+    <div class="content">
+        <div class="container">
+
+            <div class="contact" style="color:black !important">
+                <div class="row">
+                    <div class="span6" "bgreen">
+                        <div class="cwell">
+                            <!-- Contact form -->
+                            <h3 class="title" style="color:black !important">Contact Form</h3>
+                            <div class="form">
+                                <!-- Contact form (not working)-->
+                                <form class="form-horizontal">
+                                    <!-- Name -->
+                                    <div class="control-group">
+                                        <label class="control-label" for="name">Name</label>
+                                        <div class="controls">
+                                            <input type="text" class="input-medium" id="name"></div>
+                                    </div>
+                                    <!-- Email -->
+                                    <div class="control-group">
+                                        <label class="control-label" for="email">Email</label>
+                                        <div class="controls">
+                                            <input type="text" class="input-medium" id="email"></div>
+                                    </div>
+                                    <!-- Website -->
+                                    <div class="control-group">
+                                        <label class="control-label" for="website">Website</label>
+                                        <div class="controls">
+                                            <input type="text" class="input-medium" id="website"></div>
+                                    </div>
+                                    <!-- Comment -->
+                                    <div class="control-group">
+                                        <label class="control-label" for="comment">Comment</label>
+                                        <div class="controls">
+                                            <textarea class="input-madium" id="comment" rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                    <!-- Buttons -->
+                                    <div class="form-actions">
+                                        <!-- Buttons -->
+                                        <button type="submit" class="btn btn-inverse">Submit</button>
+                                        <button type="reset" class="btn btn-primary">Reset</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="span6">
+                        <div class="cwell">
+                            <!-- Address section -->
+                            <h3 class="title" style="color:black !important">Address</h3>
+
+                            <div class="address" style="color:black !important">
+                                <address>
+                                    <!-- Company name -->
+                                    <h4 style="color:black !important">Responsive Web, Inc.</h4>
+                                    <!-- Address -->
+                                    795 Folsom Ave, Suite 600
+                                    <br>
+                                    San Francisco, CA 94107
+                                    <br>
+                                    <!-- Phone number -->Phone: (123) 456-7890.</address>
+
+                                <address>
+                                    <!-- Name -->
+                                    <h4 style="color:black !important">Full Name</h4>
+                                    <!-- Email -->
+                                    <a href="mailto:#">first.last@gmail.com</a>
+                                </address>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class= "span6">
+                        <br>
+
+                        <img src="img/annotit_leo_pencil.png" class="pull-right" height="100px" width="300px"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {{block extra_scripts}}
+    <!-- Here write any page speficic things for example specific scripts-->
+    {{end}}

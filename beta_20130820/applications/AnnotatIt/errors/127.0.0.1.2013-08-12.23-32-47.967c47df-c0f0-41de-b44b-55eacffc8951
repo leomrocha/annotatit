@@ -1,0 +1,479 @@
+(dp1
+S'output'
+p2
+S"<type 'exceptions.NameError'> global name 'new_media' is not defined"
+p3
+sS'layer'
+p4
+S'/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/applications/AnnotatIt/controllers/api.py'
+p5
+sS'code'
+p6
+S'from urlparse import urlparse, parse_qs\nimport json\n#from gluon.contrib.simplejson import loads, dumps\nhelpers = local_import(\'helpers\')\nfrom helpers import *\nfrom gluon.validators import *\n\n################################################################################\n#This file first contains:\n#1 - the validators needed for specific row based access\n#and other more complex validation interactions\n#2 - The REST API itself.\n#\n################################################################################\n\n################################################################################\n###  VALIDATORS\n################################################################################\n\n############################################################\n#  User Validators\n############################################################\n\ndef _can_read_user():\n    return True\n    \ndef _can_write_user():\n    #TODO admin interface, but for the moment, not possible\n    return False\n    \ndef _can_update_user():\n    #TODO admin interface, but for the moment, not possible\n    return False\n    \ndef _can_delete_user():\n    #TODO admin interface, but for the moment, not possible\n    return False\n    \n\n############################################################\n#  Media Validators\n############################################################\n\ndef _can_read_media(media):\n    \'\'\'\n    WARNING!!!! \n    Sadly, validators with parameters can NOT be called from @auth.requires\n    \'\'\'\n    #check media permissions\n    if media:\n        if media.view_permissions == "all":\n            return True\n        #   check user is authenticated\n        if not auth.user:\n            return False\n        #   check current user has the permissions auth_permissions\n        if auth.user_id == media.owner_id or auth.has_permission(name=\'media-view\', table_name=\'media\', record_id=media.id):\n            return True\n    return False\n    \ndef _can_write_media():\n    #check user is logged (done automagically with the @auth.require() but I \n    #repeat it here in case this function needs to be called from somewhere else\n    if auth.user:\n        return True\n    return False\n    \ndef _can_update_media(media):\n    \'\'\'\n    WARNING!!!! \n    Sadly, validators with parameters can NOT be called from @auth.requires\n    Only owner can update\n    \'\'\'\n    if media and auth.user_id == media.owner_id:\n        return True\n    return  False\n    \ndef _can_delete_media(media):\n    \'\'\'\n    WARNING!!!! \n    Sadly, validators with parameters can NOT be called from @auth.requires\n    Only owner can delete\n    \'\'\'\n    if media and auth.user_id == media.owner_id:\n        return True\n    return  False\n\n\n#############################################################################\n#  Generic validators for annotations (for the moment are all the same)\n#############################################################################\n\ndef _can_read_reg(reg):\n    try:\n        #find associated media,        \n        media = db.media(db.media.id == reg[\'media_id\'])\n        if media:\n            if media.view_permissions == "all":\n                return True\n            #   check user is authenticated\n            if not auth.user:\n                return False\n            #   check current user has the permissions auth_permissions\n            if auth.user_id == reg.owner_id or auth.has_permission(name=\'media-view\', table_name=\'media\', record_id=media.id):\n                return True\n    except Exception as err:\n        pass\n\n    return False\n    \ndef _can_write_reg(reg):\n    try:\n        #find associated media,        \n        media = db.media(db.media.id == reg[\'media_id\'])\n        if media:\n            #   check user is authenticated\n            if not auth.user:\n                return False\n            if media.view_permissions == "all":\n                return True\n            #   check current user has the permissions auth_permissions\n            if auth.user_id == reg.owner_id or auth.has_permission(name=\'media-annotate\', table_name=\'media\', record_id=media.id):\n                return True\n    except Exception as err:\n        pass\n\n    return False\n    \ndef _can_update_reg(reg):\n    \'\'\'\n    WARNING!!!! \n    Sadly, validators with parameters can NOT be called from @auth.requires\n    Only owner can delete\n    \'\'\'\n    if reg and auth.user_id == reg.owner_id:\n        return True\n    return  False\n    \n\n#for the moment for update and delete, user MUST be the owner\n_can_delete_reg = _can_update_reg\n\n############################################################\n#  Annotation specific Validators\n\n#For the moment, all annotations have the same permissions\n#here I rename the functions to be able to modify this with ease later in\n#case of need\n############################################################\n_can_read_section = _can_read_fscomment = _can_read_reg\n_can_write_section = _can_write_fscomment = _can_write_reg\n_can_update_section = _can_update_fscomment = _can_update_reg\n_can_delete_section = _can_delete_fscomment = _can_delete_reg\n    \n    \n################################################################################\n##\n## RESTful API interfaces\n##\n################################################################################\n#\n#Note that all data types have a public(client model or Resource Model) and\n# a private (server model, the one stored in the DB) representation\n# Only public Resource Model will be presented in the API documentation \n# for each datatype, the private representation can be seen in:\n# applications/AnnotatIt/models/db.py\n#\n################################################################################\n\n\n#@request.restful()\n#def file_path():\n#    """\n#    As web2py has a path hiding thing for security,\n#        here a method to get the path of an image from the generated id\n#        This is a public method because files in the \n#        static folder are ment to be public\n#    """\n#    def GET(fid):\n#        p = URL(\'download\',fid)\n#        dp = {"file_path": p}\n#        return dp if dp else dict()\n#    return locals()\n\n#/api/current_user\n@request.restful()\ndef current_user():\n    """\n    This is ment to give the user his/her id and a way to update the profile\n    """\n    #@auth.requires(_can_read_user,requires_login = False) #Not needed this is public info\n    def GET():\n        #returns only a SINGLE user\n        usr = db(db.auth_user.id == auth.user_id).select(\n                                                    db.auth_user.id,\n                                                    db.auth_user.first_name,\n                                                    db.auth_user.last_name,\n                                                    db.auth_user.email,\n                                                    #db.auth_user.thumbnail\n                                                   ).first()\n        return usr.as_dict() if usr else dict()\n    @auth.requires(_can_update_user)\n    def PUT(u_id,**vars):\n        #TODO\n        return db.auth_user.validate_and_update(**vars)\n        #resp = db(db.auth_user._id==u_id).update(**vars)\n        #return resp\n    return locals()\n\n\n#/api/user/[:id]\n@request.restful()\ndef user():\n    """\n    Private representation: \n        refer to\n                 .../models/db.py#user_info \n                auth_user model (defined by Web2py)\n    Public representation:\n        The data needed for the end user (to see) is:\n            user_id\n            nickname\n            image (path to the image)\n    """\n    #print "API user called"\n    #print request.vars\n    #print "#############"\n    #print request.env\n    #@auth.requires(_can_read_user,requires_login = False) #Not needed this is public info\n    def GET(u_id):\n        #print "GET user "+str(u_id)\n        #if u_id:\n        #print "returning detail in another user"\n        #returns only a SINGLE user\n        usr = db(db.user_info.user_id == u_id).select(\n                                    db.user_info.user_id,\n                                    db.user_info.nickname,\n                                    db.user_info.image_link\n                                    ).first()\n        if usr:\n            d = usr.as_dict()\n            #d.update({"image": URL(\'download\', usr.image)})\n            return d\n        \'\'\'\n        else:\n            #print "returning current user"\n            usr = db(db.auth_user.id == auth.user_id).select(\n                                                    db.auth_user.id,\n                                                    db.auth_user.first_name,\n                                                    db.auth_user.last_name,\n                                                    db.auth_user.email,\n                                                    #db.auth_user.thumbnail\n                                                   ).first()\n            return usr.as_dict() if usr else dict()\n        \'\'\'\n        response.status = 204\n        return dict()\n    #TODO\n    @auth.requires(_can_write_user)\n    def POST(*args,**vars):\n        #TODO\n        #input format should be the one from the models/db.py # flagged_comment\n        return db.auth_user.validate_and_insert(**vars)\n    @auth.requires(_can_update_user)\n    def PUT(u_id,**vars):\n        #TODO\n        return db.auth_user.validate_and_update(**vars)\n        #return db(db.auth_user._id==u_id).update(**vars)\n        #return dict()\n    @auth.requires(_can_delete_user)\n    def DELETE(u_id):\n        #TODO\n        return db(db.auth_user._id==u_id).delete()\n        return dict()\n    return locals()\n\n#/api/manage_group/:id\n#@request.restful()\n#def manage_group():\n#    """\n#    Manage suscription of people to annotate or view a certain media file \n#    GET API:\n#        will return {\xc2\xa0list of people with annotate and list of people with view permissions }\n#    Input API:\n#        \n#    """\n#    pass\n\n#/api/current_user\n@request.restful()\ndef media_files():\n    """\n    This is ment to give the user a list of all the media he/she can access\n    """\n    #print "getting media files"\n    def GET():\n        #print "started the get"\n        try:\n            #TODO separate the data the user receives according to the permissions\n            owns = db(db.media.owner_id == auth.user_id or\n                         auth.accessible_query("media-annotate", db.media) or\n                         auth.accessible_query("media-view", db.media) )\n                         \n            owns = owns.select(db.media.ALL)\n            """\n            #print response.json(owns)\n            #all the media the user can annotate\n            can_annotate = db(auth.accessible_query("media-annotate", db.media)).select(\n                                            db.media.id,\n                                            db.media.owner_id,\n                                            db.media.title,\n                                            db.media.media_id,\n                                            db.media.media_network,\n                                            db.media.media_url,\n                                            #db.media.privacy,\n                                            db.media.media_annotate_key,\n                                            db.media.media_view_results_key,\n                                            #db.media.media_embed_key,\n                                            #db.media.annotation_permissions,\n                                            #db.media.view_permissions,\n                                            db.media.creation_datetime,\n                                            db.media.update_datetime,\n                                            db.media.media_duration,\n                                            db.media.media_thumbnail\n                                            )\n            print "can annotate"\n            print can_annotate\n            can_view = db(auth.accessible_query("media-view", db.media)).select(\n                                            db.media.id,\n                                            db.media.owner_id,\n                                            db.media.title,\n                                            db.media.media_id,\n                                            db.media.media_network,\n                                            db.media.media_url,\n                                            #db.media.privacy,\n                                            #db.media.media_annotate_key,\n                                            db.media.media_view_results_key,\n                                            #db.media.media_embed_key,\n                                            #db.media.annotation_permissions,\n                                            #db.media.view_permissions,\n                                            db.media.creation_datetime,\n                                            db.media.update_datetime,\n                                            db.media.media_duration,\n                                            db.media.media_thumbnail\n                                            )\n            print "can view"\n            print can_view\n            """\n            if not owns:\n                response.status = 204\n            ret = response.json(owns) #{}\n            return ret \n        except Exception as err:\n            response.status = 501\n            return dict()\n        response.status = 401\n        return dict()\n    return locals()\n\n\n#/api/media/[:id]\n@request.restful()\ndef media():\n    """\n    Private representation: \n        refer to\n                 .../models/db.py#user_info \n                auth_user model (defined by Web2py)\n    Public representation:\n        The data needed for the end user (to see) is:\n            db.media.owner_id,\n            db.media.title,\n            db.media.media_id,\n            db.media.media_network,\n            db.media.media_url,\n            db.media.privacy,\n            db.media.annotation_permissions,\n            db.media.view_permissions,\n            db.media.creation_datetime,\n            db.media.update_datetime\n        To create, update a new record the last two elements are not needed as they \n        are automatically created\n        To delete a record only the ID is needed\n            \n    """\n    #@auth.requires(_can_read_media, requires_login = False) #deprecated, now has to be called from the inside of the method\n    def GET(action, m_key):\n        \'\'\'\n        Returns a SINGLE media record or dict() (empty)\n        The single media record has to match:\n        action = [annotate|view_results|embed]\n        m_id is the key for the action\n        \'\'\'\n        #\n        #print action\n        #print m_key\n        try:\n            q = db(db.media["media_"+action+"_key"] == m_key)\n            #print q\n            if _can_read_media(q.select().first()):\n                #print "trying thing "\n                m = q.select(\n                            db.media.id,\n                            db.media.owner_id,\n                            db.media.title,\n                            db.media.media_id,\n                            db.media.media_network,\n                            db.media.media_url,\n                            db.media.privacy,\n                            db.media.annotation_permissions,\n                            db.media.view_permissions,\n                            db.media.creation_datetime,\n                            db.media.update_datetime,\n                            db.media.media_duration,\n                            db.media.media_thumbnail\n                            ).first()\n                #print m\n                return m.as_dict() if m else dict()\n            response.status = 401\n            return dict()\n        except Exception as err:\n            response.status = 501\n            return dict()\n        response.status = 401\n        return dict()\n\n    @auth.requires(_can_write_media)\n    def POST():\n        #validate data\n        #add register and get response id\n        #process the request for filling media network and permissions and create the new register\n        #print "POST, creation of a media file"\n        new_media =  json.loads(request.body.read())\n        #print "####"\n        #print "received data = "+str(new_media)\n        #get media network\n        media_network = get_service(new_media[\'media_url\'])\n        #print media_network\n        new_media.update(media_network)\n        #print "updated media: "+str(new_media)\n        #get privacy options\n        invited_annotators = []\n        if new_media.has_key(\'invited_annotators\'):\n            invited_annotators = new_media[\'invited_annotators\']\n            #print invited_annotators\n            #TODO make it a list and validate they are all emails\n            #eliminate the var from the dict\n            del new_media[\'invited_annotators\']\n        invited_viewers = []\n        if new_media.has_key(\'invited_viewers\'):\n            invited_viewers = new_media[\'invited_viewers\']\n            #print invited_viewers\n            #TODO make it a list and validate they are all emails\n            #eliminate the var from the dict\n            del new_media[\'invited_viewers\']\n        ret = db.media.validate_and_insert(**new_media) #warning, check what is this actually returning\n        #print "was register created?? "\n        #print ret\n        if ret.id:\n            #print "setting permissions and groups"\n            #create new group for annotate this video user-[ID]_annotate-[mediaID]\n            ag_id = auth.add_group("media-annotate-"+str(ret.id), "Annotation permissions for media with id = "+str(ret.id)) \n            #create auth permissions for annotate\n            #auth.add_permission(ag_id, "media-annotate-"+str(id), \'media\', ret.id)\n            auth.add_permission(ag_id, "media-annotate", \'media\', ret.id)\n            #add this user as owner of these groups\n            db.group_ownership.insert(owner_id=auth.user_id, group_id=ag_id )\n            #set user in the group\n            auth.add_membership(ag_id, auth.user_id)\n            #TODO if there are invitees, add them to the corresponding group\n            #for e in invited_annotators:\n            #   get user (if exists)\n            #   iu = db.auth_user(db.auth_user.email == e)\n            #   if iu:\n            #       auth.add_membership(ag_id, iu.id)\n            #   else:\n            #       #add to invitees list\n            #       #enqueue to send invitation email\n            #       pass\n            #create new group for view this video user-[ID]_view-[mediaID]\n            vg_id = auth.add_group("media-view-"+str(ret.id), "View permissions for media with id = "+str(ret.id)) \n            #create auth permissions for view\n            #auth.add_permission(vg_id, "media-view-"+str(id), \'media\', ret.id)\n            auth.add_permission(vg_id, "media-view", \'media\', ret.id)\n            #add this user as owner of these groups\n            db.group_ownership.insert(owner_id=auth.user_id, group_id=vg_id )\n            #set user in the group\n            auth.add_membership(vg_id, auth.user_id)\n            #TODO if there are invitees, add them to the corresponding group\n        if ret:\n            return response.json(ret)\n        else:\n            response.status = 400\n            return response.json(ret)\n        response.status = 400\n        #return dict()\n\n    @auth.requires_login()\n    def PUT(m_id):\n        #get the record\n        print "updating media register"\n        umedia = db.media(db.media.id == m_id)\n        print umedia\n        #to_update =  json.loads(request.body.read())\n        #validate\n        if umedia and _can_update_media(umedia):\n            print "permissions granted, getting data"\n            updated_media =  json.loads(request.body.read())\n            #erasing values that should NOT be updated\n            #Keys should NEVER be changed\n            if new_media.has_key(\'media_embed_key\'):\n                del new_media[\'media_embed_key\']\n            if new_media.has_key(\'media_annotate_key\'):\n                del new_media[\'media_annotate_key\']\n            if new_media.has_key(\'media_view_results_key\'):\n                del new_media[\'media_view_results_key\']\n            #actual url, should NEVER be changed\n            if new_media.has_key(\'media_url\'):\n                del new_media[\'media_url\']\n            if new_media.has_key(\'media_id\'):\n                del new_media[\'media_id\']\n            if new_media.has_key(\'media_network\'):\n                del new_media[\'media_network\']\n            print "data from json = "\n            print updated_media\n            try:\n                print "updating"\n                ret =  db(db.media.id == m_id).validate_and_update(**updated_media)\n                print "updated"\n                print ret\n                return response.json(ret)\n            except Exception as err:\n                print "ERROR"\n                print err\n        print "permissions denied"\n        response.status = 401\n        return dict()\n        \n    @auth.requires_login()\n    def DELETE(m_id):\n        cmnt = db.media(db.media.id == m_id)\n        #validate\n        if cmnt and _can_delete_media(cmnt):\n            return db(db.media.id==m_id).delete()\n        response.status = 401\n        return dict()\n        \n    return locals()\n\n################################################################################\n\n#/api/fscomments/media/[:id]\n@request.restful()\ndef fscomments():\n    """\n        Get all the comments for a certain media file\n        Public and private API is the one from the database\n    """\n    #@auth.requires(_can_read_fscomment, requires_login = False)\n    def GET(mid):\n        #get the related records \n        #print "getting all comments"\n        cmnt = db(db.flagged_comment.media_id == int(mid)).select(db.flagged_comment.ALL)\n        #cmnt = db(db.flagged_comment.media_id == int(mid))(db.flagged_comment.owner_id == db.auth_user.id).select(db.flagged_comment.ALL, db.auth_user.id, db.auth_user.first_name)\n        #print cmnt\n        if cmnt:\n            return response.json(cmnt)\n        else:\n            response.status = 204\n            None\n        \n    return locals()\n\n#/api/fscomment/[:id]\n@request.restful()\ndef fscomment():\n    """\n        Public and private API is the one from the database\n    """\n    #print "fscomment API"\n    #print request.env\n    def GET(c_id):\n        #get the record\n        cmnt = db.flagged_comment(db.flagged_comment.id == c_id)\n        #validate\n        if cmnt and _can_read_fscomment(cmnt):\n            return response.json(cmnt) if cmnt else dict()\n        response.status = 401\n        return dict()\n        \n    @auth.requires_login()\n    def POST():\n        #print "posting comment"\n        new_comment =  json.loads(request.body.read())\n        #print "new comment = "\n        #print new_comment\n        #print "checking permissions"\n        if _can_write_fscomment(new_comment):\n            #print "user can write comments"\n            try:\n                ret = db.flagged_comment.validate_and_insert(**new_comment)            \n            except Exception as err:\n                print "error!! "\n                print err\n                ret = err\n            #print ret\n            return response.json(ret) if ret else dict()\n        response.status = 401\n        return dict()\n        \n    @auth.requires_login()\n    def PUT(c_id):\n        #print "putting comment (update)"\n        #print c_id\n        #get the record\n        cmnt = db.flagged_comment(db.flagged_comment.id == c_id)\n        #validate\n        #print cmnt\n        if cmnt and _can_update_fscomment(cmnt):\n            #print "validated"\n            #return db(db.flagged_comment.id == c_id).update(**vars)\n            updated_comment =  json.loads(request.body.read())\n            #print \'getting data from json\'\n            #print updated_comment\n            try:\n                ret =  db(db.flagged_comment.id == c_id).validate_and_update(**updated_comment)\n                #print ret\n                return response.json(ret)\n            except Exception as err:\n                print "ERROR"\n                print err\n        response.status = 401\n        return dict()\n        \n    @auth.requires_login()\n    def DELETE(c_id):\n        #print "enter delete method"\n        cmnt = db.flagged_comment(db.flagged_comment.id == c_id)\n        #validate\n        if cmnt and _can_delete_fscomment(cmnt):\n            #print \'has permisions to delete\'\n            ret =  db(db.flagged_comment.id==c_id).delete()\n            #print ret\n            return response.json(ret)\n        response.status = 401\n        return dict()\n        \n    return locals()\n\n\n#/api/sections/media/[:id]\n@request.restful()\ndef sections():\n    """\n        Get all the sections for a certain media file\n        Public and private API is the one from the database\n    """\n    def GET(mid):\n        #get the record\n        #print "getting all sections"\n        sect = db(db.section.media_id == int(mid)).select(db.section.ALL)\n        #print sect\n        #return response.json(sect) if sect else None\n        if sect:\n            return response.json(sect)\n        else:\n            response.status = 204\n            None\n    return locals()\n\n#/api/section/[:id]\n@request.restful()\ndef section():\n    """\n        Public and private API is the one from the database\n        \n    """\n    def GET(c_id):\n        #get the record\n        sect = db.section(db.section.id == c_id)\n        #validate\n        if sect and _can_read_section(sect):\n            return response.json(ret) if sect else dict()\n        response.status = 401\n        return dict()\n\n    @auth.requires_login()\n    def POST():\n        print "posting section"\n        new_section =  json.loads(request.body.read())\n        print "new section = "\n        print new_section\n        #print "checking permissions"\n        if _can_write_section(new_section):\n            print "user can write section"\n            try:\n                ret = db.section.validate_and_insert(**new_section)            \n            except Exception as err:\n                print "error!! "\n                print err\n                ret = err\n            print ret\n            return response.json(ret) if ret else dict()\n        response.status = 401\n        return dict()\n        \n        \n    @auth.requires_login()\n    def PUT(c_id):\n        #print "putting sections (update)"\n        #print c_id\n        #get the record\n        sect = db.section(db.section.id == c_id)\n        #validate\n        #print sect\n        if sect and _can_update_section(sect):\n            #print "validated"\n            updated_section =  json.loads(request.body.read())\n            #print \'getting data from json\'\n            #print updated_section\n            try:\n                ret =  db(db.section.id == c_id).validate_and_update(**updated_section)\n                #print ret\n                return response.json(ret)\n            except Exception as err:\n                print "ERROR"\n                print err\n        response.status = 401\n        return dict()\n            \n    @auth.requires_login()\n    def DELETE(c_id):\n        sect = db.section(db.section.id == c_id)\n        #validate\n        if sect and _can_delete_section(sect):\n            ret = db(db.section.id==c_id).delete()\n            return response.json(ret)\n        response.status = 401\n        return dict()\n        \n    return locals()\n\n\nresponse._vars=response._caller(media)\n'
+p7
+sS'snapshot'
+p8
+(dp9
+S'exception'
+p10
+(dp11
+S'__hash__'
+p12
+S"<method-wrapper '__hash__' of exceptions.NameError object>"
+p13
+sS'__setattr__'
+p14
+S"<method-wrapper '__setattr__' of exceptions.NameError object>"
+p15
+sS'__reduce_ex__'
+p16
+S'<built-in method __reduce_ex__ of exceptions.NameError object>'
+p17
+sS'__getslice__'
+p18
+S"<method-wrapper '__getslice__' of exceptions.NameError object>"
+p19
+sS'__getitem__'
+p20
+S"<method-wrapper '__getitem__' of exceptions.NameError object>"
+p21
+sS'__setstate__'
+p22
+S'<built-in method __setstate__ of exceptions.NameError object>'
+p23
+sS'args'
+p24
+S'("global name \'new_media\' is not defined",)'
+p25
+sS'__reduce__'
+p26
+S'<built-in method __reduce__ of exceptions.NameError object>'
+p27
+sS'__str__'
+p28
+S"<method-wrapper '__str__' of exceptions.NameError object>"
+p29
+sS'__format__'
+p30
+S'<built-in method __format__ of exceptions.NameError object>'
+p31
+sS'__getattribute__'
+p32
+S"<method-wrapper '__getattribute__' of exceptions.NameError object>"
+p33
+sS'__class__'
+p34
+S"<type 'exceptions.NameError'>"
+p35
+sS'__unicode__'
+p36
+S'<built-in method __unicode__ of exceptions.NameError object>'
+p37
+sS'__delattr__'
+p38
+S"<method-wrapper '__delattr__' of exceptions.NameError object>"
+p39
+sS'__subclasshook__'
+p40
+S'<built-in method __subclasshook__ of type object>'
+p41
+sS'__repr__'
+p42
+S"<method-wrapper '__repr__' of exceptions.NameError object>"
+p43
+sS'__dict__'
+p44
+S'{}'
+p45
+sS'__sizeof__'
+p46
+S'<built-in method __sizeof__ of exceptions.NameError object>'
+p47
+sS'__doc__'
+p48
+S"'Name not found globally.'"
+p49
+sS'__init__'
+p50
+S"<method-wrapper '__init__' of exceptions.NameError object>"
+p51
+sS'__new__'
+p52
+S'<built-in method __new__ of type object>'
+p53
+ssS'evalue'
+p54
+S"global name 'new_media' is not defined"
+p55
+sS'request'
+p56
+cgluon.html
+XML_unpickle
+p57
+(S's5Q\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top">ajax</td><td valign="top">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">application</td><td valign="top">:</td><td><div>AnnotatIt</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">args</td><td valign="top">:</td><td><div><table><tr><td><div>10</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">body</td><td valign="top">:</td><td><div>&lt;open file &#x27;&lt;fdopen&gt;&#x27;, mode &#x27;w+b&#x27; at 0x2aa6e40&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">cid</td><td valign="top">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">client</td><td valign="top">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">controller</td><td valign="top">:</td><td><div>api</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">cookies</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">csrftoken</td><td valign="top">:</td><td><div>vEOWcJTajsjL04IbUYkp437D3ATIS6AI<table><tr><td style="font-weight:bold;vertical-align:top">comment</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">domain</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">expires</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">httponly</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">max-age</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">secure</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">version</td><td valign="top">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_id_admin</td><td valign="top">:</td><td><div>127.0.0.1-4fefe4e7-2047-49a9-b7d8-1a17ecbaf885<table><tr><td style="font-weight:bold;vertical-align:top">comment</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">domain</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">expires</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">httponly</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">max-age</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">secure</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">version</td><td valign="top">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_id_annotatit</td><td valign="top">:</td><td><div>127.0.0.1-c3beaf1d-3dcf-49e4-be01-b094609cddbf<table><tr><td style="font-weight:bold;vertical-align:top">comment</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">domain</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">expires</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">httponly</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">max-age</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">secure</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">version</td><td valign="top">:</td><td><div></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">env</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">app_folders</td><td valign="top">:</td><td><div>set([&#x27;/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/applications/AnnotatIt/&#x27;, &#x27;/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/applications/admin/&#x27;])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">applications_parent</td><td valign="top">:</td><td><div>/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">content_length</td><td valign="top">:</td><td><div>600</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">content_type</td><td valign="top">:</td><td><div>application/json</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">db_sessions</td><td valign="top">:</td><td><div>set([])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">debugging</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">gluon_parent</td><td valign="top">:</td><td><div>/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">gunicorn_socket</td><td valign="top">:</td><td><div>&lt;socket._socketobject object at 0x246e0c0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_accept</td><td valign="top">:</td><td><div>application/json, text/javascript, */*; q=0.01</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_accept_encoding</td><td valign="top">:</td><td><div>gzip,deflate,sdch</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_accept_language</td><td valign="top">:</td><td><div>en-US,en;q=0.8,fr;q=0.6,es;q=0.4</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_cache_control</td><td valign="top">:</td><td><div>no-cache</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_connection</td><td valign="top">:</td><td><div>keep-alive</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_cookie</td><td valign="top">:</td><td><div>csrftoken=vEOWcJTajsjL04IbUYkp437D3ATIS6AI; session_id_admin=127.0.0.1-4fefe4e7-2047-49a9-b7d8-1a17ecbaf885; session_id_annotatit=127.0.0.1-c3beaf1d-3dcf-49e4-be01-b094609cddbf</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_host</td><td valign="top">:</td><td><div>localhost:5000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_origin</td><td valign="top">:</td><td><div>http://localhost:5000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_pragma</td><td valign="top">:</td><td><div>no-cache</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_referer</td><td valign="top">:</td><td><div>http://localhost:5000/member/my_media</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_user_agent</td><td valign="top">:</td><td><div>Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.95 Safari/537.36</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">http_x_requested_with</td><td valign="top">:</td><td><div>XMLHttpRequest</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_jython</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_pypy</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">local_hosts</td><td valign="top">:</td><td><div><table><tr><td><div>cotita</div></td></tr><tr><td><div>::ffff:127.0.0.1</div></td></tr><tr><td><div>::1</div></td></tr><tr><td><div>localhost</div></td></tr><tr><td><div>127.0.1.1</div></td></tr><tr><td><div>127.0.0.1</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path_info</td><td valign="top">:</td><td><div>/api/media/10</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">query_string</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">raw_uri</td><td valign="top">:</td><td><div>/api/media/10</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">remote_addr</td><td valign="top">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">remote_port</td><td valign="top">:</td><td><div>51251</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">request_method</td><td valign="top">:</td><td><div>PUT</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">request_uri</td><td valign="top">:</td><td><div>/AnnotatIt/api/media/10</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">script_name</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">server_name</td><td valign="top">:</td><td><div>localhost</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">server_port</td><td valign="top">:</td><td><div>5000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">server_protocol</td><td valign="top">:</td><td><div>HTTP/1.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">server_software</td><td valign="top">:</td><td><div>gunicorn/0.17.2</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_crontype</td><td valign="top">:</td><td><div>soft</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_original_uri</td><td valign="top">:</td><td><div>/api/media/10</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_path</td><td valign="top">:</td><td><div>/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_version</td><td valign="top">:</td><td><div>2.5.1-stable+timestamp.2013.06.06.15.39.19</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_errors</td><td valign="top">:</td><td><div>&lt;open file &#x27;&lt;stderr&gt;&#x27;, mode &#x27;w&#x27; at 0x7f6609884270&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_file_wrapper</td><td valign="top">:</td><td><div>&lt;class gunicorn.http.wsgi.FileWrapper at 0x23d8808&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_input</td><td valign="top">:</td><td><div>&lt;gunicorn.http.body.Body object at 0x2c09250&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_multiprocess</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_multithread</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_run_once</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_url_scheme</td><td valign="top">:</td><td><div>http</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi_version</td><td valign="top">:</td><td><div><table><tr><td><div>1</div></td></tr><tr><td><div>0</div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">extension</td><td valign="top">:</td><td><div>html</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">folder</td><td valign="top">:</td><td><div>/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/applications/AnnotatIt/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">function</td><td valign="top">:</td><td><div>media</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">get_vars</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">global_settings</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">app_folders</td><td valign="top">:</td><td><div>set([&#x27;/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/applications/AnnotatIt/&#x27;, &#x27;/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/applications/admin/&#x27;])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">applications_parent</td><td valign="top">:</td><td><div>/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">db_sessions</td><td valign="top">:</td><td><div>set([])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">debugging</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">gluon_parent</td><td valign="top">:</td><td><div>/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_jython</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_pypy</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">local_hosts</td><td valign="top">:</td><td><div><table><tr><td><div>cotita</div></td></tr><tr><td><div>::ffff:127.0.0.1</div></td></tr><tr><td><div>::1</div></td></tr><tr><td><div>localhost</div></td></tr><tr><td><div>127.0.1.1</div></td></tr><tr><td><div>127.0.0.1</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_crontype</td><td valign="top">:</td><td><div>soft</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">web2py_version</td><td valign="top">:</td><td><div>2.5.1-stable+timestamp.2013.06.06.15.39.19</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_https</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_local</td><td valign="top">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">is_restful</td><td valign="top">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">now</td><td valign="top">:</td><td><div>datetime.datetime(2013, 8, 12, 23, 32, 47, 488159)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">post_vars</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">url</td><td valign="top">:</td><td><div>/api/media/10</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">utcnow</td><td valign="top">:</td><td><div>datetime.datetime(2013, 8, 12, 21, 32, 47, 488169)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">uuid</td><td valign="top">:</td><td><div>AnnotatIt/127.0.0.1.2013-08-12.23-32-47.967c47df-c0f0-41de-b44b-55eacffc8951</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">vars</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">environ</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">CONTENT_LENGTH</td><td valign="top">:</td><td><div>600</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">CONTENT_TYPE</td><td valign="top">:</td><td><div>application/json</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_ACCEPT</td><td valign="top">:</td><td><div>application/json, text/javascript, */*; q=0.01</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_ACCEPT_ENCODING</td><td valign="top">:</td><td><div>gzip,deflate,sdch</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_ACCEPT_LANGUAGE</td><td valign="top">:</td><td><div>en-US,en;q=0.8,fr;q=0.6,es;q=0.4</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_CACHE_CONTROL</td><td valign="top">:</td><td><div>no-cache</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_CONNECTION</td><td valign="top">:</td><td><div>keep-alive</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_COOKIE</td><td valign="top">:</td><td><div>csrftoken=vEOWcJTajsjL04IbUYkp437D3ATIS6AI; session_id_admin=127.0.0.1-4fefe4e7-2047-49a9-b7d8-1a17ecbaf885; session_id_annotatit=127.0.0.1-c3beaf1d-3dcf-49e4-be01-b094609cddbf</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_HOST</td><td valign="top">:</td><td><div>localhost:5000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_ORIGIN</td><td valign="top">:</td><td><div>http://localhost:5000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_PRAGMA</td><td valign="top">:</td><td><div>no-cache</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_REFERER</td><td valign="top">:</td><td><div>http://localhost:5000/member/my_media</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_USER_AGENT</td><td valign="top">:</td><td><div>Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.95 Safari/537.36</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">HTTP_X_REQUESTED_WITH</td><td valign="top">:</td><td><div>XMLHttpRequest</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">PATH_INFO</td><td valign="top">:</td><td><div>/api/media/10</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">QUERY_STRING</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">RAW_URI</td><td valign="top">:</td><td><div>/api/media/10</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">REMOTE_ADDR</td><td valign="top">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">REMOTE_PORT</td><td valign="top">:</td><td><div>51251</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">REQUEST_METHOD</td><td valign="top">:</td><td><div>PUT</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">REQUEST_URI</td><td valign="top">:</td><td><div>/AnnotatIt/api/media/10</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SCRIPT_NAME</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SERVER_NAME</td><td valign="top">:</td><td><div>localhost</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SERVER_PORT</td><td valign="top">:</td><td><div>5000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SERVER_PROTOCOL</td><td valign="top">:</td><td><div>HTTP/1.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">SERVER_SOFTWARE</td><td valign="top">:</td><td><div>gunicorn/0.17.2</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">WEB2PY_ORIGINAL_URI</td><td valign="top">:</td><td><div>/api/media/10</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">gunicorn.socket</td><td valign="top">:</td><td><div>&lt;socket._socketobject object at 0x246e0c0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.errors</td><td valign="top">:</td><td><div>&lt;open file &#x27;&lt;stderr&gt;&#x27;, mode &#x27;w&#x27; at 0x7f6609884270&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.file_wrapper</td><td valign="top">:</td><td><div>&lt;class gunicorn.http.wsgi.FileWrapper at 0x23d8808&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.input</td><td valign="top">:</td><td><div>&lt;open file &#x27;&lt;fdopen&gt;&#x27;, mode &#x27;w+b&#x27; at 0x2aa6e40&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.multiprocess</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.multithread</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.run_once</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.url_scheme</td><td valign="top">:</td><td><div>http</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">wsgi.version</td><td valign="top">:</td><td><div>1</div></td></tr></table></div></td></tr></table></div></td></tr></table></div>'
+tRp58
+sS'frames'
+p59
+(lp60
+(dp61
+S'file'
+p62
+S'/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/gluon/restricted.py'
+p63
+sS'dump'
+p64
+(dp65
+S'environment'
+p66
+S"{'A': <class 'gluon.html.A'>, 'ANY_OF': <class 'gluon.validators.ANY_OF'>, 'APP_DOMAIN_NAME': 'AnnotatIt.com', 'APP_DOMAIN_NAME_2': 'Annotat.It', 'APP_NAME': 'AnnotatIt', 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, ...}"
+p67
+sS'ccode'
+p68
+S'<code object <module> at 0x2ec8930, file "/home/...plications/AnnotatIt/controllers/api.py", line 1>'
+p69
+ssS'lnum'
+p70
+I212
+sS'lines'
+p71
+(dp72
+I207
+S'    try:'
+p73
+sI208
+S'        if isinstance(code, types.CodeType):'
+p74
+sI209
+S'            ccode = code'
+p75
+sI210
+S'        else:'
+p76
+sI211
+S'            ccode = compile2(code, layer)'
+p77
+sI212
+S'        exec ccode in environment'
+p78
+sI213
+S'    except HTTP:'
+p79
+sI214
+S'        raise'
+p80
+sI215
+S'    except RestrictedError:'
+p81
+sI216
+S'        # do not encapsulate (obfuscate) the original RestrictedError'
+p82
+ssS'call'
+p83
+S"(code='from urlparse import urlparse, parse_qs\\nimport j...ocals()\\n\\n\\nresponse._vars=response._caller(media)\\n', environment={'A': <class 'gluon.html.A'>, 'ANY_OF': <class 'gluon.validators.ANY_OF'>, 'APP_DOMAIN_NAME': 'AnnotatIt.com', 'APP_DOMAIN_NAME_2': 'Annotat.It', 'APP_NAME': 'AnnotatIt', 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, ...}, layer='/home/leo/projects/AnnotatIt/annotatit-beta/hero...it-beta/applications/AnnotatIt/controllers/api.py')"
+p84
+sS'func'
+p85
+S'restricted'
+p86
+sa(dp87
+g62
+S'/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/applications/AnnotatIt/controllers/api.py'
+p88
+sg64
+(dp89
+sg70
+I744
+sg71
+(dp90
+I736
+S'            ret = db(db.section.id==c_id).delete()'
+p91
+sI737
+S'            return response.json(ret)'
+p92
+sI738
+S'        response.status = 401'
+p93
+sI739
+S'        return dict()'
+p94
+sI740
+S''
+sI741
+S'    return locals()'
+p95
+sI742
+S''
+sI733
+S'        sect = db.section(db.section.id == c_id)'
+p96
+sI734
+S'        #validate'
+p97
+sI735
+S'        if sect and _can_delete_section(sect):'
+p98
+ssg83
+S'()'
+p99
+sg85
+S'<module>'
+p100
+sa(dp101
+g62
+S'/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/gluon/globals.py'
+p102
+sg64
+(dp103
+S'self'
+p104
+S'undefined'
+p105
+sS'f'
+S'<function media>'
+p106
+ssg70
+I194
+sg71
+(dp107
+I192
+S"        self.delimiters = ('{{', '}}')"
+p108
+sI193
+S'        self._vars = None'
+p109
+sI194
+S'        self._caller = lambda f: f()'
+p110
+sI195
+S'        self._view_environment = None'
+p111
+sI196
+S'        self._custom_commit = None'
+p112
+sI197
+S'        self._custom_rollback = None'
+p113
+sI198
+S''
+sI189
+S'        self.menu = []             # used by the default view layout'
+p114
+sI190
+S'        self.files = []            # used by web2py_ajax.html'
+p115
+sI191
+S'        self.generic_patterns = []  # patterns to allow generic views'
+p116
+ssg83
+S'(f=<function media>)'
+p117
+sg85
+S'<lambda>'
+p118
+sa(dp119
+g62
+S'/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/gluon/globals.py'
+p120
+sg64
+(dp121
+S'rest_action'
+p122
+S'<function PUT>'
+p123
+sS'_self'
+p124
+S"<Storage {'function': 'media', 'body': <open fil...ications/AnnotatIt/', 'post_vars': <Storage {}>}>"
+p125
+sS'_self.args'
+p126
+S"['10']"
+p127
+sS'_self.vars'
+p128
+S'<Storage {}>'
+p129
+ssg70
+I158
+sg71
+(dp130
+I160
+S'                    exc_type, exc_value, exc_traceback = sys.exc_info()'
+p131
+sI161
+S'                    if len(traceback.extract_tb(exc_traceback)) == 1:'
+p132
+sI162
+S'                        raise HTTP(400, "invalid arguments")'
+p133
+sI153
+S'                    raise HTTP(400, "invalid method")'
+p134
+sI154
+S'                rest_action = _action().get(method, None)'
+p135
+sI155
+S'                if not rest_action:'
+p136
+sI156
+S'                    raise HTTP(400, "method not supported")'
+p137
+sI157
+S'                try:'
+p138
+sI158
+S'                    return rest_action(*_self.args, **_self.vars)'
+p139
+sI159
+S'                except TypeError, e:'
+p140
+ssg83
+S"(_action=<function media>, _self=<Storage {'function': 'media', 'body': <open fil...ications/AnnotatIt/', 'post_vars': <Storage {}>}>, *a=(), **b={})"
+p141
+sg85
+S'f'
+sa(dp142
+g62
+S'/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/gluon/tools.py'
+p143
+sg64
+(dp144
+S'action'
+p145
+S'<function PUT>'
+p146
+sS'a'
+S"('10',)"
+p147
+sS'b'
+g45
+ssg70
+I3022
+sg71
+(dp148
+I3017
+S'                    flag = condition'
+p149
+sI3018
+S'                if not flag:'
+p150
+sI3019
+S'                    current.session.flash = self.messages.access_denied'
+p151
+sI3020
+S'                    return call_or_redirect('
+p152
+sI3021
+S'                        self.settings.on_failed_authorization)'
+p153
+sI3022
+S'                return action(*a, **b)'
+p154
+sI3023
+S'            f.__doc__ = action.__doc__'
+p155
+sI3024
+S'            f.__name__ = action.__name__'
+p156
+sI3025
+S'            f.__dict__.update(action.__dict__)'
+p157
+sI3026
+S'            return f'
+p158
+ssg83
+S"(*a=('10',), **b={})"
+p159
+sg85
+S'f'
+sa(dp160
+g62
+S'/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/applications/AnnotatIt/controllers/api.py'
+p161
+sg64
+(dp162
+S'new_media'
+p163
+g105
+ssg70
+I511
+sg71
+(dp164
+I512
+S"                del new_media['media_embed_key']"
+p165
+sI513
+S"            if new_media.has_key('media_annotate_key'):"
+p166
+sI514
+S"                del new_media['media_annotate_key']"
+p167
+sI515
+S"            if new_media.has_key('media_view_results_key'):"
+p168
+sI506
+S'        if umedia and _can_update_media(umedia):'
+p169
+sI507
+S'            print "permissions granted, getting data"'
+p170
+sI508
+S'            updated_media =  json.loads(request.body.read())'
+p171
+sI509
+S'            #erasing values that should NOT be updated'
+p172
+sI510
+S'            #Keys should NEVER be changed'
+p173
+sI511
+S"            if new_media.has_key('media_embed_key'):"
+p174
+ssg83
+S"(m_id='10')"
+p175
+sg85
+S'PUT'
+p176
+sasS'pyver'
+p177
+S'Python 2.7.3: /home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/venv/bin/python (prefix: /home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/venv)'
+p178
+sS'session'
+p179
+g57
+(S's>\x14\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top">auth</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">expiration</td><td valign="top">:</td><td><div>3600</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">hmac_key</td><td valign="top">:</td><td><div>53420ceb-d67f-464c-8efb-4566afea82c9</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">last_visit</td><td valign="top">:</td><td><div>datetime.datetime(2013, 8, 12, 23, 32, 45, 765092)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">remember</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">user</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">email</td><td valign="top">:</td><td><div>leo.m.rocha@gmail.com</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">first_name</td><td valign="top">:</td><td><div>Leonardo</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">id</td><td valign="top">:</td><td><div>1L</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">last_name</td><td valign="top">:</td><td><div>Rocha</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">registration_id</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">registration_key</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">reset_password_key</td><td valign="top">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">user_groups</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">1</td><td valign="top">:</td><td><div>user_1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">2</td><td valign="top">:</td><td><div>media-annotate-1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">3</td><td valign="top">:</td><td><div>media-view-1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">4</td><td valign="top">:</td><td><div>media-annotate-2</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">5</td><td valign="top">:</td><td><div>media-view-2</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">6</td><td valign="top">:</td><td><div>media-annotate-3</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">7</td><td valign="top">:</td><td><div>media-view-3</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">8</td><td valign="top">:</td><td><div>media-annotate-4</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">9</td><td valign="top">:</td><td><div>media-view-4</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">10</td><td valign="top">:</td><td><div>media-annotate-5</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">11</td><td valign="top">:</td><td><div>media-view-5</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">12</td><td valign="top">:</td><td><div>media-annotate-6</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">13</td><td valign="top">:</td><td><div>media-view-6</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">14</td><td valign="top">:</td><td><div>media-annotate-7</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">15</td><td valign="top">:</td><td><div>media-view-7</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">16</td><td valign="top">:</td><td><div>media-annotate-8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">17</td><td valign="top">:</td><td><div>media-view-8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">19</td><td valign="top">:</td><td><div>media-annotate-9</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">20</td><td valign="top">:</td><td><div>media-view-9</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">21</td><td valign="top">:</td><td><div>media-annotate-10</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">22</td><td valign="top">:</td><td><div>media-view-10</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">23</td><td valign="top">:</td><td><div>media-annotate-11</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">24</td><td valign="top">:</td><td><div>media-view-11</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">25</td><td valign="top">:</td><td><div>media-annotate-12</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">26</td><td valign="top">:</td><td><div>media-view-12</div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">flash</td><td valign="top">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">last_orderby</td><td valign="top">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">last_query</td><td valign="top">:</td><td><div>db.media.id&gt;0</div></td></tr></table></div>'
+tRp180
+sS'etype'
+p181
+S"<type 'exceptions.NameError'>"
+p182
+sS'date'
+p183
+S'Mon Aug 12 23:32:47 2013'
+p184
+sS'response'
+p185
+g57
+(S'sV\x1e\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top">body</td><td valign="top">:</td><td><div>&lt;cStringIO.StringO object at 0x29f0960&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">cookies</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">session_id_annotatit</td><td valign="top">:</td><td><div>127.0.0.1-c3beaf1d-3dcf-49e4-be01-b094609cddbf<table><tr><td style="font-weight:bold;vertical-align:top">comment</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">domain</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">expires</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">httponly</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">max-age</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">path</td><td valign="top">:</td><td><div>/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">secure</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">version</td><td valign="top">:</td><td><div></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">delimiters</td><td valign="top">:</td><td><div><table><tr><td><div>{{</div></td></tr><tr><td><div>}}</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">files</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">flash</td><td valign="top">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">generic_patterns</td><td valign="top">:</td><td><div><table><tr><td><div>*</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">google_analytics_id</td><td valign="top">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">headers</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">X-Powered-By</td><td valign="top">:</td><td><div>web2py</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">left_menu</td><td valign="top">:</td><td><div><table><tr><td><div><table><tr><td><div>Media</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div><table><tr><td><div><table><tr><td><div>My media</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/member/my_media</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Add media</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/member/add_media</div></td></tr></table></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Groups</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div><table><tr><td><div><table><tr><td><div>My Groups</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/member/my_groups</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Create Group</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/member/create_group</div></td></tr></table></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Contacts</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div><table><tr><td><div><table><tr><td><div>My Contacts</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/member/my_contacts</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Add Contact</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/member/add_contact</div></td></tr></table></div></td></tr></table></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">logo</td><td valign="top">:</td><td><div><a class="brand" href="http://www.annotatit.com/"><b>AnnotatIt</b>&trade;&nbsp;</a></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">logo_img</td><td valign="top">:</td><td><div><img alt="AnnotatIt" src="/AnnotatIt/static/images/annotatit_pencil_200.png" /></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">menu</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">meta</td><td valign="top">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top">author</td><td valign="top">:</td><td><div>Leonardo M. Rocha &lt;leo@annotatit.com&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">description</td><td valign="top">:</td><td><div>Coolaborative Synchronized Media Annotation. Tag and mark videos and audio files online! </div></td></tr><tr><td style="font-weight:bold;vertical-align:top">generator</td><td valign="top">:</td><td><div>Leonardo M. Rocha</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">keywords</td><td valign="top">:</td><td><div>AnnotatIt.com | Write synchronized comments on video and audio with your friends! Show others the exact moment you want! Start Now!</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">models_to_run</td><td valign="top">:</td><td><div><table><tr><td><div>^\\w+\\.py$</div></td></tr><tr><td><div>^api/\\w+\\.py$</div></td></tr><tr><td><div>^api/media/\\w+\\.py$</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">postprocessing</td><td valign="top">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_cookie_expires</td><td valign="top">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_data_name</td><td valign="top">:</td><td><div>session_data_annotatit</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_file</td><td valign="top">:</td><td><div>&lt;open file &#x27;/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/applications/AnnotatIt/sessions/127.0.0.1-c3beaf1d-3dcf-49e4-be01-b094609cddbf&#x27;, mode &#x27;rb+&#x27; at 0x2aa60c0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_filename</td><td valign="top">:</td><td><div>/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/applications/AnnotatIt/sessions/127.0.0.1-c3beaf1d-3dcf-49e4-be01-b094609cddbf</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_id</td><td valign="top">:</td><td><div>127.0.0.1-c3beaf1d-3dcf-49e4-be01-b094609cddbf</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_id_name</td><td valign="top">:</td><td><div>session_id_annotatit</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_locked</td><td valign="top">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_new</td><td valign="top">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">session_storage_type</td><td valign="top">:</td><td><div>file</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">status</td><td valign="top">:</td><td><div>200</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">subtitle</td><td valign="top">:</td><td><div>Collaborative Synchronized Media Annotations made Easy</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">title</td><td valign="top">:</td><td><div>Annotatit</div></td></tr><tr><td style="font-weight:bold;vertical-align:top">view</td><td valign="top">:</td><td><div>api/media.html</div></td></tr></table></div>'
+tRp186
+sS'locals'
+p187
+(dp188
+S'updated_media'
+p189
+S"{u'annotation_permissions': u'only_me', u'creation_datetime': u'2013-08-10 17:23:26', u'description': u'', u'id': 10, u'media_annotate_key': u'2480bfcc-7277-49a4-81eb-4a5510499a35', u'media_duration': u'-1', u'media_embed_key': u'49ec07e2-342b-4c45-b63e-2cb9fd8ef52b', u'media_id': u'5vBGOrI6yBk', u'media_network': u'youtube', u'media_thumbnail': u'http://img.youtube.com/vi/5vBGOrI6yBk/default.jpg', ...}"
+p190
+sS'm_id'
+p191
+S"'10'"
+p192
+sS'umedia'
+p193
+S"<Row {'annotation_permissions': 'only_me', 'owne...49a4-81eb-4a5510499a35', 'media_duration': '-1'}>"
+p194
+sssS'traceback'
+p195
+S'Traceback (most recent call last):\n  File "/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/gluon/restricted.py", line 212, in restricted\n    exec ccode in environment\n  File "/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/applications/AnnotatIt/controllers/api.py", line 744, in <module>\n  File "/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/gluon/globals.py", line 194, in <lambda>\n    self._caller = lambda f: f()\n  File "/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/gluon/globals.py", line 158, in f\n    return rest_action(*_self.args, **_self.vars)\n  File "/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/gluon/tools.py", line 3022, in f\n    return action(*a, **b)\n  File "/home/leo/projects/AnnotatIt/annotatit-beta/heroku/annotatit-beta/applications/AnnotatIt/controllers/api.py", line 511, in PUT\n    if new_media.has_key(\'media_embed_key\'):\nNameError: global name \'new_media\' is not defined\n'
+p196
+s.

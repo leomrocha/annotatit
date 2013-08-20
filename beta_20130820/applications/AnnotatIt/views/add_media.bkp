@@ -1,0 +1,447 @@
+{{left_sidebar_enabled= False}}
+{{right_sidebar_enabled=False}}
+
+{{extend 'annotatit_layout.html'}}
+{{block head}}
+    <style>
+    
+    /* MARKETING CONTENT
+    -------------------------------------------------- */
+
+    /* Center align the text within the three columns below the carousel */
+    .step_container .span4 {
+      text-align: center;
+      border:0px solid;
+      border-radius:25px;
+    }
+    .step_container h2 {
+      font-weight: normal;
+    }
+    .step_container .span4 p {
+      margin-left: 10px;
+      margin-right: 10px;
+       text-align: center;
+       
+    }
+    .container .button p{
+       text-align: center;
+    }
+    /**/
+    </style>
+{{end}}
+
+{{block center}}
+
+<!-- WARNING, going directly to step 2 because of support not yet added to upload files --> 
+
+<div class="container steps" hidden="true" type="hidden">
+
+  <!-- Three columns of text below the carousel -->
+  <div class="row numbers">
+    <!-- Repeat this for every step -->
+    <div class="span3">
+        <img class="step1 active" src="{{=URL('static', 'images/step_1_active.png')}}" alt="step 1 active" hidden="true"  type="hidden">
+        <img class="step1 inactive" src="{{=URL('static', 'images/step_1_inactive.png')}}" alt="step 1 inactive" >
+    </div><!-- /.span4 -->
+  </div><!-- /.row -->
+<hr/>
+</div><!-- /.container -->
+
+<!-- TODO Step 1 --> 
+<!-- decide if add a link from an external service or upload a file -->
+
+
+<!-- Step 2 --> 
+<!-- If add link -->
+    <!-- Show  -->
+        <!-- Box for adding link -->
+        <!-- Choice for privacy: private, unlisted, public  -->
+        <!-- Checkbox: Send me an email when done -->
+
+
+<div class="step_container step1">
+
+  <div class="row form">
+    <div class="span2 ">
+        <img class="step1 active" src="{{=URL('static', 'images/step_1_active.png')}}" alt="step 1 active" hidden="true"  type="hidden">
+        <img class="step1 inactive" src="{{=URL('static', 'images/step_1_inactive.png')}}" alt="step 1 inactive" >
+    </div><!-- /.span4 -->
+
+    <div class="span4 ">
+        <p> Copy the link of the media file here: </p>        
+    </div><!-- /.span4 -->
+    <div class="span4 ">
+        <input id="media_link" placeholder="Copy the link here" > </input>
+    </div><!-- /.span4 -->
+    <div class="span2 "  hidden="true">
+        <p>
+        <a class="btn btn-primary" href="javascript:nextStep">Next</a>
+        </p>
+    </div><!-- /.span4 -->
+  </div><!-- /.row -->
+</div><!-- /.container -->
+<hr/>
+
+
+<!-- Step 2 --> 
+<!-- TODO  If upload file -->
+<!-- It is the same as before but replaces the  add link box with an upload box -->
+<!-- Notify that the service is not yet available but we will notify when it is online-->
+<!-- go to Step 2 "add link" --> 
+
+<!-- Step 3 --> 
+<!-- If add media was successful -->
+    <!-- Show  -->
+        <!-- Select who -->
+            <!-- Can annotate -->
+            <!-- Can view -->
+        <!-- Box for adding annotators -->
+        <!-- Box for adding viewers -->
+
+<div class="step_container step2">
+
+  <div class="row form">
+    <div class="span2 ">
+        <img class="step2 active" src="{{=URL('static', 'images/step_2_active.png')}}" alt="step 2 active" hidden="true" type="hidden">
+        <img class="step2 inactive" src="{{=URL('static', 'images/step_2_inactive.png')}}" alt="step 2 inactive" >
+    </div><!-- /.span4 -->
+    
+    <div class="span4 ">
+        <p> Who can Annotate ?</p>
+        <select id="privacy_select">
+        <option value="only_me"> only me</option>
+        <option value="invited">by invitation</option>
+        <option value="all"> all</option>
+        </select>
+    </div><!-- /.span4 -->
+    <div class="span4 ">
+        <p> Who can View ?</p>
+        <select id="privacy_select">
+        <option value="only_me"> only me</option>
+        <option value="invited">by invitation</option>
+        <option value="all"> all</option>
+        </select>
+    </div><!-- /.span4 -->
+    <div class="span2 "  hidden="true">
+        <p>
+        <a class="btn " href="javascript:previousStep">Previous</a>
+        </p>
+        <p>
+        <a class="btn btn-primary" href="javascript:nextStep">Next</a>
+        </p>
+    </div><!-- /.span4 -->
+    
+  </div> <!-- /.row -->
+  <div class="row form">
+    <div class="span2 ">
+    </div><!-- /.span4 -->
+    <!-- ANNOTATE -->
+    <div class="span4 only_me">
+        <p>Only you can annotate this video </p>
+    </div><!-- /.span4 -->
+    <div class="span4 invited" hidden="true">
+        <textarea id="annotation_permissions" placeholder="Copy the emails here to invite
+                                                     , one by line or separated by commas" ></textarea>  
+    </div><!-- /.span4 -->
+
+    <div class="span4 all" hidden="true">
+        <p>Every person with the direct link and an AnnotatIt account can annotate </p>
+    </div><!-- /.span4 -->
+    
+    
+    <!-- VIEW -->
+    <div class="span4 only_me">
+        <p>Only you can view this video </p>
+    </div><!-- /.span4 -->
+    <div class="span4 invited" hidden="true">
+        <textarea id="view_permissions" placeholder="Copy the emails here to invite
+                                                     , one by line or separated by commas" ></textarea>  
+    </div><!-- /.span4 -->
+    <div class="span4 all" hidden="true">
+        <p>Every person with the direct link can view </p>
+    </div><!-- /.span4 -->
+  </div><!-- /.row -->
+<hr/>
+</div><!-- /.container -->
+
+
+
+
+<!-- Step 4 --> 
+<!-- If previous step was successful -->
+    <!-- Suggest tags option  -->
+    <!-- Suggest Marks option  -->
+
+<div class="step_container step3" hidden="true">
+  <div class="row form">
+    <div class="span2 ">
+        <img class="step3 active" src="{{=URL('static', 'images/step_3_active.png')}}" alt="step 3 active" hidden="true" type="hidden">
+        <img class="step3 inactive" src="{{=URL('static', 'images/step_3_inactive.png')}}" alt="step 3 inactive" >
+    </div><!-- /.span4 -->
+    
+    <div class="span4 ">
+        <p> Suggest Tags <span > (?) </span> </p>
+    </div><!-- /.span4 -->
+    <div class="span4 ">
+        <p> Suggest Marks <span > (?) </span> </p>
+    </div><!-- /.span4 -->    
+    <div class="span2 "  hidden="true">
+        <p>
+        <a class="btn " href="javascript:previousStep">Previous</a>
+        </p>
+        <p>
+        <a class="btn btn-primary" href="javascript:nextStep">Next</a>
+        </p>
+    </div><!-- /.span4 -->
+    
+  </div> <!-- /.row -->
+  <div class="row form">
+    <div class="span2 ">
+    </div><!-- /.span4 -->
+    <div class="span4" >
+        <textarea id="suggested_tags" placeholder="Write your tags here
+                                                 , one by line or separated by commas" ></textarea>  
+    </div><!-- /.span4 -->
+    <div class="span4" >
+        <textarea id="suggested_tags" placeholder="Write your tags here
+                                                 , one by line or separated by commas" ></textarea>  
+    </div><!-- /.span4 -->
+  </div> <!-- /.row -->
+<hr/>
+</div><!-- /.container -->
+
+
+<div class="container steps" >
+
+  <!-- Three columns of text below the carousel -->
+  <div class="row numbers">
+    <div class="span4">
+    </div><!-- /.span4 -->
+    <!-- Repeat this for every step -->
+    <div class="span4 button">
+        <p><a class="btn btn-primary" id="Submit" href="#">Submit</a></p>
+    </div><!-- /.span4 -->
+  </div><!-- /.row -->
+<hr/>
+</div><!-- /.container -->
+
+
+<!-- Step 5 --> 
+<!-- If previous step was successful -->
+    <!-- Show  -->
+        <!-- Links for  -->
+            <!-- Annotation link  -->
+            <!-- View link  -->
+            <!-- Embed code  - copy this code to embed as an iframe in your blog -->
+
+
+<div class="step_container step4 media_links"  hidden="true">
+  <div class="row form">
+    <div class="span2 "  hidden="true">
+        <img class="step4 active" src="{{=URL('static', 'images/step_4_active.png')}}" alt="step 4 active" hidden="true" type="hidden">
+        <img class="step4 inactive" src="{{=URL('static', 'images/step_4_inactive.png')}}" alt="step 4 inactive" >
+    </div><!-- /.span4 -->
+    
+    <div class="span4 ">
+        <p> Your file is ready!! </p>
+    </div><!-- /.span4 -->
+    
+  </div> <!-- /.row -->
+  <div class="row">
+    <div class="span2 ">
+    </div><!-- /.span4 -->
+    <div class="span4" >
+        <p> <span > (?) </span> Annotation Link:   </p>
+    </div><!-- /.span4 -->
+    <div class="span4" >
+        <p><a class="btn btn-primary" id="annotation_link" href="#">Start Annotating!</a></p>
+    </div><!-- /.span4 -->
+  </div> <!-- /.row -->
+  <div class="row">
+    <div class="span2 ">
+    </div><!-- /.span4 -->
+    <div class="span4" >
+        <p> <span > (?) </span> View Link:   </p>
+    </div><!-- /.span4 -->
+    <div class="span4" >
+       <p> <a class="btn btn-primary" id="view_link" href="#">Share it</a></p>
+    </div><!-- /.span4 -->
+  </div> <!-- /.row -->
+  <div class="row">
+    <div class="span2 ">
+    </div><!-- /.span4 -->
+    <div class="span4" >
+        <p> <span > (?) </span> Embed Link:   </p>
+        <p></p>
+    </div><!-- /.span4 -->
+    <div class="span4" >
+        <p><textarea  id="embed_link" readonly>LALA</textarea></p>
+    </div><!-- /.span4 -->
+  </div> <!-- /.row -->
+
+  
+<hr/>
+</div><!-- /.container -->
+
+
+
+
+<script>
+    //things for web2py to complete  during template processing
+    var ajax_url = '{{=URL("")}}';
+    var images_url = '{{=URL("static","images/")}}';
+    
+    
+    ///////////////////////////////////////////////////////////////////////////
+    // from here should go to a separate js file minified and gzipped
+    ///////////////////////////////////////////////////////////////////////////
+    //sets up the UI for the next step
+    //generic step class
+    var steps = new Array();
+    var Step = {
+        //private
+        init: function(name){
+            this.step_name = name;
+        },
+        start: function(){
+            $("."+this.step_name+" .inactive").hide();
+            $("."+this.step_name+" .active").show();
+            $("."+this.step_name).show();
+        },
+        stop: function(){
+            $("."+this.step_name+" .active").hide();
+            $("."+this.step_name+" .inactive").show();
+            $("."+this.step_name).hide();
+        }
+    };
+    //Step Factory
+    function createStep(name){
+        function F = {};
+        F.prototype = Step;
+        var f = new F();
+        f.init(name);
+        return f;        
+    }
+    //Generic steps for this page
+    for(var i=1 i<5; i++){
+        steps[i-1] = createStep("step"+i);
+    }
+    
+    ///BEGIN steps particular behaviour
+    //setting particular behaviour of every step
+    //callbacks and ajax calls setup when submitted
+    steps[0].prototype.setup = function(){
+        //TODO
+    }
+    steps[1].prototype.setup = function(){
+        //TODO
+    }
+    steps[2].prototype.setup = function(){
+        //TODO
+    }
+    steps[3].prototype.setup = function(){
+        //TODO
+    }
+    steps[4].prototype.setup = function(){
+        //TODO
+    }
+    
+    ///END steps particular behaviour
+    //making the setup of every step
+    $.each(steps, function(index, value) {
+        value.setup();
+    });
+    //setting up starting point    
+    var startStep = 1;
+    var currentStep = startStep; 
+    
+    //
+    function nextStep(){
+        //puts current step non modifiable
+        //hides all the current step
+        steps[currentStep-1].stop();
+        currentStep++;
+        //shows animated the next step
+        steps[currentStep].start();
+    }
+
+    //name in the possibilities for the service
+    //jsonData the JSON text or object
+    function submitQuery(name, jsonData){
+        //TODO check that name is one of the available services
+        //TODO check that jsonData is a valid 
+        //      else, return an error
+        //make call
+        $.ajax({
+               type: "POST",
+               url: ajax_url+name,
+               data: jsonData
+            }).done(function( msg ) {
+                console.log("response: "+ msg);
+                if(msg !== "False" && msg !==false && 
+                    msg !=="Error" && msg !=="undefined"){
+                    //parse msg
+                    try{
+                        var parsed = $.parseJSON(msg);
+                        if(msg.success){
+                            nextStep();
+                        }else{
+                        //TODO call attention in the current problems
+                        }
+                    }catch(err){
+                        console.log("ERROR unexpected error parsing msg "+msg);
+                        console.log("ERROR = "+err);
+                    }
+                }
+                });
+        return true;
+    }
+
+
+    //<!-- Step 1 --> 
+    //<!-- decide if add a link from an external service or upload a file -->
+
+    //<!-- Step 2 --> 
+    //<!-- If add link -->
+    //    <!-- Show  -->
+    //        <!-- Box for adding link -->
+    //        <!-- Choice for privacy: private, unlisted, public  -->
+    //        <!-- if checks public: no options are shown  -->
+    //        <!-- Send me an email when done -->
+
+    //<!-- Step 2 --> 
+    //<!-- If upload file -->
+    //<!-- Notify that the service is not yet available but we will notify when it is online-->
+    //<!-- go to Step 2 "add link" --> 
+
+    //<!-- Step 3 --> 
+    //<!-- If add media was successful -->
+    //    <!-- Show  -->
+    //       <!-- Select who -->
+    //            <!-- Can annotate -->
+    //            <!-- Can view -->
+    //        <!-- Box for adding annotators -->
+    //        <!-- Box for adding viewers -->
+
+    //<!-- Step 4 --> 
+    //<!-- If previous step was successful -->
+    //    <!-- Suggest tags option  -->
+
+    //<!-- Step 5 --> 
+    //<!-- If previous step was successful -->
+    //    <!-- Show  -->
+    //        <!-- Links for  -->
+    //            <!-- Annotation link  -->
+    //            <!-- View link  -->
+    //            <!-- Embed code  - copy this code to embed as an iframe in your blog -->
+    
+    //init all the one page app
+    //first hide everything (by default everything should be shown, debugging and devel purposes
+    $.each(steps, function(index, value) {
+        value.stop();
+    });
+    //now start teh first step
+    steps[startStep-1].start();
+</script>
+
+{{end}}

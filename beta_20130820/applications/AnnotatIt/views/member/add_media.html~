@@ -1,0 +1,147 @@
+{{extend 'layout_user.html'}}
+{{block head_extra}}
+    <style>
+        .validationMessage { color: Red; }
+        .customMessage { color: Orange; }
+    </style>
+{{end}}
+
+{{block content}} <!-- TODO this line must replace the following, remember to erase the # symbol-->
+
+
+<div class="main-content"  id="MyMediaPage">
+
+	<div class="page-content" id="AnnotatItAddMedia">
+	
+	    <!-- Begin add media FORM -->
+        <form class="form-horizontal"  data-bind="visible: !mediaAdded(), submit: submit">
+	        <div class="container-fluid">
+		        <div class="row-fluid">
+			        <div class="span6">
+
+			        	<!--Title-->
+				        <div class="control-group">
+					        <label class="control-label" for="form-field-1">{{=T('Title')}}</label>
+
+					        <div class="controls">
+						        <input type="text" id="form-field-1" placeholder="Write a title" data-bind="value: m_title" />
+					        </div>
+				        </div>
+
+				        <!--Copy URL link-->
+				        
+
+                        <div class=" media_file_upload">
+				            <div class= "controls">
+				                <img alt="150x150" src="" data-bind="attr: { src: m_thumbnail }" />
+					            <input type="text" class="input-search-query" placeholder="Copy link here" data-bind="value: m_url"/>
+				            </div>
+
+				            <br/>
+
+				            <div class="control-group">
+					            <label class="control-label">{{=T('Media')}} <br/> {{=T('Description')}}</label>
+					            <div class="controls">
+						            <textarea class="limited" id="form-field-9" data-maxlength="140" data-bind="value: m_description"></textarea>
+
+						            <div style="padding-top:20px">
+						            	<select data-bind="options: m_privacy, value:selectedPrivacy"></select>
+						            </div>
+					            </div>
+				            </div>
+				            <div class="form-actions">
+				            	<button class="btn btn-info" type="submit"> <i class="icon-ok bigger-110"></i>
+				            		{{=T('Submit')}}
+				            	</button>
+				            	&nbsp; &nbsp; &nbsp;
+				            	<button class="btn" type="reset"> <i class="icon-undo bigger-110"></i>
+				            		{{=T('Reset')}}
+				            	</button>
+				            </div>
+				        </div> <!-- ./media_file_upload -->
+			        </div>
+
+			        <div class= "span4" id="permissions_options">
+				        <label for="form-field-select-4">{{=T('Give permission to view')}}</label>
+				        <div class="row-fluid">
+                            <select data-bind="options: m_viewers, optionsText: 'optName', value: selectedViewers"></select>
+        <div  data-bind="visible: selectedViewers().optValue == 'authorized_groups' "> <!-- -->
+					            <textarea type="text" name="tags" id="form-field-tags" placeholder="Enter email addresses" 
+            					    data-bind="value: invitedViewers "></textarea>
+					
+					            <span class="help-button" data-rel="popover" data-trigger="hover" data-placement="right" data-content="People you add here will be able to view  this media file" >?</span>
+					            <br>
+					            <br>
+					            <label>
+						            <input name="form-field-checkbox" type="checkbox" />
+						            &nbsp;
+						            <span class="lbl">{{=T('Notify?')}}</span>
+					            </label>
+				            </div>
+				        </div>
+
+				        <hr>
+
+				        <label for="form-field-select-4">{{=T('Give permission to Annotate')}}</label>
+				        <div class="row-fluid">
+                            <select data-bind="options: m_annotators, optionsText: 'optName', value: selectedAnnotators"></select>
+                            <div  data-bind="visible: selectedAnnotators().optValue == 'authorized_groups' "> <!-- -->
+					            <textarea name="tags" id="form-field-tags2" placeholder="Enter email address" 
+            					    data-bind="value: invitedAnnotators "> </textarea>
+					            <span class="help-button" data-rel="popover" data-trigger="hover" data-placement="right" data-content="People you add here will be able to view andannotate this media file" >?</span>
+					            <br>
+					            <br>
+					            <label>
+						            <input name="form-field-checkbox" type="checkbox" />
+						            &nbsp;
+						            <span class="lbl">{{=T('Notify?')}}</span>
+					            </label>
+				            </div>
+				        </div>
+
+			        </div>
+			        <!-- End permissions_options-->
+			
+		        </div>
+	        </div>
+        </form><!-- ./add media FORM -->
+        
+        <!-- Begin on success message-->
+        <div class="" data-bind="visible: mediaAdded" >
+            <div class="span4 ">
+                <h3> Your file is ready!! </h3>
+                <!---->
+                <img alt="150x150" src="" data-bind="attr: { src: m_thumbnail }" />
+            </div><!-- /.span4 -->
+            <div class="span4 ">
+                <!--<p><a class="btn btn-primary" id="annotation_link" data-bind="attr:{ href: '../member/annotate_media/'+media_annotate_key() }">{{=T('Start Annotating!')}}</a></p>
+                <button type="button" class="btn btn-default" data-bind="click: function(){console.log('clicked copy to share'); copyToClipboardMessage(media_annotate_key());} ">{{=T('Copy link to share it!')}} </button>-->
+            </div><!-- /.span4 -->
+        </div>
+        <!-- ./ on success message -->
+        
+	</div><!--/.page-content-->
+</div><!--/.main-content-->
+{{end}}
+
+{{block extra_scripts}}
+
+    <!-- Dependences -->
+    <script src="{{=URL('static','js/ext_lib/knockback.js')}}"></script>
+    <script src="{{=URL('static','js/ext_lib/ko-mapping.js')}}"></script>
+    <!-- FORM client side validation with knockout - WARNING may cause problems with IE-->
+    <script src="{{=URL('static','js/ext_lib/knockout.validation.min.js')}}"></script>
+
+    <!-- Facade for media players auto loads the dependences if not already loaded-->
+    <script src="{{=URL('static','js/libs/media_player_facade.js')}}"></script>
+    <!--<script src="{{=URL('static','js/libs/graph_display_box.js')}}"></script>
+    -->
+    <!-- IN PROGRESS integration with knockbackjs-->
+    <script src="{{=URL('static','js/libs/kb/knockout-underscore-templater.js')}}"></script>
+    <script src="{{=URL('static','js/libs/kb/shared.js')}}"></script>
+    <script src="{{=URL('static','js/libs/kb/models.js')}}"></script>
+    <script src="{{=URL('static','js/libs/kb/view-models.js')}}"></script>
+    
+    <script src="{{=URL('static','js/libs/kb/add_media.js')}}"></script>
+
+{{end}}

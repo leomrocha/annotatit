@@ -1,0 +1,147 @@
+{{extend 'layout_media.html'}}
+
+{{block specific_header}}
+<style type="text/css">
+    #acolorstrip{
+        width: 100%; height: 20px;
+        border-style: solid;
+        border-color: white;
+        background-color: white;
+    }
+    textarea#noteInput{
+        border:3px solid !important;
+    }
+    .tooltip-inner {
+        white-space:pre-wrap;
+    }
+</style>
+{{end}}
+
+{{block media_frame}}
+<div class="MediaPlayerDiv" id="MediaPlayerDiv" ></div>
+{{end}}
+
+{{block graph_plot}}
+<div id="comment_tooltip" class="tooltip_hidden">
+    <div class="itemdiv dialogdiv">
+        <div class="user">
+            <img  id="thumbnail" src="#" >
+            <strong><span id="user"></span></strong>
+        </div>
+        <div class="body"  id="tooltipdiv" >
+            <div class="time"> <i class="icon-time"></i>
+                <span class="red" id="media_time"></span>
+                <a href="#">
+                    <span id="flag"></span>
+                </a>
+            </div>
+            <div class="name"><a href="#"  id="user"></a></div>
+            <div class="text"  id="content"></div>
+        </div>
+    </div>
+</div>
+
+<div class="CommentsPlotDiv" id="CommentsPlotDiv" ></div>
+
+
+<div id="section_tooltip" class="tooltip_hidden">
+    <div class="itemdiv dialogdiv">
+        <div class="user">
+            <img  id="thumbnail" src="#" >
+            <strong><span id="user"></span></strong>
+        </div>
+        <div class="body">
+            <div class="time"> 
+                <span class="green" id="begin_time"></span>
+                <i class="icon-time"></i>
+                <span class="red" id="end_time"></span>
+                <a href="#">
+                    <span id="flag">S</span>
+                </a>
+            </div>
+            <div class="name"><a href="#"  id="user"></a></div>
+            <div class="text"  id="name"></div>
+        </div>
+    </div>
+</div>
+
+<div class="SectionsPlotDiv" id="SectionsPlotDiv" ></div>
+{{end}}
+
+{{block comment_form}}
+<form data-bind="submit: addNote">
+
+    <div class="form-actions input-append">
+        <div class="control-group">
+            <div class="controls">
+                <div class="controls">
+                    <div class="btn-group" data-toggle="buttons-radio" data-bind="template: { name: 'flag_button_template' , foreach: allFlags }" ></div>
+                </div>
+
+            </div>
+        </div>
+        <div> <!-- TODO put the time offset menu below the -->
+            Time offset:
+            <a data-bind="click: decrementOffset" 
+                class="btn btn-mini" href="#"><i class="icon-only icon-chevron-sign-left"></i>
+            </a>
+		    <a data-bind="click: seekTime"  href="#"> 
+	        <span class="black" data-bind="text: timeOffset" ></span> sec.
+	        </a>
+	        <a data-bind="click: incrementOffset" 
+                class="btn btn-mini" href="#"><i class="icon-only icon-chevron-sign-right"></i> 
+            </a>
+            <span class="badge badge-warning"><i class="icon-only icon-question-sign" rel="tooltip" title="Time offset: Modifies comment creation time with the given value."></i></span>
+        </div>
+        <!--<div id="acolorstrip" data-bind="style:{borderColor:flagColor , backgroundColor: flagColor}"></div>-->
+        <div class="span9 notesInput">
+            <textarea id="noteInput" type="submit" placeholder="Write your note and press Enter to save" style="height:80px; float:left" data-bind="hasFocus: notesFormSelected, value: new_text, valueUpdate:'afterkeydown', event: {keyup: createNote }, style:{color:flagColor()} " ></textarea>
+        </div>
+        <span class="span2 form-actions2">
+            <!--<span data-bind="value: selectedFlag().flag_name, style:{backgroundColor: selectedFlag().flag_color} " ></span>
+        <br/>
+        -->
+        <!--<span data-bind="text: selectedFlag().flag_name, style:{backgroundColor: selectedFlag().flag_color}" " ></span><br/>-->
+        <div style="float:right">
+            <span data-bind="text: beginTimetxt"></span>
+            <br/>
+            <span data-bind="visible: makeSection "> to:
+                <span data-bind="text: endTimetxt"></span>
+            </span>
+            <br/>
+            <!--<button class="btn btn-info" type="submit"> <i class="icon-ok bigger-110"></i></button>-->
+            <button class="btn btn-info" type="button" data-bind="click: noteStart, visible: !(makeSection() ) ">
+                <i class="icon-long-arrow-right"></i> 
+            </button>
+            
+            <button class="btn btn-danger" type="button" data-bind="click: noteCancel, visible: makeSection">
+                <i class="icon-remove-sign"></i>
+            </button>
+            <button class="btn btn-success" type="button" data-bind="click: noteEnd, visible: inprogress() || makeSection()">
+                <i class="icon-save"></i>
+            </button>
+            
+        </div>
+    </div>
+</form>
+{{end}}
+
+
+
+{{block extra_scripts_media}}
+    <script id="flag_button_template" type="text/template">
+      <button class="btn btn-mini" type="button" data-bind=" click: function(data,event) { $parent.selectFlag(data.flag_name, data.flag_color, data.keyboard_shortcut ) }"  style="background-color: <%= flag_color %> !important;">
+      <%-keyboard_shortcut%></button>
+    </script>
+    <!--Graphic library-->
+    <!--<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    -->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.2.2/d3.v3.min.js" charset="utf-8"></script>
+    <!--Comments Graph library-->
+    <script src="{{=URL('static','js/libs/comments_plot.js')}}"></script>
+    <!-- Init application -->
+    <script src="{{=URL('static','js/libs/kb/annotate.js')}}"></script>
+    <script>
+        $('[rel=tooltip]').tooltip();
+    </script>
+{{end}}

@@ -1,0 +1,228 @@
+{{extend 'annotate_layout.html'}}
+
+{{block viewer_head}}
+{{end}}
+
+{{block media_frame}}
+    <div class=" MediaPlayerDiv" id="MediaPlayerDiv" ></div>
+{{end}}
+{{block comments_frame}}
+    <div data-name='FlaggedSyncComments' class=" AnnotatItCommentsDisplayDiv scrollable" id="AnnotatItCommentsDisplayDiv" >
+      <ul class="unstyled" id="CommentsList"
+      data-bind='template: { name: "comment_template" , foreach: comments }'></ul>
+    </div>
+{{end}}
+{{block controls_frame}}
+    <div class=" AnnotatItControlsFrameDiv scrollable" id="AnnotatItControlsFrameDiv" >
+      <div id="sectionForm" >
+        <ul class="unstyled" id="SectionList">
+        </ul>
+      </div>
+      <div id="commentsForm" >
+        <ul class="unstyled" id="FlagList">
+          <li class="add_flag_form">
+            <!-- this first item is only to show a raw idea of what should be here-->
+            <!-- Color picker-->
+            +
+            <span class="colorpicker badge" style="background-color: 'blue'"> 
+              colorpicker 
+            </span>
+            <!-- input for entering one key -
+            defaults to the first letter of the
+            following form
+            this key will be the keyboard shortcut for selecting this flag
+            -->
+            <span class="flag_shortcut"> n </span>
+            <span class="flag_name"> Name </span>
+            <!-- input for entering the name of the flag-->
+          </li>
+          <!-- TODO Here will be located the list of possible flags -->
+        </ul>
+        <div data-name='NewFlaggedSyncComment' class="unstyled" id="CommentFormField" >
+          <form data-bind="submit: addComment">
+            <textarea cols="30" rows="10" value="<%= new_text() %>"></textarea>
+            <select size=4 data-bind="options: commentFlags, optionsValue: 'keyboard_shortcut', value: new_keyboard_shortcut"></select>
+            <input data-bind="value: new_media_time, attr: {max: duration }" type="number" min=0.0>
+            <!--<input type="submit">-->
+          </form>
+        </div>
+        <div  id="currentTimeDiv" >
+          <!-- TODO here a DEBUG div for being able to see the current time -->
+        </div>
+      </div>
+    </div>
+{{end}}
+{{block graph_frame}}
+    <canvas class="AnnotatItGraphCanvas" id="AnnotatItGraphCanvas"  width="700" height="200"></canvas>
+{{end}}
+<!-- Scripts -->
+{{block end_scripts}}
+    <script src="http://code.createjs.com/easeljs-0.6.0.min.js"></script>
+    <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>-->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+{{if media.media_network == "youtube":}}
+    <script src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
+{{elif media.media_network == "vimeo":}}
+    <script src="http://a.vimeocdn.com/js/froogaloop2.min.js"></script>
+{{else:}}
+    <p>"Media not supported"</p>
+{{pass}}
+<!-- Facade for media players auto loads the needed library-->
+<script src="{{=URL('static','js/media_player_facade.js')}}"></script>
+<script src="{{=URL('static','js/graph_display_box.js')}}"></script>
+
+
+<!-- IN PROGRESS integration with knockbackjs-->
+
+<script src="{{=URL('static','js/tmpknockback/knockback.js')}}"></script>
+<script src="{{=URL('static','js/tmpknockback/ko-mapping.js')}}"></script>
+<script src="{{=URL('static','js/tmpknockback/knockout-underscore-templater.js')}}"></script>
+
+<script src="{{=URL('static','js/tmpknockback/shared.js')}}"></script>
+<script src="{{=URL('static','js/tmpknockback/models.js')}}"></script>
+
+<script src="{{=URL('static','js/tmpknockback/view-models.js')}}"></script>
+<!--
+<script src="{{=URL('static','js/tmpknockback/lib.js')}}"></script>
+-->
+
+<!-- END in progress-->
+<!-- TEST data-->
+<script src="{{=URL('static','js/test/graph_test_data.js')}}"></script>
+<!-- END TEST data-->
+<script id="comment_template" type="text/template">
+<li class="owner_id-<%= owner_id()  %>">
+    <table class="table table-hover ">
+        <tr>
+            <th width="80">
+                <div>
+                    <a data-bind="visible: !editing()" 
+                    href="javascript:MediaPlayerFacade.seekTime(<%= media_time() %>)">
+                        <!-- This should be passed to the view model
+                            and make it work using formatting -->
+                        <%
+                            var ht = Math.floor(media_time()/3600);
+                            var hh =  ht >0? ht+":" : "";
+                            ht = Math.floor((media_time() - ht )/60);
+                            var mm = ht >0? ht+":" :  "";
+                            var ss = (media_time()%60)>0 ? (media_time() % 60).toFixed(2) : "00";
+                            var timetxt = hh+mm+ss;
+                        %>
+                        <%= timetxt %>
+                    </a>
+                    <input data-bind="visible: editing, value: media_time, attr: {max: duration }" 
+                    type="number" min=0.0>
+                    <span data-bind="visible: !editing()" class="badge" style="background-color: <%= flag_color() %>;">
+                        <%= keyboard_shortcut() %>
+                    </span>
+                    <select size=4 data-bind="options: flags, optionsValue: 'keyboard_shortcut', visible: editing, value: keyboard_shortcut">
+                    </select>
+                </div>
+                <img src="<%= owner_thumbnail_url()  %>" />
+                <div> <span class=""> <%= owner_name()  %> </span></div>
+            </th>
+            <td class="comment_text" rowspan="2">
+                <div class="pull-left">
+                    <p data-bind="visible: !editing()"><%= text() %></p>
+                    <textarea data-bind="visible: editing, value: text"></textarea>
+                </div><!--Send to left-->
+                <div class="pull-right">
+                    <% if (can_edit()) { %>
+                        <a data-bind="visible: !editing(), click: Edit" 
+                        class="btn btn-mini btn-warning" href="#">Edit</a>
+                        <a data-bind="visible: editing, click: Save" 
+                        class="btn btn-mini btn-warning" href="#">Save</a>
+                    <% } %>
+                    <% if (can_delete()) { %>
+                        <a data-bind="visible: !editing(), click: Destroy" class="btn btn-mini btn-danger" href="#">Delete</a>
+                    <% } %>
+                </div><!--Send to right corner-->
+            </td>
+        </tr>
+    </table> <!-- /.span11 -->
+</li>
+</script>
+<script id="flag_template" type="text/template">
+    <li class="flag_key-<%-keyboard_shortcut %>">
+        <div class="table-hover" style="background-color: <%-flag_color%>;">
+          <span> <%-keyboard_shortcut%> </span>
+          <span> <%-flag_name%> </span>
+          <span class="pull-right">
+          <a class="btn btn-mini btn-info" href="#">Hide</a>
+          </span><!--Send to right corner-->
+        </div>
+    </li>
+</script>
+<script id="flag_template_form" type="text/template">
+    <li class="add_flag_form">
+    <div class="table-hover">
+      <span class="colorpicker"></span>
+      <input type="text" maxlength="1" width="15">  </input>
+      <input type="text" maxlength="50" width="50">  </input>
+    </div>
+    </li>
+</script>
+<script  type="text/javascript">
+    //loading after window loaded
+    var graph_update_time = function(e,time){
+        //console.log("e = "+ _.keys(e));
+        //console.log("e = "+ _.values(e));
+        //console.log("time = "+ time);
+        GraphDisplayBox.updateTime(time);
+    };
+    var set_time = function(e,time){
+        console.log("set_time, time = "+time);
+        MediaPlayerFacade.seekTime(time);
+    };
+
+    var graph_init = function(e){
+        var duration = MediaPlayerFacade.getDuration();
+        console.log("duration = "+duration);
+        console.log("Loading Graph display");
+        GraphDisplayBox.init(duration);
+        console.log("Graph display Loaded");
+        console.log("Setting event handlers");
+        $(document).on("Annotatit:Event:MediaPlayerFacade:time:update",graph_update_time);
+        $(document).on("Annotatit:Event:time:set",set_time);
+        console.log('filling graphs');
+        // GraphDisplayBox.add(f1_obj);
+        GraphDisplayBox.add(arr1_json);
+        // GraphDisplayBox.add(s1_obj);
+        // GraphDisplayBox.add(sarr1_obj);
+    };
+    /* // replaced by  loading with knockbackjs
+    var comments_setup = function(){
+      //get template text:
+      var templ = $("#comment_template").html();
+      //console.log("comment template = "+templ);
+      var compiledTempl = _.template(templ);
+      var clist = $("#CommentsList");
+      var compiledFlag = _.template($("#flag_template").html());
+      var flist = $("#FlagList");
+      //console.log("input = "+f1_obj);
+      //console.log("input keys = "+_.keys(f1_obj));
+      //console.log("input values = "+_.values(f1_obj));
+      for(var i=0; i< arr1_json.length; i++){
+          //add comment to the comments list
+          var cjson = $.parseJSON(arr1_json[i]);
+          // clist.append(compiledTempl( cjson ));
+          //add flag to the flags list (in case for a later use of the same flag or filters)
+          // flist.append(compiledFlag( cjson )); //should add non duplicates only
+      }
+    };*/
+
+    window.onload=function() {
+      console.log("setting up comments");
+      // comments_setup(); TODO this line should be changed for knockback
+      console.log("starting media player facade");
+      MediaPlayerFacade.init("{{=media.media_network}}","{{=media.media_id}}");
+      console.log("media player facade started");
+      console.log("Binding events for when media is ready");
+      $(document).on("Annotatit:Event:MediaPlayerFacade:Ready", graph_init);
+    } ;
+    /*$(function () {
+      ko.applyBindings(flaggedSyncCommentsViewModel, $("#AnnotatItCommentsDisplayDiv")[0]);
+      ko.applyBindings(flaggedSyncCommentsViewModel, $("[data-name=NewFlaggedSyncComment]")[0]);
+    });*/
+    </script>
+{{end}}

@@ -1,0 +1,324 @@
+{{extend 'layout_base.html'}}
+
+{{block head}}
+    <!--  
+    Here goes:
+        All the things that should go on the <head> </head> tag
+        Specific CSS and some JS files (js files should go at the end) for guest views 
+    -->
+	<!--page specific plugin styles-->
+
+	<link rel="stylesheet" href="{{=URL('static','css/ext_lib/chosen.css')}}" />
+	<link rel="stylesheet" href="{{=URL('static','css/ext_lib/datepicker.css')}}" />
+	<link rel="stylesheet" href="{{=URL('static','css/ext_lib/bootstrap-timepicker.css')}}" />
+	<link rel="stylesheet" href="{{=URL('static','css/ext_lib/daterangepicker.css')}}" />
+	<link rel="stylesheet" href="{{=URL('static','css/ext_lib/colorpicker.css')}}" />
+
+	<!--fonts-->
+
+	<link rel="stylesheet" href="{{=URL('static','css/ext_lib/ace-fonts.css')}}" />
+
+	<!--ace styles-->
+
+	<link rel="stylesheet" href="{{=URL('static','css/ext_lib/ace.min.css')}}" />
+	<link rel="stylesheet" href="{{=URL('static','css/ext_lib/ace-responsive.min.css')}}" />
+	<link rel="stylesheet" href="{{=URL('static','css/ext_lib/ace-skins.min.css')}}" />
+
+	<!--[if lte IE 8]>
+	<link rel="stylesheet" href="{{=URL('static','css/ext_lib/ace-ie.min.css')}}" />
+	<![endif]-->
+	
+    {{block head_extra}}
+    {{end}}
+
+
+{{end}}
+
+{{block body}}
+    <!-- All that goes on the <body> tag -->
+
+			<div class="navbar">fmwnenlkewl
+				<!--NavBar-->			
+				<div class="navbar-inner">
+					<div class="container-fluid">
+						<a href="#" class="brand">
+							<small> <i class="icon-pencil"></i>
+								AnnotatIt
+							</small>
+						</a>
+						<!--/.brand-->			
+
+						<ul class="nav ace-nav pull-right">
+							<!--Alarms -->			
+							{{ if False:}}
+							<!-- THIS WILL NOT APPEAR IN THIS SOFTWARE VERSION, erased by the if False statement -->			
+							<li class="purple">
+								<a data-toggle="dropdown" class="dropdown-toggle" href="#"> <i class="icon-bell-alt icon-animated-bell"></i>
+									<span class="badge badge-important">8</span>
+								</a>
+
+								<ul class="pull-right dropdown-navbar navbar-pink dropdown-menu dropdown-caret dropdown-closer">
+									<li class="nav-header">
+										<i class="icon-warning-sign"></i>
+										8 Notifications
+									</li>
+
+									<li>
+										<a href="#">
+											<div class="clearfix">
+												<span class="pull-left">
+													<i class="btn btn-mini no-hover btn-pink icon-comment"></i>
+													New Comments
+												</span>
+												<span class="pull-right badge badge-info">+12</span>
+											</div>
+										</a>
+									</li>
+
+									<li>
+										<a href="#">
+											<i class="btn btn-mini btn-primary icon-user"></i>
+											Bob just signed up as an editor ...
+										</a>
+									</li>
+
+									<li>
+										<a href="#">
+											<div class="clearfix">
+												<span class="pull-left">
+													<i class="btn btn-mini no-hover btn-success icon-shopping-cart"></i>
+													New Orders
+												</span>
+												<span class="pull-right badge badge-success">+8</span>
+											</div>
+										</a>
+									</li>
+
+									<li>
+										<a href="#">
+											<div class="clearfix">
+												<span class="pull-left">
+													<i class="btn btn-mini no-hover btn-info icon-twitter"></i>
+													Followers
+												</span>
+												<span class="pull-right badge badge-info">+11</span>
+											</div>
+										</a>
+									</li>
+
+									<li>
+										<a href="#">
+											See all notifications
+											<i class="icon-arrow-right"></i>
+										</a>
+									</li>
+								</ul>
+							</li>
+
+							<li class="green">
+								<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+									<i class="icon-envelope icon-animated-vertical"></i>
+									<span class="badge badge-success">5</span>
+								</a>
+
+								<ul class="pull-right dropdown-navbar dropdown-menu dropdown-caret dropdown-closer">
+									<li class="nav-header">
+										<i class="icon-envelope-alt"></i>
+										5 Messages
+									</li>
+
+									<!-- HERE is where messages will be added dynamically-->			
+									<li>
+										<a href="#">
+											{{=T('See all messages')}}
+											<i class="icon-arrow-right"></i>
+										</a>
+									</li>
+								</ul>
+							</li>
+							{{pass}}
+							<!-- END if FALSE-->			
+
+							<li class="light-blue">
+								<a data-toggle="dropdown" href="#" class="dropdown-toggle">
+
+									<img class="nav-user-photo" src="assets/avatars/user.jpg" alt="{{=auth.user}}'s Photo" />			
+
+									<span class="user-info">
+										<small>{{=T('Welcome,')}}</small>
+										<!-- this is an example of a string that will be translated, ALL static text should be written like this-->			
+										{{=auth.user}}
+										<!-- TODO put name instead of ID-->			
+									</span>
+
+									<i class="icon-caret-down"></i>
+								</a>
+
+								<ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-closer">
+									<!-- TODO this menu should be automatically completed with server side templates
+    									but for the moment, do it static here-->			
+									<li>
+										<a href="#">
+											<i class="icon-cog"></i>
+											Settings
+										</a>
+									</li>
+
+									<li>
+										<a href="#">
+											<i class="icon-user"></i>
+											Profile
+										</a>
+									</li>
+
+									<li class="divider"></li>
+
+									<li>
+										<a href="index.html">
+											<i class="icon-off"></i>
+											Logout
+										</a>
+									</li>
+								</ul>
+							</li>
+						</ul>
+
+						<!--/.ace-nav-->			
+					</div>
+					<!--/.container-fluid-->			
+				</div>
+				<!--/.navbar-inner-->			
+			</div>
+			<!--/.navbar-->
+		
+			<div class="main-container container-fluid">
+				<!--Side Bar -->
+				<a class="menu-toggler" id="menu-toggler" href="#">
+					<span class="menu-text"></span>
+				</a>			
+
+				<div class="sidebar" id="sidebar">
+					<div class="sidebar-shortcuts" id="sidebar-shortcuts">
+						<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+							<button class="btn btn-small btn-success">
+								<i class="icon-signal"></i>
+							</button>
+
+							<button class="btn btn-small btn-info">
+								<i class="icon-pencil"></i>
+							</button>
+
+							<button class="btn btn-small btn-warning">
+								<i class="icon-group"></i>
+							</button>
+
+							<button class="btn btn-small btn-danger">
+								<i class="icon-cogs"></i>
+							</button>
+						</div>
+
+						<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+							<span class="btn btn-success"></span>
+
+							<span class="btn btn-info"></span>
+
+							<span class="btn btn-warning"></span>
+
+							<span class="btn btn-danger"></span>
+						</div>
+					</div><!--#sidebar-shortcuts-->
+
+					<ul class="nav nav-list">
+					    <!-- TODO this menu will be automatically completed with server side templates
+					    but for the moment do it static here-->
+						<li>
+							<a href="#" class="dropdown-toggle">
+								<i class="icon-desktop"></i>
+								<span class="menu-text"> Media </span>
+
+								<b class="arrow icon-angle-down"></b>
+							</a>
+
+							<ul class="submenu">
+								<li>
+									<a href="mymedia.html">
+										<i class="icon-double-angle-right"></i>
+										My media
+									</a>
+								</li>
+
+								<li>
+									<a href="myannotations.html">
+										<i class="icon-double-angle-right"></i>
+										My annotations
+									</a>
+								</li>
+
+								<li>
+									<a href="sharedwithme.html">
+										<i class="icon-double-angle-right"></i>
+										Shared with me
+									</a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a href="howto.html">
+								<i class="icon-question-sign"></i>
+								<span class="menu-text"> How to? </span>
+							</a>
+						</li>
+					</ul><!--/.nav-list-->
+
+					<div class="sidebar-collapse" id="sidebar-collapse">
+						<i class="icon-double-angle-left"></i>
+					</div>
+				</div>
+			<!--End SideBar-->
+
+		<!--Main Content-->	
+			<div class="main-content">
+
+		        {{block content}}
+		        {{end}}
+			</div>
+		</div>
+	</div>
+    
+    
+    
+{{end}}
+
+{{block end_scripts}}
+<!-- All the scripts should load here for faster rendering to the user -->
+
+    <!-- This is an example of an underscorejs template  -->
+    <!-- The idea behind this is that everything that is repeated many times and
+    is dynamic will be treated by javascript code-->
+    <script id="message_item_template" type="text/template">
+        <li>
+        <a href="#">
+	        <img src="<%-thumbnail_path%>" class="msg-photo" alt="<%-user_name%>'s Avatar" />
+	        <span class="msg-body">
+		        <span class="msg-title">
+			        <span class="blue"><%-user_name%></span>
+			        <%-message%>
+		        </span>
+		        <span class="msg-time">
+			        <i class="icon-time"></i>
+			        <span><%-time%></span>
+		        </span>
+	        </span>
+        </a>
+        </li>
+    </script>
+
+<!--
+    <script src="{{=URL('static','js/ext_lib/ace-elements.min.js')}}"></script>
+	<script src="{{=URL('static','js/ext_lib/ace.min.js')}}"></script>
+-->
+	
+    {{block extra_scripts}}
+    <!-- Allow child templates to add (instead of replace) scripts (example view media libs)-->
+    {{end}}
+{{end}}

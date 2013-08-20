@@ -1,0 +1,159 @@
+timestamp: 2013-07-28T10:16:15.685063
+CREATE TABLE auth_user(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    first_name CHAR(128),
+    last_name CHAR(128),
+    email CHAR(512),
+    password CHAR(512),
+    registration_key CHAR(512),
+    reset_password_key CHAR(512),
+    registration_id CHAR(512)
+);
+success!
+timestamp: 2013-07-28T10:16:15.871090
+CREATE TABLE auth_group(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    role CHAR(512),
+    description TEXT
+);
+success!
+timestamp: 2013-07-28T10:16:16.583320
+CREATE TABLE auth_membership(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE
+);
+success!
+timestamp: 2013-07-28T10:16:16.739146
+CREATE TABLE auth_permission(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE,
+    name CHAR(512),
+    table_name CHAR(512),
+    record_id INTEGER
+);
+success!
+timestamp: 2013-07-28T10:16:16.896216
+CREATE TABLE auth_event(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    time_stamp TIMESTAMP,
+    client_ip CHAR(512),
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    origin CHAR(512),
+    description TEXT
+);
+success!
+timestamp: 2013-07-28T10:16:17.052459
+CREATE TABLE auth_cas(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    created_on TIMESTAMP,
+    service CHAR(512),
+    ticket CHAR(512),
+    renew CHAR(1)
+);
+success!
+timestamp: 2013-07-28T10:16:17.174937
+CREATE TABLE user_info(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    nickname CHAR(50),
+    image CHAR(512)
+);
+success!
+timestamp: 2013-07-28T10:16:17.301853
+CREATE TABLE media(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    owner_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    title CHAR(256),
+    description CHAR(512),
+    media_annotate_key CHAR(64) NOT NULL DEFAULT '7021018c-a36c-4358-863a-9536c7ad736a' UNIQUE,
+    media_view_results_key CHAR(64) NOT NULL DEFAULT '3cb23219-f5e5-4aa3-8614-8e178bd7de26' UNIQUE,
+    media_embed_key CHAR(64) NOT NULL DEFAULT '78804660-6f81-44ee-9c03-dc235684412c' UNIQUE,
+    media_id CHAR(512),
+    media_network CHAR(512),
+    media_url CHAR(512),
+    media_thumbnail CHAR(512),
+    media_duration CHAR(512),
+    privacy CHAR(512),
+    annotation_permissions CHAR(512),
+    view_permissions CHAR(512),
+    creation_datetime TIMESTAMP,
+    update_datetime TIMESTAMP
+);
+success!
+timestamp: 2013-07-28T10:16:17.434430
+CREATE TABLE flagged_comment(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    owner_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    media_id INTEGER REFERENCES media (id) ON DELETE CASCADE,
+    parent_id INTEGER REFERENCES comment (id) ON DELETE CASCADE,
+    media_time DOUBLE,
+    keyboard_shortcut CHAR(1),
+    flag_name CHAR(30),
+    flag_color CHAR(7),
+    text TEXT,
+    creation_datetime TIMESTAMP,
+    update_datetime TIMESTAMP
+);
+success!
+timestamp: 2013-07-28T10:16:17.557561
+CREATE TABLE section(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    owner_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    media_id INTEGER REFERENCES media (id) ON DELETE CASCADE,
+    parent_id INTEGER REFERENCES section (id) ON DELETE CASCADE,
+    name CHAR(512),
+    color CHAR(7),
+    begin_time DOUBLE,
+    end_time DOUBLE,
+    creation_datetime TIMESTAMP,
+    update_datetime TIMESTAMP
+);
+success!
+timestamp: 2013-07-28T10:16:17.701731
+CREATE TABLE group_ownership(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    owner_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE
+);
+success!
+timestamp: 2013-07-28T14:53:46.070769
+ALTER TABLE user_info ADD image_link CHAR(512);
+timestamp: 2013-08-05T09:40:27.230139
+ALTER TABLE section ADD keyboard_shortcut CHAR(1);
+timestamp: 2013-08-05T09:40:27.437520
+ALTER TABLE section ADD flag_color CHAR(7);
+timestamp: 2013-08-05T09:40:27.608544
+ALTER TABLE section ADD flag_name CHAR(30);
+timestamp: 2013-08-15T00:21:15.943569
+CREATE TABLE note(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    owner_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    media_id INTEGER REFERENCES media (id) ON DELETE CASCADE,
+    parent_id INTEGER REFERENCES section (id) ON DELETE CASCADE,
+    name CHAR(512),
+    keyboard_shortcut CHAR(1),
+    flag_name CHAR(30),
+    flag_color CHAR(7),
+    begin_time DOUBLE,
+    end_time DOUBLE,
+    creation_datetime TIMESTAMP,
+    update_datetime TIMESTAMP
+);
+success!
+timestamp: 2013-08-15T01:01:04.751005
+ALTER TABLE note ADD text TEXT;
+timestamp: 2013-08-15T10:57:32.838741
+CREATE TABLE script(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    owner_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    media_id INTEGER REFERENCES media (id) ON DELETE CASCADE,
+    parent_id INTEGER REFERENCES section (id) ON DELETE CASCADE,
+    text TEXT,
+    creation_datetime TIMESTAMP,
+    update_datetime TIMESTAMP
+);
+success!
+timestamp: 2013-08-19T15:57:32.000851
+ALTER TABLE auth_user ADD country CHAR(512);

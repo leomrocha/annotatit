@@ -1,0 +1,371 @@
+{{extend 'layout_guest.html'}}
+
+
+<!-- Extra script for cslider -->
+{{block extra_head}}
+{{
+  response.files.append(URL('static','css/ext_lib/slider.css'))
+  response.files.append(URL('static','css/ext_lib/prettyPhoto.css'))
+}}
+{{end}}
+
+{{block content}}
+
+
+<div class="myrow2"></div>
+
+
+<!-- Slider starts -->
+<div class="container">
+  <div class="parallax-slider" style="height:500px">
+    <!-- Slider (Parallax Slider) -->
+    <div id="da-slider" class="da-slider" style="height:100%">
+      <!-- Each slide should be enclosed inside "da-slide" class -->
+      
+      <div class="da-slide"><!-- Slide starts -->
+        <div>
+          <p class="bgreen">
+            <!-- Heading -->
+            <span class="das-head">"AnnotatIt"</span>
+            <br />
+            {{=T("The easiest way to make collaborative synchronized notes over a video or audio file.")}}
+            <br />
+            <!-- Link -->
+            <a class="das-link btn">
+              Read More <i class="icon-double-angle-right"></i>
+            </a>
+          </p>
+        </div>
+      </div><!-- Slide ends -->
+      
+      <div class="da-slide"><!-- Slide starts -->
+        <div>
+          <p class="bblue">
+            <!-- Heading -->
+            <span class="das-head">{{=T("Collaborative File Annotation")}}</span>
+            <br />
+            {{=T("1 - Add an video file")}}
+            <br />
+            {{=T("2 - Decide who can view and who add notes")}}
+            <br />
+            {{=T("3 - Start annotating with your people!")}}
+            <br />
+            <!-- Link -->
+            <a class="das-link btn">
+              Read More <i class="icon-double-angle-right"></i>
+            </a>
+          </p>
+        </div>
+      </div><!-- Slide ends -->
+      <div class="da-slide"><!-- Slide starts -->
+        <div>
+          <p class="bviolet">
+            <!-- Heading -->
+            <span class="das-head">{{=T("Synchronized Annotations")}}</span>
+            <br />
+            {{=T("Your notes are synchronized in time with the video")}}
+            <br />
+            {{=T("You can select parts of the file")}}
+            <br />
+            {{=T("You take the notes, AnnotatIt synchronizes them automatically")}}
+            <br />
+            <!-- Link -->
+            <a class="das-link btn">
+              Read More <i class="icon-double-angle-right"></i>
+            </a>
+          </p>
+        </div>
+      </div><!-- Slide ends -->
+{{if False:}}
+      <!-- Slide starts -->
+      <div class="da-slide">
+        <div>
+          <p class="bviolet">
+            <!-- Heading -->
+            <span class="das-head">"Show your friends the exact moment on your youtube video that you want them to see"</span>
+            <br />
+            <!-- Para -->
+            _What you can do_: create synchronized comments, notes and other things with your friends, study group or company to be able to quickly access any point
+            <br />
+            <!-- Link -->
+            <a class="das-link btn">
+              Read More <i class="icon-double-angle-right"></i>
+            </a>
+          </p>
+        </div>
+      </div>
+      <!-- Slide ends -->
+
+      <div class="da-slide">
+
+        <p class="bblue">
+          <!-- Heading -->
+          <span class="das-head">"Show your students the points where they can improve"</span>
+          <br />
+          <!-- Para -->
+          _Useful for_:
+          Coaching, online learning, sharing the moment of the video with your friends, send a link to a moment of a video to your friends
+          <br />
+          <a class="das-link btn">
+            Read More <i class="icon-double-angle-right"></i>
+          </a>
+        </p>
+
+      </div>
+      <div class="da-slide">
+
+        <p class="bgreen">
+          <!-- Heading -->
+          <span class="das-head">"Access any point of a video or audio file with just one click"</span>
+          <br />
+          <!-- Para -->
+          _Works with_: here name (and put the logos) of pages that use youtube and vimeo (I think udacity and coursera for example use youtube)
+          <br />
+          <a class="das-link btn">
+            Read More
+            <i class="icon-double-angle-right"></i>
+          </a>
+        </p>
+
+      </div>
+{{pass}}<!-- end if False-->
+      <nav class="da-arrows">
+        <span class="da-arrows-prev"></span>
+        <span class="da-arrows-next"></span>
+      </nav>
+    </div>
+  </div>
+</div>
+<!-- Slider ends -->
+
+<div class="big-box">
+  <div class="container"  style="background-color:#F88529">
+    <div class="row">
+      <div class="span12">
+
+        <!-- Left box -->
+        <div class="big-box-left" "span7">
+          <!-- Box content -->
+          <div class="mybox-content" style="color:white">
+            <!-- title -->
+            <div class="box-title">
+              {{=T("Works with multiple networks")}}
+            </div>
+            <!-- Para -->
+            <p>{{=T("Make synchronized notes of any video of YouTube and Vimeo")}}</p>
+            <p>{{=T("Take notes of your Coursera and Udacity classes!")}}</p>
+            <!-- Button -->
+            <a href="#" class="btn btn-inverse">Check It Out</a>
+            <!-- TODO (when in production) example of coursera, udacity, youtube and Vimeo videos. Put as public AND put the link here.-->
+            <br />
+            <br />
+            <!-- Links --> </div>
+        </div>
+        <div class="big-box-right">
+          <!-- Image -->
+          <a href="#">
+            <img class="pull-right"height="340px"src="../static/images/photos/girl1.jpg" alt="" />
+          </a>
+        </div>
+        <!-- Center box -->
+
+        <!-- Right box -->
+        <div class="clearfix"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="big-box">
+  <div class="container"  style="background-color:#52B9E9">
+    <div class="row">
+      <div class="span12">
+        <div class="big-box-mid">
+          <!-- Image -->
+          <a href="#">
+            <img height="340px"src="../static/images/photos/girl1.jpg" alt="" />
+          </a>
+        </div>
+        <!-- Left box -->
+        <div class="big-box-left">
+          <!-- Box content -->
+          <div class="mybox-content" style="color:white">
+            <!-- title -->
+            <div class="box-title">
+              {{=T("Coolaborative learning!")}}
+            </div>
+            <!-- Para -->
+            <p>{{=T("1- Upload a video")}}</p>
+            <p>{{=T("2- Share the link with your coach, teacher, or study group")}}</p>
+            <p>{{=T("3- They can make specific comments and notes on the exact needed moment!")}}</p>
+            <p>{{=T("4- You can learn faster!")}}</p>
+            <!-- Button -->
+            <a href="#" class="btn btn-inverse">{{=T("Check It Out")}}</a>
+            <br />
+            <br />
+            <!-- Links --> </div>
+        </div>
+
+        <!-- Center box -->
+
+        <!-- Right box -->
+        <div class="clearfix"></div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="big-box">
+  <div class="container" style="background-color:#932AB6">
+    <div class="row">
+      <div class="span12">
+
+        <!-- Left box -->
+        <div class="big-box-left" "span7">
+          <!-- Box content -->
+          <div class="mybox-content" style="color:white">
+            <!-- title -->
+            <div class="box-title">
+              {{=T("Great for online classes!")}}
+            </div>
+            <!-- Para -->
+            <p>{{=T("1- Add your class video")}}</p>
+            <p>{{=T("2- Share the link with your study group")}}</p>
+            <p>{{=T("3- You all can take coolaborative notes!")}}</p>
+            <!-- Button -->
+            <a href="#" class="btn btn-inverse">{{=T("See an example")}}</a>
+            <br />
+            <br />
+            <!-- Links --> </div>
+        </div>
+
+        <div class="big-box-right">
+          <!-- Image -->
+          <a href="#">
+            <img height="340px"src="../static/images/photos/girl1.jpg" alt="" />
+          </a>
+        </div>
+
+        <!-- Center box -->
+
+        <!-- Right box -->
+        <div class="clearfix"></div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="big-box">
+  <div class="container"  style="background-color:#43C83C">
+    <div class="row">
+      <div class="span12">
+        <div class="big-box-mid">
+          <!-- Image -->
+          <a href="#">
+            <img height="340px"src="../static/images/photos/girl1.jpg"/>
+          </a>
+        </div>
+        <!-- Left box -->
+        <div class="big-box-left">
+          <!-- Box content -->
+          <div class="mybox-content" style="color:white">
+            <!-- title -->
+            <div class="box-title">
+              {{=T("Awesome for marking songs in concerts!")}}
+            </div>
+            <!-- Para -->
+            <p>{{=T("1- Add your video")}}</p>
+            <p>{{=T("2- Make the sections where each song starts and ends.")}}</p>
+            <p>{{=T("3- Share the View link! Everybody enjoys, only you edit the intervals!")}}</p>
+            <!-- Button -->
+            <a href="#" class="btn btn-inverse">{{=T("Check this concert!!")}}</a>
+            <br />
+            <br />
+            <!-- Links --> </div>
+        </div>
+
+        <!-- Center box -->
+
+        <!-- Right box -->
+        <div class="clearfix"></div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container" style="margin-left: 15%;">
+
+  <!-- Pricing table #3. Class name "price-a" -->
+ 
+
+    <div class="span3">
+      <div class="price-a pricel center">
+        <div class="phead-top bviolet">
+          <h4>Free Account</h4>
+        </div>
+        <div class="arrow-down"></div>
+        <div class="plist">
+          <ul>
+            <li>Annotate Videos</li>
+            <li>Up to 30 videos for free!</li>
+            <li>Share with your friends</li>
+          </ul>
+        </div>
+        <div class="pbutton">
+          <!-- button -->
+          <a href="#" class="btn btn-danger btn-large">Join for free</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="span3">
+      <div class="price-a pricel center">
+        <div class="phead-top bviolet">
+          <h4>Pro Account</h4>
+        </div>
+        <div class="arrow-down"></div>
+        <div class="plist">
+          <ul>
+            <li>Privacy: put a password on your videos!</li>
+            <li>Support for both video and audio files!</li>
+            <li>Choose who can annotate your videos!</li>
+          </ul>
+        </div>
+        <div class="pbutton">
+          <!-- button -->
+          <a href="#" class="btn btn-danger btn-large">Contact Us!</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="span3">
+      <div class="price-a pricel center">
+        <div class="phead-top bviolet">
+          <h4>Enterprise</h4>
+        </div>
+        <div class="arrow-down"></div>
+        <div class="plist">
+          <ul>
+            <li>Save money</li>
+            <li>We meet your needs!</li>
+            <li>The amount of users YOU need!</li>
+          </ul>
+        </div>
+        <div class="pbutton">
+          <!-- button -->
+          <a href="#" class="btn btn-danger btn-large">Contact us!</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{{block extra_scripts}}
+
+{{end}}

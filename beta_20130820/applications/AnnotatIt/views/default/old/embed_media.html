@@ -1,0 +1,148 @@
+{{extend 'embed_layout.html'}}
+
+{{block viewer_head}}
+
+{{end}}
+
+{{block media_frame}}    
+    <div class=" MediaPlayerDiv" id="MediaPlayerDiv" ></div>
+{{end}}
+
+{{block comments_frame}}
+    <div class=" AnnotatItCommentsDisplayDiv scrollable" id="AnnotatItCommentsDisplayDiv" >
+    
+          
+          <ul class="unstyled" id="CommentsList">
+          </ul>
+        
+    
+    </div>
+{{end}}
+
+{{block graph_frame}}
+    <canvas class="AnnotatItGraphCanvas" id="AnnotatItGraphCanvas"  width="520" height="200"></canvas>
+{{end}}
+
+
+<!-- Scripts --> 
+{{block end_scripts}}
+
+<script src="http://code.createjs.com/easeljs-0.6.0.min.js"></script>
+<!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>-->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+
+{{if media.media_network == "youtube":}}
+    <script src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
+{{elif media.media_network == "vimeo":}}
+    <script src="http://a.vimeocdn.com/js/froogaloop2.min.js"></script>
+{{else:}}
+    <p>"Media not supported"</p>
+{{pass}}
+
+<!-- Facade for media players auto loads the needed library-->
+<script src="{{=URL('static','js/media_player_facade.js')}}"></script>
+<script src="{{=URL('static','js/graph_display_box.js')}}"></script>
+
+<!-- TEST data-->
+
+<script src="{{=URL('static','js/test/graph_test_data.js')}}"></script>
+<!-- END TEST data-->
+
+<script id="comment_template" type="text/template">
+        <li class="owner_id-<%-owner_id %>">
+                <table class="table table-hover ">
+                    <tr>
+                        <th width="80"> 
+                            <div><a href="javascript:MediaPlayerFacade.seekTime(<%-media_time%>)">
+                                    <%
+                                        var ht = Math.floor(media_time/3600);
+                                        var hh =  ht >0? ht+":" : "";
+                                        ht = Math.floor((media_time - ht )/60);
+                                        var mm = ht >0? ht+":" :  "";
+                                        var ss = (media_time%60)>0 ? (media_time % 60).toFixed(2) : "00";
+                                        var timetxt = hh+mm+ss;
+                                    %>
+                                    <%-timetxt%> 
+                                 </a>
+                                 <span class="badge" style="background-color: <%-flag_color%>;">
+                                        <%-keyboard_shortcut%>
+                                 </span>
+                            </div>
+                            <img src="<%-owner_thumbnail_url %>" />
+                            <div> <span class=""> <%-owner_name %> </span></div>
+                        </th>
+                        <td class="comment_text" rowspan="2">
+                            <div class="pull-left">
+                                <p><%-text %></p>
+                            </div><!--Send to left-->                        
+                            <div class="pull-right">
+                            <% if (can_edit) { %>
+                                <a class="btn btn-mini btn-warning" href="#">Edit</a>
+                            <% } %>
+                            <% if (can_delete) { %>      
+                                <a class="btn btn-mini btn-danger" href="#">Delete</a>
+                            <% } %>
+                            </div><!--Send to right corner-->
+                        </td>
+                    </tr>
+                </table> <!-- /.span11 -->
+             </li>
+</script>
+
+<script  type="text/javascript">
+    //loading after window loaded
+    
+    
+    var graph_update_time = function(e,time){
+        //console.log("e = "+ _.keys(e));
+        //console.log("e = "+ _.values(e));
+        //console.log("time = "+ time);
+        GraphDisplayBox.updateTime(time);
+    };
+    var set_time = function(e,time){
+        console.log("set_time, time = "+time);
+        MediaPlayerFacade.seekTime(time);
+    };
+    
+    var graph_init = function(e){
+        var duration = MediaPlayerFacade.getDuration();
+        console.log("duration = "+duration);
+        console.log("Loading Graph display");
+        GraphDisplayBox.init(duration );
+        console.log("Graph display Loaded");
+        console.log("Setting event handlers");
+        $(document).on("Annotatit:Event:MediaPlayerFacade:time:update",graph_update_time);
+        $(document).on("Annotatit:Event:time:set",set_time);
+        console.log('filling graphs');
+        GraphDisplayBox.add(f1_obj);
+        GraphDisplayBox.add(arr1_json);
+        GraphDisplayBox.add(s1_obj);
+        GraphDisplayBox.add(sarr1_obj);
+    };
+    var comments_setup = function(){
+        //get template text:
+        var templ = $("#comment_template").html();
+        //console.log("comment template = "+templ);
+        var compiledTempl = _.template(templ);
+        var clist = $("#CommentsList");
+        //console.log("input = "+f1_obj);
+        //console.log("input keys = "+_.keys(f1_obj));
+        //console.log("input values = "+_.values(f1_obj));
+        clist.append(compiledTempl(f1_obj));
+        for(var i=0; i< arr1_json.length; i++){
+            clist.append(compiledTempl($.parseJSON(arr1_json[i]) ));
+        }
+    };
+    
+    window.onload=function() {
+        console.log("setting up comments");
+        comments_setup();
+        console.log("starting media player facade");
+        MediaPlayerFacade.init("{{=media.media_network}}","{{=media.media_id}}");
+        console.log("media player facade started");
+        console.log("Bind events for when media is ready");
+        $(document).on("Annotatit:Event:MediaPlayerFacade:Ready", graph_init);
+    } ; 
+</script>
+{{end}}
+
